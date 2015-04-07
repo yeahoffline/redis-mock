@@ -123,6 +123,7 @@ redis-mock is work in progress, feel free to report an issue
 
 
 # Versions
+0.4.8 merge issue #1
 0.4.7 update devDependencies (should, mocha)
 
 
