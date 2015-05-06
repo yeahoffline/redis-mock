@@ -66,6 +66,7 @@ Currently implemented are the following redis commands:
 ### Strings
 * get
 * set
+* getset
 * mget
 * setex
 * setnx
