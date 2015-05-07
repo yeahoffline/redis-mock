@@ -124,7 +124,8 @@ redis-mock is work in progress, feel free to report an issue
 
 
 # Versions
-0.4.8 merge issue #1
+0.4.9 merge getset + expire fix (thanks to sobotklp)
+0.4.8 merge issue #1 (thanks to williamkapke)
 0.4.7 update devDependencies (should, mocha)
 
 
