@@ -164,6 +164,50 @@ describe("get", function () {
   });
 });
 
+describe("getset", function () {
+  var r;
+
+  beforeEach(function () {
+    r = redismock.createClient();
+  });
+
+  it("should return null for a non-existing key", function (done) {
+    r.getset("does-not-exist", "newValue", function (err, result) {
+      should.not.exist(result);
+
+      r.end();
+      done();
+    });
+
+  });
+
+  it("should return the value of the key before setting it", function (done) {
+    r.set("test-key", "oldValue", function (err, result) {
+      r.getset("test-key", "newValue", function (err, result) {
+        result.should.equal("oldValue");
+        r.get("test-key", function (err, result) {
+          result.should.equal("newValue");
+          r.end();
+          done();
+        });
+      });
+    });
+  });
+
+  it("should return an error if the key holds the wrong type of value", function (done) {
+    r.sadd("test-key", "setMember", function (err, result) {
+      result.should.equal(1);
+      r.getset("test-key", "newValue", function (err, result) {
+        err.message.should.eql("WRONGTYPE Operation against a key holding the wrong kind of value");
+
+        r.end();
+        done();
+      });
+    });
+  });
+
+});
+
 describe("setex", function () {
 
   var r;
