@@ -4,6 +4,7 @@
   "description": "Redis client mock object for unit testing",
   "author": "Kristian Faeldt <kristian.faeldt@gmail.com>",
   "main": "./lib/redis-mock",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/yeahoffline/redis-mock"
