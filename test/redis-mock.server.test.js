@@ -32,3 +32,15 @@ describe("flushdb", function () {
 
 });
 
+describe("auth", function () {
+  it("should always succeed and call back", function (done) {
+    var r = redismock.createClient();
+
+    r.auth("secret", function (err, result) {
+      result.should.equal('OK');
+      r.end();
+      done();
+    });
+  });
+});
+
