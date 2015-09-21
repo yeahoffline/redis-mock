@@ -37,6 +37,7 @@ Currently implemented are the following redis commands:
 
 ### General
 * createClient
+* auth
 * end
 
 ### Events
@@ -124,9 +125,10 @@ redis-mock is work in progress, feel free to report an issue
 
 
 # Versions
-0.4.9 merge getset + expire fix (thanks to sobotklp)
-0.4.8 merge issue #1 (thanks to williamkapke)
-0.4.7 update devDependencies (should, mocha)
+* 0.5.0 "Add an AUTH method" + other pr (thanks to aredridel)
+* 0.4.9 merge getset + expire fix (thanks to sobotklp)
+* 0.4.8 merge issue #1 (thanks to williamkapke)
+* 0.4.7 update devDependencies (should, mocha)
 
 
 
