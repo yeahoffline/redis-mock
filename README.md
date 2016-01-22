@@ -101,6 +101,12 @@ Currently implemented are the following redis commands:
 * lindex
 * lset
 
+### Sets
+* sadd
+* srem
+* smembers
+* scard
+
 ### Server
 * flushdb
 * flushall
