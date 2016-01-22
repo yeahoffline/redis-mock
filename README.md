@@ -6,10 +6,11 @@ redis-mock
 [![Build Status](https://travis-ci.org/yeahoffline/redis-mock.svg?branch=master)](https://travis-ci.org/yeahoffline/redis-mock)
 [![Coverage Status](https://coveralls.io/repos/yeahoffline/redis-mock/badge.svg)](https://coveralls.io/r/yeahoffline/redis-mock)
 
-The goal of the `redis-mock` project is to create a feature-complete mock of https://github.com/mranney/node_redis, so that it may be used interchangeably when writing unit tests for code that depends on `redis`.
+The goal of the `redis-mock` project is to create a feature-complete mock of [node_redis](https://github.com/NodeRedis/node_redis), which may be used interchangeably when writing unit tests for code that depends on `redis`.
 
-All operations are performed in-memory, why no Redis installation is required.
-100% redis compatible (see cross verification)
+All operations are performed in-memory, so no Redis installation is required.
+
+100% Redis-compatible (see [Cross Verification](#cross-verification))
 
 # Installation
 
@@ -99,6 +100,12 @@ Currently implemented are the following redis commands:
 * brpop
 * lindex
 * lset
+
+### Sets
+* sadd
+* srem
+* smembers
+* scard
 
 ### Server
 * flushdb
