@@ -243,8 +243,23 @@ describe("setex", function () {
           done();
         });
       }, 2100);
-
     }
+  });
+
+  it("should set a key without a callback involved", function (done) {
+    var key = 'test_persist_wo_callback';
+
+    r.setex(key, 1000, "val");
+
+    setTimeout(function () {
+      r.get(key, function (err, result) {
+        result.should.equal("val");
+        r.del(key);
+        r.end();
+        done();
+      });
+    }, 100)
+
   });
 
 });
