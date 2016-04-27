@@ -126,7 +126,8 @@ describe("publish and subscribe", function () {
 
     r.psubscribe(pattern);
     r.on('pmessage', function (ch, msg) {
-      ch.should.equal(goodChannels[index]);
+      ch.should.equal(pattern);
+      msg.should.equal(goodChannels[index]);
       index++;
       if(index === goodChannels.length) {
         r.punsubscribe(pattern);
@@ -135,8 +136,8 @@ describe("publish and subscribe", function () {
       }
     });
 
-    badChannels.forEach(function (channelName) { r2.publish(channelName, ""); });
-    goodChannels.forEach(function (channelName) { r2.publish(channelName, ""); });
+    badChannels.forEach(function (channelName) { r2.publish(channelName, channelName); });
+    goodChannels.forEach(function (channelName) { r2.publish(channelName, channelName); });
   });
 
   it("should support multiple subscribers", function (done) {
