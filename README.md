@@ -49,11 +49,16 @@ Currently implemented are the following redis commands:
 * subscribe
 * unsubscribe
 * message
+* psubscribe
+* punsubscribe
+* pmessage
 
 ### Publish/subscribe
 * publish
 * subscribe
 * unsubscribe
+* psubscribe
+* punsubscribe
 
 ### Keys
 * del
