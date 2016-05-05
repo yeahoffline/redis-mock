@@ -90,6 +90,7 @@ Currently implemented are the following redis commands:
 * hmset
 * hmget
 * hkeys
+* hvals
 * hincrby
 * hincrbyfloat
 
