@@ -472,6 +472,25 @@ describe("multiple get/set", function () {
 
   });
 
+  //HVALS
+  it("should be able to get all vals for hash", function (done) {
+
+    var r = redismock.createClient();
+
+    r.hvals(mHash2, function (err, result) {
+
+      result.should.containEql(mValue1);
+      result.should.containEql(mValue2);
+      result.should.containEql(mValue3);
+      result.should.containEql(mValue4);
+
+      r.end();
+
+      done();
+
+    });
+
+  });
 
   //HGETALL
   it("should be able to get all values for hash", function (done) {
