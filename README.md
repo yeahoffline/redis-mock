@@ -104,6 +104,7 @@ Currently implemented are the following redis commands:
 * blpop
 * brpop
 * lindex
+* lrange
 * lset
 
 ### Sets

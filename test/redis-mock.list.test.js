@@ -202,6 +202,80 @@ describe("lindex", function () {
   });
 });
 
+describe("lrange", function () {
+  var key1 = "lrange1";
+  var key2 = "lrange2";
+  var key3 = "lrange3";
+  var keyU = "keyMissing";
+  var testValues = [1, 2, 3, 4, 5];
+
+  it("getting a non-exisiting list", function (done) {
+    var r = redismock.createClient();
+    r.lrange(keyU, 0, -1, function (err, result) {
+      result.should.be.an.Array().and.have.lengthOf(0);
+      r.end();
+      done();
+    });
+  });
+
+  it("getting positive indexes of exisiting list", function (done) {
+    var r = redismock.createClient();
+    var cb = function (err, result) {
+      r.lrange(key1, 0, 1, function (err, result) {
+        result.should.deepEqual(["1", "2"]);
+        r.lrange(key1, 0, 9, function (err, result) {
+          result.should.deepEqual(["1", "2", "3", "4", "5"]);
+          r.lrange(key1, 1, 2, function (err, result) {
+            result.should.deepEqual(["2", "3"]);
+            r.lrange(key1, 2, 1, function (err, result) {
+              result.should.be.an.Array().and.have.lengthOf(0);
+              r.end();
+              done();
+            });
+          });
+        });
+      });
+    };
+    r.rpush.apply(r, [key1].concat(testValues, cb));
+  });
+
+  it("getting negative indexes of exisiting list", function (done) {
+    var r = redismock.createClient();
+    var cb = function (err, result) {
+      r.lrange(key2, -2, -1, function (err, result) {
+        result.should.deepEqual(["4", "5"]);
+        r.lrange(key2, -9, -4, function (err, result) {
+          result.should.deepEqual(["1", "2"]);
+          r.lrange(key2, -4, -5, function (err, result) {
+            result.should.be.an.Array().and.have.lengthOf(0);
+            r.end();
+            done();
+          });
+        });
+      });
+    };
+    r.rpush.apply(r, [key2].concat(testValues, cb));
+  });
+
+  it("getting positive and negative indexes of exisiting list", function (done) {
+    var r = redismock.createClient();
+    var cb = function (err, result) {
+      r.lrange(key3, 0, -1, function (err, result) {
+        result.should.deepEqual(["1", "2", "3", "4", "5"]);
+        r.lrange(key3, 1, -3, function (err, result) {
+          result.should.deepEqual(["2", "3"]);
+          r.lrange(key3, -4, 4, function (err, result) {
+            result.should.deepEqual(["2", "3", "4", "5"]);
+            r.end();
+            done();
+          });
+        });
+      });
+    };
+    r.rpush.apply(r, [key3].concat(testValues, cb));
+  });
+});
+
 describe("lset", function () {
 
   var testKey = "myKey4";
