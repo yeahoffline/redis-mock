@@ -10,7 +10,8 @@
     "url": "https://github.com/yeahoffline/redis-mock"
   },
   "devDependencies": {
-    "should": "5.1.0",
+    "eslint": "^2.10.2",
+    "should": "8.3.2",
     "mocha": "2.2.1",
     "redis": "0.12.1"
   },
