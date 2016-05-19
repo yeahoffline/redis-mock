@@ -429,7 +429,7 @@ describe("multiple get/set", function () {
     r.hmset(mHash, { mKey3: mValue3, mKey4: mValue4});
     r.hmget(mHash2, mKey1, mKey2, function (err, result) {
 
-      result.should.be.an.Array.and.have.lengthOf(2);
+      result.should.be.an.Array().and.have.lengthOf(2);
       result.should.eql([mValue1, mValue2]);
 
       r.end();
@@ -444,7 +444,7 @@ describe("multiple get/set", function () {
 
     r.hmget("random", mKey1, mKey2, function (err, result) {
       debugger;
-      result.should.be.an.Array.and.have.lengthOf(2);
+      result.should.be.an.Array().and.have.lengthOf(2);
       result.should.eql([null, null]);
       r.end();
 
