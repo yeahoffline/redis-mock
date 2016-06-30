@@ -23,13 +23,14 @@ describe("multi()", function () {
     should.exist(multi.hget);
   });
 
-  describe("exec()", function () {
+  describe.only("exec()", function () {
     it("should handle things without errors and callbacks", function (done) {
       var multi = r.multi();
       multi.get('foo').incr('foo');
 
       r.set('foo', 3, function () {
         multi.exec(function (err, results) {
+          should(err).not.be.ok();
           should.deepEqual(results, ['3',4]);
           done();
         });
@@ -42,6 +43,7 @@ describe("multi()", function () {
           ['get', 'foo'],
           ['incr', 'foo']
         ]).exec(function (err, results) {
+          should(err).not.be.ok();
           should.deepEqual(results, ['3',4]);
           done();
         });
@@ -51,6 +53,7 @@ describe("multi()", function () {
     it("should handle extraneous callbacks", function (done) {
       var multi = r.multi();
       multi.get('foo').incr('foo', function (err, result) {
+        should(err).not.be.ok();
         should.equal(result, 1);
         done();
       }).exec();
