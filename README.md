@@ -40,6 +40,7 @@ Currently implemented are the following redis commands:
 * createClient
 * auth
 * end
+* multi
 
 ### Events
 * ready
