@@ -11,7 +11,7 @@ if (process.env['VALID_TESTS']) {
 afterEach(function (done) {
   r = redismock.createClient();
   r.flushdb(function () {
-    r.end();
+    r.end(true);
     done();
   });
 });
@@ -27,7 +27,7 @@ describe("redis-mock", function () {
     r.should.be.an.instanceof(redismock.RedisClient);
     r.should.be.an.instanceof(events.EventEmitter);
 
-    r.end();
+    r.end(true);
 
   });
 
@@ -44,7 +44,7 @@ describe("redis-mock", function () {
 
         didOtherPassed = true;
 
-        r.end();
+        r.end(true);
 
         done();
       }
@@ -57,7 +57,7 @@ describe("redis-mock", function () {
 
         didOtherPassed = true;
 
-        r.end();
+        r.end(true);
 
         done();
       }
@@ -77,7 +77,7 @@ describe("redis-mock", function () {
 
         });
 
-        r.end();
+        r.end(true);
 
     });
    */

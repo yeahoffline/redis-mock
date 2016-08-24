@@ -14,7 +14,7 @@ describe("ping", function () {
     r.ping(function (err, result) {
       result.should.equal("PONG");
 
-      r.end();
+      r.end(true);
 
       done();
 
@@ -34,7 +34,7 @@ describe("set", function () {
 
             result.should.equal("bar");
 
-            r.end();
+            r.end(true);
 
             done();
 
@@ -53,7 +53,7 @@ describe("set", function () {
 
         result.should.equal("[object Object]");
 
-        r.end();
+        r.end(true);
         done();
 
       });
@@ -74,7 +74,7 @@ describe("set", function () {
             setTimeout(function () {
               r.exists("foo", function (err, result) {
                 result.should.equal(0);
-                r.end();
+                r.end(true);
                 done();
               });
             }, 1100);
@@ -97,7 +97,7 @@ describe("set", function () {
             setTimeout(function () {
               r.exists("foo", function (err, result) {
                 result.should.equal(0);
-                r.end();
+                r.end(true);
                 done();
               });
             }, 1100);
@@ -117,7 +117,7 @@ describe("set", function () {
             (err === null).should.be.true;
             (result === null).should.be.true;
 
-            r.end();
+            r.end(true);
             done();
 
         });
@@ -139,7 +139,7 @@ describe("get", function () {
 
         result.should.equal("bar");
 
-        r.end();
+        r.end(true);
 
         done();
 
@@ -156,7 +156,7 @@ describe("get", function () {
 
       should.not.exist(result);
 
-      r.end();
+      r.end(true);
 
       done();
 
@@ -175,7 +175,7 @@ describe("getset", function () {
     r.getset("does-not-exist", "newValue", function (err, result) {
       should.not.exist(result);
 
-      r.end();
+      r.end(true);
       done();
     });
 
@@ -187,7 +187,7 @@ describe("getset", function () {
         result.should.equal("oldValue");
         r.get("test-key", function (err, result) {
           result.should.equal("newValue");
-          r.end();
+          r.end(true);
           done();
         });
       });
@@ -200,7 +200,7 @@ describe("getset", function () {
       r.getset("test-key", "newValue", function (err, result) {
         err.message.should.eql("WRONGTYPE Operation against a key holding the wrong kind of value");
 
-        r.end();
+        r.end(true);
         done();
       });
     });
@@ -223,7 +223,7 @@ describe("setex", function () {
         result.should.equal("OK");
       r.get(key, function (err, result) {
         result.should.equal("val");
-        r.end();
+        r.end(true);
         done();
       });
     });
@@ -239,7 +239,7 @@ describe("setex", function () {
       setTimeout(function () {
         r.exists(key, function (err, result) {
           result.should.equal(0);
-          r.end();
+          r.end(true);
           done();
         });
       }, 2100);
@@ -255,7 +255,7 @@ describe("setex", function () {
       r.get(key, function (err, result) {
         result.should.equal("val");
         r.del(key);
-        r.end();
+        r.end(true);
         done();
       });
     }, 100)
@@ -275,7 +275,7 @@ describe("setnx", function () {
 
       r.get("foo", function (err, result) {
         result.should.eql("10");
-        r.end();
+        r.end(true);
         done();
       });
     });
@@ -294,7 +294,7 @@ describe("setnx", function () {
         r.get("foo", function(err, result) {
             result.should.equal("val");
 
-            r.end();
+            r.end(true);
             done();
         });
       });
@@ -321,7 +321,7 @@ describe("mget", function () {
 
           result[2].should.equal("three");
 
-          r.end();
+          r.end(true);
           done();
         });
 
@@ -346,7 +346,7 @@ describe("incr", function () {
 
           result.should.eql("11");
 
-          r.end();
+          r.end(true);
           done();
         });
       });
@@ -365,7 +365,7 @@ describe("incr", function () {
 
         result.should.eql("1");
 
-        r.end();
+        r.end(true);
         done();
       });
     });
@@ -381,7 +381,7 @@ describe("incr", function () {
 
         err.message.should.eql("WRONGTYPE Operation against a key holding the wrong kind of value");
 
-        r.end();
+        r.end(true);
         done();
       });
     });
@@ -397,7 +397,7 @@ describe("incr", function () {
 
         err.message.should.equal("ERR value is not an integer or out of range");
 
-        r.end();
+        r.end(true);
         done();
       });
     });
@@ -420,7 +420,7 @@ describe("incrby", function () {
 
           result.should.eql("12");
 
-          r.end();
+          r.end(true);
           done();
         });
       });
@@ -439,7 +439,7 @@ describe("incrby", function () {
 
         result.should.eql("5");
 
-        r.end();
+        r.end(true);
         done();
       });
     });
@@ -455,7 +455,7 @@ describe("incrby", function () {
 
         err.message.should.eql("WRONGTYPE Operation against a key holding the wrong kind of value");
 
-        r.end();
+        r.end(true);
         done();
       });
     });
@@ -471,7 +471,7 @@ describe("incrby", function () {
 
         err.message.should.equal("ERR value is not an integer or out of range");
 
-        r.end();
+        r.end(true);
         done();
       });
     });
@@ -494,7 +494,7 @@ describe("incrbyfloat", function () {
 
           result.should.eql("2");
 
-          r.end();
+          r.end(true);
           done();
         });
       });
@@ -511,7 +511,7 @@ describe("incrbyfloat", function () {
       r.get("bar", function (err, result) {
         result.should.eql("1.5");
 
-        r.end();
+        r.end(true);
         done();
       });
     });
@@ -527,7 +527,7 @@ describe("incrbyfloat", function () {
 
         err.message.should.eql("WRONGTYPE Operation against a key holding the wrong kind of value");
 
-        r.end();
+        r.end(true);
         done();
       });
     });
@@ -543,7 +543,7 @@ describe("incrbyfloat", function () {
 
         err.message.should.equal("ERR value is not a valid float");
 
-        r.end();
+        r.end(true);
         done();
       });
     });

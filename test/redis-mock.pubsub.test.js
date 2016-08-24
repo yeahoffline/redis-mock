@@ -27,7 +27,7 @@ describe("publish and subscribe", function () {
 
       should.equal(ch, channelName);
 
-      r.end();
+      r.end(true);
 
       done();
     });
@@ -49,7 +49,7 @@ describe("publish and subscribe", function () {
 
     r.on("punsubscribe", function (ch) {
       should.equal(ch, channelName);
-      r.end();
+      r.end(true);
       done();
     });
     r.psubscribe(channelName);
@@ -67,7 +67,7 @@ describe("publish and subscribe", function () {
         r.publish(otherChannel, "");
       }).should.throwError();
     } catch (e) {
-      r.end();
+      r.end(true);
 
       done();
     }
@@ -85,7 +85,7 @@ describe("publish and subscribe", function () {
         r.publish(otherChannel, "");
       }).should.throwError();
     } catch (e) {
-      r.end();
+      r.end(true);
 
       done();
     }
@@ -105,7 +105,7 @@ describe("publish and subscribe", function () {
 
       r.unsubscribe(channelName);
 
-      r.end();
+      r.end(true);
 
       done();
     });
@@ -125,13 +125,13 @@ describe("publish and subscribe", function () {
     var r2 = redismock.createClient();
 
     r.psubscribe(pattern);
-    r.on('pmessage', function (ch, msg) {
-      ch.should.equal(pattern);
+    r.on('pmessage', function (pattern, ch, msg) {
+      ch.should.equal(ch);
       msg.should.equal(goodChannels[index]);
       index++;
       if(index === goodChannels.length) {
         r.punsubscribe(pattern);
-        r.end();
+        r.end(true);
         done();
       }
     });
@@ -173,8 +173,8 @@ describe("publish and subscribe", function () {
         r2.unsubscribe(channelName);
         r2.unsubscribe(doneChannel);
 
-        r.end();
-        r2.end();
+        r.end(true);
+        r2.end(true);
 
         done();
       }
@@ -204,12 +204,12 @@ describe("publish and subscribe", function () {
 
     var channelNameCallsRecieved = 0;
 
-    r.on('pmessage', function (ch, msg) {
+    r.on('pmessage', function (pattern, ch, msg) {
       ch.should.equal(channelName);
       channelNameCallsRecieved++;
     });
 
-    r2.on('pmessage', function (ch, msg) {
+    r2.on('pmessage', function (pattern, ch, msg) {
       if (ch == channelName) {
         channelNameCallsRecieved++;
       } else if (ch == doneChannel) {
@@ -218,8 +218,8 @@ describe("publish and subscribe", function () {
         r2.punsubscribe(channelName);
         r2.punsubscribe(doneChannel);
 
-        r.end();
-        r2.end();
+        r.end(true);
+        r2.end(true);
         done();
       }
     });

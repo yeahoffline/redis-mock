@@ -19,7 +19,7 @@ describe("flushdb", function () {
 
           result.should.be.equal(0);
 
-          r.end();
+          r.end(true);
           done();
         })
 
@@ -38,8 +38,8 @@ describe("auth", function () {
 
     r.auth("secret", function (err, result) {
       result.should.equal('OK');
-      r.end();
       done();
+      r.end(true); //Moved this after the done() call. For some reason, calling `end()` beforehand causes this test to fail.
     });
   });
 });

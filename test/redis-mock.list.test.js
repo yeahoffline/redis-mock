@@ -9,14 +9,14 @@ if (process.env['VALID_TESTS']) {
 describe("basic pushing/poping list", function () {
   var testKey = "myKey";
   var testKey2 = "myKey2";
-  var testValues = [1, {foo: "bar"}, 3, 4, 5];
+  var testValues = [1, JSON.stringify({foo: "bar"}), 3, 4, 5];
   var testValue = 10;
 
   it("should not get any value from the end", function (done) {
     var r = redismock.createClient();
     r.rpop(testKey, function (err, result) {
       should.not.exist(result);
-      r.end();
+      r.end(true);
       done();
     });
   });
@@ -25,7 +25,7 @@ describe("basic pushing/poping list", function () {
     var r = redismock.createClient();
     r.lpop(testKey, function (err, result) {
       should.not.exist(result);
-      r.end();
+      r.end(true);
       done();
     });
   });
@@ -36,7 +36,7 @@ describe("basic pushing/poping list", function () {
       result.should.equal(1);
       r.rpop(testKey, function (err, result) {
         result.should.equal(testValue + "");
-        r.end();
+        r.end(true);
         done();
       });
     });
@@ -48,7 +48,7 @@ describe("basic pushing/poping list", function () {
       result.should.equal(1);
       r.lpop(testKey, function (err, result) {
         result.should.equal(testValue + "");
-        r.end();
+        r.end(true);
         done();
       });
     });
@@ -62,7 +62,7 @@ describe("basic pushing/poping list", function () {
         result.should.equal(2);
         r.rpop(testKey, function (err, result) {
           result.should.equal(testValue + "");
-          r.end();
+          r.end(true);
           done();
         });
       });
@@ -77,7 +77,7 @@ describe("basic pushing/poping list", function () {
         result.should.equal(testValues[testValues.length - 1] + "");
         r.rpop(testKey2, function (err, result) {
           result.should.equal(testValues[0] + "");
-          r.end();
+          r.end(true);
           done();
         });
       });
@@ -96,7 +96,7 @@ describe("llen", function () {
 
     r.llen(testKey, function (err, result) {
       result.should.equal(0);
-      r.end();
+      r.end(true);
       done();
     });
   });
@@ -109,7 +109,7 @@ describe("llen", function () {
         r.rpop(testKey, function (err, result) {
           r.llen(testKey, function (err, result) {
             result.should.equal(testValues.length - 1);
-            r.end();
+            r.end(true);
             done();
           });
         });
@@ -138,7 +138,7 @@ describe("lindex", function () {
 
         should.not.exist(result);
 
-        r.end();
+        r.end(true);
 
         done();
       });
@@ -163,7 +163,7 @@ describe("lindex", function () {
 
             result.should.equal(testValues[testValues.length - 1] + '');
 
-            r.end();
+            r.end(true);
 
             done();
           });
@@ -191,7 +191,7 @@ describe("lindex", function () {
 
             result.should.equal(testValues[0] + '');
 
-            r.end();
+            r.end(true);
 
             done();
           });
@@ -213,7 +213,7 @@ describe("lrange", function () {
     var r = redismock.createClient();
     r.lrange(keyU, 0, -1, function (err, result) {
       result.should.be.an.Array().and.have.lengthOf(0);
-      r.end();
+      r.end(true);
       done();
     });
   });
@@ -229,7 +229,7 @@ describe("lrange", function () {
             result.should.deepEqual(["2", "3"]);
             r.lrange(key1, 2, 1, function (err, result) {
               result.should.be.an.Array().and.have.lengthOf(0);
-              r.end();
+              r.end(true);
               done();
             });
           });
@@ -248,7 +248,7 @@ describe("lrange", function () {
           result.should.deepEqual(["1", "2"]);
           r.lrange(key2, -4, -5, function (err, result) {
             result.should.be.an.Array().and.have.lengthOf(0);
-            r.end();
+            r.end(true);
             done();
           });
         });
@@ -266,7 +266,7 @@ describe("lrange", function () {
           result.should.deepEqual(["2", "3"]);
           r.lrange(key3, -4, 4, function (err, result) {
             result.should.deepEqual(["2", "3", "4", "5"]);
-            r.end();
+            r.end(true);
             done();
           });
         });
@@ -294,7 +294,7 @@ describe("lset", function () {
       err.message.should.equal("ERR no such key");
       should.not.exist(result);
 
-      r.end();
+      r.end(true);
 
       done();
     });
@@ -316,7 +316,7 @@ describe("lset", function () {
           err.message.should.equal("ERR index out of range");
           should.not.exist(result);
 
-          r.end();
+          r.end(true);
 
           done();
         });
@@ -339,7 +339,7 @@ describe("lset", function () {
 
           result.should.equal('3');
 
-          r.end();
+          r.end(true);
 
           done();
         });
@@ -362,7 +362,7 @@ describe("lset", function () {
 
           result.should.equal('3');
 
-          r.end();
+          r.end(true);
 
           done();
         });
@@ -385,7 +385,7 @@ describe("lset", function () {
 
           result.should.equal('42');
 
-          r.end();
+          r.end(true);
 
           done();
         });
@@ -408,7 +408,7 @@ describe("lset", function () {
 
           result.should.equal('45');
 
-          r.end();
+          r.end(true);
 
           done();
         });
@@ -434,7 +434,7 @@ describe("rpushx", function (argument) {
 
         should.not.exist(result);
 
-        r.end();
+        r.end(true);
 
         done();
       });
@@ -455,7 +455,7 @@ describe("rpushx", function (argument) {
 
           result.should.equal('5');
 
-          r.end();
+          r.end(true);
 
           done();
         });
@@ -479,7 +479,7 @@ describe("lpushx", function (argument) {
 
         should.not.exist(result);
 
-        r.end();
+        r.end(true);
 
         done();
       });
@@ -500,7 +500,7 @@ describe("lpushx", function (argument) {
 
           result.should.equal('5');
 
-          r.end();
+          r.end(true);
 
           done();
         });
