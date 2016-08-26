@@ -13,7 +13,7 @@ describe("select", function() {
       should.not.exist(err);
       result.should.equal('OK');
 
-      r.end();
+      r.end(true);
       done();
     });
     
@@ -26,7 +26,7 @@ describe("select", function() {
       should.not.exist(result);
       should(err).Error;
 
-      r.end();
+      r.end(true);
       done();
     }); 
   });

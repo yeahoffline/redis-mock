@@ -15,7 +15,7 @@ describe('sadd', function () {
       r.smembers('foo', function (err, result) {
         result.should.eql(['bar']);
 
-        r.end();
+        r.end(true);
         done();
       });
     });
@@ -33,7 +33,7 @@ describe('sadd', function () {
         result.should.containEql('baz');
         result.should.containEql('qux');
         
-        r.end();
+        r.end(true);
         done();
       });
     });
@@ -53,7 +53,7 @@ describe('sadd', function () {
           result.should.containEql('bar');
           result.should.containEql('baz');
 
-          r.end();
+          r.end(true);
           done();
         });
       });
@@ -68,7 +68,7 @@ describe('sadd', function () {
       r.sadd('foo', 'bar', function (err, result) {
         err.message.should.eql('WRONGTYPE Operation against a key holding the wrong kind of value');
 
-        r.end();
+        r.end(true);
         done();
       });
     });
@@ -83,7 +83,7 @@ describe('sadd', function () {
       result.should.containEql('bar');
       result.should.containEql('baz');
       
-      r.end();
+      r.end(true);
       done();
     });
   });
@@ -105,7 +105,7 @@ describe('srem', function () {
           result.should.containEql('baz');
           result.should.containEql('qux');
 
-          r.end();
+          r.end(true);
           done();
         });
       });
@@ -124,7 +124,7 @@ describe('srem', function () {
           result.should.have.length(1);
           result.should.eql([ 'qux']);
 
-          r.end();
+          r.end(true);
           done();
         });
       });
@@ -141,7 +141,7 @@ describe('srem', function () {
         r.smembers('foo', function (err, result) {
           result.should.eql([]);
 
-          r.end();
+          r.end(true);
           done();
         });
       });
@@ -155,7 +155,7 @@ describe('srem', function () {
       r.srem('baz', 'qux', function (err, result) {
         result.should.eql(0);
 
-        r.end();
+        r.end(true);
         done();
       });
     });
@@ -169,7 +169,7 @@ describe('srem', function () {
       r.srem('foo', 'bar', function (err, result) {
         err.message.should.eql('WRONGTYPE Operation against a key holding the wrong kind of value');
 
-        r.end();
+        r.end(true);
         done();
       });
     });
@@ -183,7 +183,7 @@ describe('srem', function () {
         result.should.be.instanceof(Array);
         result.should.have.length(0);
 
-        r.end();
+        r.end(true);
         done();
       });
     });
@@ -200,7 +200,7 @@ describe('scard', function () {
     r.sadd('foo', 'bar', 'baz', function (err, result) {
       r.scard('foo', function (err, result) {
         result.should.eql(2);
-        r.end();
+        r.end(true);
         done();
       });
     });
@@ -211,7 +211,7 @@ describe('scard', function () {
     r.sadd('foo', 'bar', 'baz', function (err, result) {
       r.scard('qux', function (err, result) {
         result.should.eql(0);
-        r.end();
+        r.end(true);
         done();
       });
     });
@@ -222,7 +222,7 @@ describe('scard', function () {
     r.hset('foo', 'bar', 'baz', function (err, result) {
       r.scard('foo', function (err, result) {
         err.message.should.eql('WRONGTYPE Operation against a key holding the wrong kind of value');
-        r.end();
+        r.end(true);
         done();
       });
     });

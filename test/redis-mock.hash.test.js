@@ -21,7 +21,7 @@ describe("basic hashing usage", function () {
     r.hexists(testHash, testKey, function (err, result) {
       result.should.equal(0);
 
-      r.end();
+      r.end(true);
 
       done();
 
@@ -37,7 +37,7 @@ describe("basic hashing usage", function () {
 
       result.should.equal(1);
 
-      r.end();
+      r.end(true);
 
       done();
 
@@ -65,7 +65,7 @@ describe("basic hashing usage", function () {
 
         err.message.should.equal("WRONGTYPE Operation against a key holding the wrong kind of value");
 
-        r.end();
+        r.end(true);
 
         done();
       });
@@ -79,7 +79,7 @@ describe("basic hashing usage", function () {
 
         result.should.equal(0);
 
-        r.end();
+        r.end(true);
 
         done();
 
@@ -95,7 +95,7 @@ describe("basic hashing usage", function () {
 
         result.should.equal(testValue);
 
-        r.end();
+        r.end(true);
 
         done();
 
@@ -110,7 +110,7 @@ describe("basic hashing usage", function () {
 
         should.not.exist(result);
 
-        r.end();
+        r.end(true);
 
         done();
 
@@ -126,7 +126,7 @@ describe("basic hashing usage", function () {
 
         result.should.equal(1);
 
-        r.end();
+        r.end(true);
 
         done();
 
@@ -142,7 +142,7 @@ describe("basic hashing usage", function () {
 
         result.should.equal(1);
 
-        r.end();
+        r.end(true);
 
         done();
 
@@ -158,7 +158,7 @@ describe("basic hashing usage", function () {
 
           should.not.exist(result);
 
-          r.end();
+          r.end(true);
 
           done();
 
@@ -174,7 +174,7 @@ describe("basic hashing usage", function () {
 
           result.should.equal(0);
 
-          r.end();
+          r.end(true);
 
           done();
 
@@ -191,7 +191,7 @@ describe("basic hashing usage", function () {
 
         result.should.equal(0);
 
-        r.end();
+        r.end(true);
 
         done();
 
@@ -212,7 +212,7 @@ describe("basic hashing usage", function () {
 
             result.should.equal(2);
 
-            r.end();
+            r.end(true);
 
             done();
 
@@ -239,12 +239,10 @@ describe("hincrby", function () {
       result.should.equal(2);
 
       r.hget(testHash, testKey, function (err, result) {
-        result.should.equal(2);
+        result.should.equal("2");
+        r.end(true);
+        done();
       });
-
-      r.end();
-
-      done();
     });
 
   });
@@ -266,11 +264,9 @@ describe("hincrbyfloat", function () {
 
       r.hget(testHash, testKey, function (err, result) {
         result.should.equal("2.591");
+        r.end(true);
+        done();
       });
-
-      r.end();
-
-      done();
     });
 
   });
@@ -288,7 +284,7 @@ describe("hincrbyfloat", function () {
           r.hget(testHash, testKey, function (err, result) {
               result.should.equal("5.182");
 
-              r.end();
+              r.end(true);
 
               done();
           });
@@ -327,7 +323,7 @@ describe("hsetnx", function () {
 
       result.should.equal(1);
 
-      r.end();
+      r.end(true);
 
       done();
 
@@ -349,7 +345,7 @@ describe("hsetnx", function () {
 
         result.should.equal(testValue);
 
-        r.end();
+        r.end(true);
 
         done();
 
@@ -397,7 +393,7 @@ describe("multiple get/set", function () {
 
       result.should.equal("OK");
 
-      r.end();
+      r.end(true);
 
       done();
 
@@ -413,7 +409,7 @@ describe("multiple get/set", function () {
 
       result.should.equal("OK");
 
-      r.end();
+      r.end(true);
 
       done();
 
@@ -432,7 +428,7 @@ describe("multiple get/set", function () {
       result.should.be.an.Array().and.have.lengthOf(2);
       result.should.eql([mValue1, mValue2]);
 
-      r.end();
+      r.end(true);
 
       done();
 
@@ -446,7 +442,7 @@ describe("multiple get/set", function () {
       debugger;
       result.should.be.an.Array().and.have.lengthOf(2);
       result.should.eql([null, null]);
-      r.end();
+      r.end(true);
 
       done();
     });
@@ -464,7 +460,7 @@ describe("multiple get/set", function () {
       result.indexOf(mKey3).should.not.equal(-1);
       result.indexOf(mKey4).should.not.equal(-1);
 
-      r.end();
+      r.end(true);
 
       done();
 
@@ -484,7 +480,7 @@ describe("multiple get/set", function () {
       result.should.containEql(mValue3);
       result.should.containEql(mValue4);
 
-      r.end();
+      r.end(true);
 
       done();
 
@@ -506,7 +502,7 @@ describe("multiple get/set", function () {
       result.should.have.property(mKey3, mValue3);
       result.should.have.property(mKey4, mValue4);
 
-      r.end();
+      r.end(true);
 
       done();
     });
@@ -519,7 +515,7 @@ describe("multiple get/set", function () {
 
       should.not.exist(result);
 
-      r.end();
+      r.end(true);
 
       done();
     });

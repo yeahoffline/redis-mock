@@ -14,7 +14,7 @@ describe("del", function () {
       result.should.equal(0);
       r.del("key4", function (err, result) {
         result.should.equal(0);
-        r.end();
+        r.end(true);
         done();
       });
     });
@@ -27,7 +27,7 @@ describe("del", function () {
         result.should.equal(1);
         r.get("test", function (err, result) {
           should.not.exist(result);
-          r.end();
+          r.end(true);
           done();
         });
       });
@@ -40,7 +40,7 @@ describe("del", function () {
       r.set("test2", "val2", function (err, result) {
         r.del(["test", "test2", "noexistant"], function (err, result) {
           result.should.equal(2);
-          r.end();
+          r.end(true);
           done();
         });
       });
@@ -59,7 +59,7 @@ describe("exists", function () {
 
       result.should.equal(0);
 
-      r.end();
+      r.end(true);
 
       done();
 
@@ -78,7 +78,7 @@ describe("exists", function () {
 
         r.del("test");
 
-        r.end();
+        r.end(true);
 
         done();
 
@@ -96,7 +96,7 @@ describe("expire", function () {
     var r = redismock.createClient();
     r.expire("test", 10, function (err, result) {
       result.should.equal(0);
-      r.end();
+      r.end(true);
       done();
     });
   });
@@ -107,7 +107,7 @@ describe("expire", function () {
       r.expire("test", 10, function (err, result) {
         result.should.equal(1);
         r.del("test");
-        r.end();
+        r.end(true);
         done();
       });
     });
@@ -121,7 +121,7 @@ describe("expire", function () {
         setTimeout(function () {
           r.exists("test", function (err, result) {
             result.should.equal(0);
-            r.end();
+            r.end(true);
             done();
           });
         }, 1500);
@@ -137,7 +137,7 @@ describe("expire", function () {
         setTimeout(function () {
           r.exists("test_exceeds", function (err, result) {
             result.should.equal(1);
-            r.end();
+            r.end(true);
             done();
           });
         }, 1000);
@@ -173,7 +173,7 @@ describe("ttl", function () {
 
             r.del("test");
 
-            r.end();
+            r.end(true);
 
             done();
           });
@@ -193,7 +193,7 @@ describe("ttl", function () {
 
       ttl.should.equal(-2);
 
-      r.end();
+      r.end(true);
 
       done();
     });
@@ -211,7 +211,7 @@ describe("ttl", function () {
 
         r.del("test");
 
-        r.end();
+        r.end(true);
 
         done();
       });

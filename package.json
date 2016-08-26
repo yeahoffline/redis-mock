@@ -13,7 +13,7 @@
     "eslint": "^2.10.2",
     "should": "8.3.2",
     "mocha": "2.2.1",
-    "redis": "0.12.1"
+    "redis": "^2.6.2"
   },
   "scripts": {
     "test": "make test"
@@ -45,5 +45,8 @@
     "url": "https://github.com/yeahoffline/redis-mock/issues",
     "email": "frank.gasser@gmail.com"
   },
-  "engine": "node >= 0.10.0"
+  "engine": "node >= 0.10.0",
+  "dependencies": {
+    "redis": "^2.6.2"
+  }
 }
