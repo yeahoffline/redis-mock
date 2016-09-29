@@ -254,16 +254,19 @@ describe("hincrbyfloat", function () {
   var testHash = "myHashToIncrFloat";
   var testKey = "myKeyToIncrFloat";
 
+  var num = 2.591;
+  var x2 = num * 2;
+  var x3 = num * 3;
 
   it("should increment an attribute of the hash", function (done) {
 
     var r = redismock.createClient();
 
-    r.hincrbyfloat(testHash, testKey, 2.591, function (err, result) {
-      result.should.equal("2.591");
+    r.hincrbyfloat(testHash, testKey, num, function (err, result) {
+      result.should.equal(num.toString());
 
       r.hget(testHash, testKey, function (err, result) {
-        result.should.equal("2.591");
+        result.should.equal(num.toString());
         r.end(true);
         done();
       });
@@ -275,14 +278,14 @@ describe("hincrbyfloat", function () {
 
     var r = redismock.createClient();
 
-    r.hincrbyfloat(testHash, testKey, 2.591, function (err, result) {
-      result.should.equal("2.591");
+    r.hincrbyfloat(testHash, testKey, num, function (err, result) {
+      result.should.equal(x2.toString());
 
-      r.hincrbyfloat(testHash, testKey, 2.591, function (err, result) {
-          result.should.equal("5.182");
+      r.hincrbyfloat(testHash, testKey, num, function (err, result) {
+          result.should.equal(x3.toString());
 
           r.hget(testHash, testKey, function (err, result) {
-              result.should.equal("5.182");
+              result.should.equal(x3.toString());
 
               r.end(true);
 
@@ -300,7 +303,7 @@ describe("hincrbyfloat", function () {
 
 describe("hsetnx", function () {
 
-  var testHash = "myHash";
+  var testHash = "myHashSetNx";
   var testKey = "myKey";
   var testKey2 = "myKey2";
   var testValue = "myValue";
@@ -361,6 +364,8 @@ describe("multiple get/set", function () {
 
   var mHash = "mHash";
   var mHash2 = "mHash2";
+  var mHash3 = "mHash3";
+  var mHash4 = "mHash4";
   var mHashEmpty = "mHashEmpty";
   var mKey1 = "mKey1";
   var mKey2 = "mKey2";
@@ -406,6 +411,38 @@ describe("multiple get/set", function () {
     var r = redismock.createClient();
 
     r.hmset(mHash, { mKey3: mValue3, mKey4: mValue4}, function (err, result) {
+
+      result.should.equal("OK");
+
+      r.end(true);
+
+      done();
+
+    });
+
+  });
+
+  it("should be able to set multiple keys using hash,array", function (done) {
+
+    var r = redismock.createClient();
+
+    r.hmset(mHash3, [mKey1, mValue1, mKey2, mValue2], function (err, result) {
+
+      result.should.equal("OK");
+
+      r.end(true);
+
+      done();
+
+    });
+
+  });
+
+  it("should be able to set multiple keys using array", function (done) {
+
+    var r = redismock.createClient();
+
+    r.hmset([mHash4, mKey1, mValue1, mKey2, mValue2], function (err, result) {
 
       result.should.equal("OK");
 
