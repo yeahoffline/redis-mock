@@ -253,10 +253,11 @@ describe("hincrbyfloat", function () {
 
   var testHash = "myHashToIncrFloat";
   var testKey = "myKeyToIncrFloat";
+  var testKey2 = "myKeyToIncrFloat2";
+
 
   var num = 2.591;
   var x2 = num * 2;
-  var x3 = num * 3;
 
   it("should increment an attribute of the hash", function (done) {
 
@@ -278,14 +279,14 @@ describe("hincrbyfloat", function () {
 
     var r = redismock.createClient();
 
-    r.hincrbyfloat(testHash, testKey, num, function (err, result) {
-      result.should.equal(x2.toString());
+    r.hincrbyfloat(testHash, testKey2, num, function (err, result) {
+      result.should.equal(num.toString());
 
-      r.hincrbyfloat(testHash, testKey, num, function (err, result) {
-          result.should.equal(x3.toString());
+      r.hincrbyfloat(testHash, testKey2, num, function (err, result) {
+          result.should.equal(x2.toString());
 
-          r.hget(testHash, testKey, function (err, result) {
-              result.should.equal(x3.toString());
+          r.hget(testHash, testKey2, function (err, result) {
+              result.should.equal(x2.toString());
 
               r.end(true);
 
