@@ -210,6 +210,8 @@ describe("getset", function () {
 
 describe("setex", function () {
 
+  this.timeout(5000);
+
   var r;
 
   beforeEach(function () {
