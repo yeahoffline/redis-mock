@@ -52,10 +52,11 @@ describe("multi()", function () {
 
     it("should handle extraneous callbacks", function (done) {
       var multi = r.multi();
-      multi.get('foo').incr('foo', function (err, result) {
+      multi.get('foo1').incr('foo1', function (err, result) {
         should.equal(result, 1);
         done();
       }).exec();
     });
+
   });
 });
