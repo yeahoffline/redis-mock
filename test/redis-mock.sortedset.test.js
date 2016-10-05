@@ -627,14 +627,12 @@ describe("sortedset multi commands", function () {
     var multi = r.multi();
     // smoke test that some of these work
     multi.zadd([testKey1, '1', 'm1'], function(err, result) {
-      console.log('zadd', err, result);
+      result.should.equal(1);
     });
     multi.zscore([testKey1, 'm1'], function(err, result) {
-      console.log('zscore', err, result);
       result.should.equal(String(1));
     });
     multi.exec(function(err, result) {
-      console.log(err, result);
       done();
     });
   });
