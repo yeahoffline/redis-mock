@@ -139,7 +139,6 @@ describe("zincrby", function () {
       should(result).equal('5');
 
       r.zincrby([testKey2, '5', 'm1'], function(err, result) {
-        console.log(result)
         should(result).equal('10');
         done();
       });
