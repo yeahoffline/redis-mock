@@ -58,6 +58,16 @@ describe("createString", function () {
   });
 });
 
+describe("Item.createSortedSet", function () {
+  it('should create an empty sortedset', function () {
+    var item = RedisItem.createSortedSet();
+
+    item.type.should.equal("sortedset");
+    item.expires.should.equal(-1);
+    item.value.should.eql({});
+  });
+});
+
 describe("Item.createHash", function () {
   it('should create an empty hash', function () {
     var item = RedisItem.createHash();
