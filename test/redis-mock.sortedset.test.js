@@ -18,18 +18,52 @@ if (process.env['VALID_TESTS']) {
 
 describe("zadd", function () {
   var testKey1 = "zaddKey1";
-  var testScore1 = 1;
-  var testMember1 = {'a': 'b'};
-  var testScore2 = 2;
-  var testMember2 = '2';
+  var args = [
+    1, 'm1',
+    1.1, 'm1.1',
+    1.2, 'm1.2',
+    1.3, 'm1.3',
+    1.4, 'm1.4',
+    1.5, 'm1.5',
+    2, 'm2',
+    3, 'm3',
+  ];
+
+  var aLen = args.length;
+  var mLen = aLen / 2;
   it("should add scores and members", function (done) {
     var r = redismock.createClient();
-    r.zadd(testKey1, testScore1, testMember1, testScore2, testMember2,
-      function(err, result) {
-        result.should.equal(2);
-        done()
+    r.zadd([testKey1].concat(args), function(err, result) {
+      result.should.equal(mLen);
+      // should only add new members
+      r.zadd([testKey1, 'nx', 1, 'm1', 4, 'm4'], function(err, result) {
+        result.should.equal(1);
+
+        // only update existing members
+        // this won't bump the return count
+        // because CH wasn't specified
+        r.zadd([testKey1, 'xx', 6, 'm6', 4.1, 'm4'], function(err, result) {
+          result.should.equal(0);
+
+          // only update existing members and bump return count
+          r.zadd([testKey1, 'xx', 'ch', 6, 'm6', 4.2, 'm4'], function(err, result) {
+            result.should.equal(1);
+
+            // update an existing score w/ incr;
+            r.zadd([testKey1, 'xx', 'ch', 'incr', 1, 'm4'], function(err, result) {
+              result.should.equal(1);
+              done();
+            });
+
+          });
+
+        });
+
+      });
+
     });
   });
+
 });
 
 describe("zcard", function () {
