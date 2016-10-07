@@ -823,3 +823,96 @@ describe("blpop", function () {
     }, 1500);
   });
 });
+
+describe("ltrim", function(argument) {
+  var testKey = "myKey10";
+  var testKey2 = "myKey11";
+  var testKey3 = "myKey12";
+  var testKey4 = "myKey13";
+  var keyUndefined = "keyUndefined";
+  var keyUndefined2 = "keyUndefined2";
+  var testValues = [1, 2, 3, 4, 5];
+
+  it("does nothing for a non-existent list", function(done) {
+    var r = redismock.createClient();
+    
+    r.ltrim(testKey, 0, 2, function(err, result) {
+      result.should.equal('OK');
+      r.end(true);
+      done();
+    });
+  });
+
+  it("removes the whole list when start/end outside list length", function(done) {
+    var r = redismock.createClient();
+    r.rpush(testKey, 1, 2, 3, 4, 5, function(err, result) {
+      r.ltrim(testKey, 5, 8, function(err, result) {
+        result.should.equal('OK');
+        r.lrange(testKey, 0, 4, function(err, result) {
+          result.should.have.length(0);
+          r.end(true);
+          done();
+        });
+      });
+    });
+  });
+
+  it("removes the whole list when start > end", function(done) {
+    var r = redismock.createClient();
+    r.rpush(testKey, 1, 2, 3, 4, 5, function(err, result) {
+      r.ltrim(testKey, 3, 2, function(err, result) {
+        result.should.equal('OK');
+        r.lrange(testKey, 0, 4, function(err, result) {
+          result.should.have.length(0);
+          r.end(true);
+          done();
+        });
+      });
+    });
+  });
+
+  it("trims correctly for positive numbers", function(done) {
+    var r = redismock.createClient();
+    r.rpush(testKey, 1, 2, 3, 4, 5, function(err, result) {
+      r.ltrim(testKey, 0, 2, function(err, result) {
+        result.should.equal('OK');
+        r.lrange(testKey, 0, 2, function(err, result) {
+          // result.should.have.length(3);
+          result.should.be.eql(["1", "2", "3"]);
+          r.end(true);
+          done();
+        });
+      });
+    });
+  });
+
+  it("trims correctly for negative numbers", function(done) {
+    var r = redismock.createClient();
+    r.rpush(testKey, 1, 2, 3, 4, 5, function(err, result) {
+      r.ltrim(testKey, -2, -1, function(err, result) {
+        result.should.equal('OK');
+        r.lrange(testKey, 0, 2, function(err, result) {
+          // result.should.have.length(3);
+          result.should.be.eql(["4", "5"]);
+          r.end(true);
+          done();
+        });
+      });
+    });
+  });
+
+  it("trims correctly for end > len", function(done) {
+    var r = redismock.createClient();
+    r.rpush(testKey2, 1, 2, 3, 4, 5, function(err, result) {
+      r.ltrim(testKey2, 1, 5, function(err, result) {
+        result.should.equal('OK');
+        r.lrange(testKey2, 0, 8, function(err, result) {
+          // result.should.have.length(3);
+          result.should.be.eql(["2", "3", "4", "5"]);
+          r.end(true);
+          done();
+        });
+      });
+    });
+  });
+});
