@@ -32,7 +32,7 @@ describe('sadd', function () {
         result.should.containEql('bar');
         result.should.containEql('baz');
         result.should.containEql('qux');
-        
+
         r.end(true);
         done();
       });
@@ -82,7 +82,7 @@ describe('sadd', function () {
       result.should.have.length(2);
       result.should.containEql('bar');
       result.should.containEql('baz');
-      
+
       r.end(true);
       done();
     });
@@ -184,6 +184,21 @@ describe('srem', function () {
         result.should.have.length(0);
 
         r.end(true);
+        done();
+      });
+    });
+  });
+
+});
+
+describe('sismember', function () {
+
+  it('should test if member exists', function (done) {
+
+    var r = redismock.createClient();
+    r.sadd('foo2', 'bar', 'baz', 'qux', function (err, result) {
+      r.sismember('foo2', 'bar', function (err, result) {
+        result.should.eql(1);
         done();
       });
     });

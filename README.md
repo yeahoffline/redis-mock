@@ -114,12 +114,26 @@ Currently implemented are the following redis commands:
 * srem
 * smembers
 * scard
+* sismember
+
+### Sorted Sets
+* zadd
+* zcard
+* zcount
+* zincrby
+* zrange
+* zrangebyscore
+* zrank
+* zrem
+* zremrangebyrank
+* zremrangebyscore
+* zrevrange
+* zrevrank
+* zscore
 
 ### Server
 * flushdb
 * flushall
-
-
 
 
 # Cross verification
