@@ -54,6 +54,30 @@ describe("basic pushing/poping list", function () {
     });
   });
 
+  it("should check a single rpush array arg works", function (done) {
+    var r = redismock.createClient();
+    r.rpush([testKey, testValue], function (err, result) {
+      result.should.equal(1);
+      r.rpop(testKey, function (err, result) {
+        result.should.equal(testValue + "");
+        r.end(true);
+        done();
+      });
+    });
+  });
+
+  it("should check a single lpush array arg works", function (done) {
+    var r = redismock.createClient();
+    r.lpush([testKey, testValue], function (err, result) {
+      result.should.equal(1);
+      r.rpop(testKey, function (err, result) {
+        result.should.equal(testValue + "");
+        r.end(true);
+        done();
+      });
+    });
+  });
+
   it("should be a queue", function (done) {
     var r = redismock.createClient();
     r.lpush(testKey, testValue, function (err, result) {
