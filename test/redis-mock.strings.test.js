@@ -124,6 +124,70 @@ describe("set", function () {
     });
   });
 
+  it("should set a key with px", function (done) {
+
+    var r = redismock.createClient();
+
+    r.set("foo", "bar", "px", 1000, function (err, result) {
+      result.should.equal("OK");
+
+      r.get("foo", function (err, result) {
+
+        result.should.equal("bar");
+
+        setTimeout(function () {
+          r.exists("foo", function (err, result) {
+            result.should.equal(0);
+            r.end(true);
+            done();
+          });
+        }, 1100);
+
+      });
+    });
+  });
+
+  it("should set a key with PX and NX", function (done) {
+
+    var r = redismock.createClient();
+
+    r.set("foo", "bar", "NX", "PX", 1000, function (err, result) {
+      result.should.equal("OK");
+
+      r.get("foo", function (err, result) {
+
+        result.should.equal("bar");
+
+        setTimeout(function () {
+          r.exists("foo", function (err, result) {
+            result.should.equal(0);
+            r.end(true);
+            done();
+          });
+        }, 1100);
+
+      });
+    });
+  });
+
+  it("should not set a key with PX and NX", function (done) {
+
+    var r = redismock.createClient();
+
+    r.set("foo", "bar", function (err, result) {
+      result.should.equal("OK");
+
+      r.set("foo", "bar", "NX", "PX", 1000, function (err, result) {
+        (err === null).should.be.true;
+        (result === null).should.be.true;
+
+        r.end(true);
+        done();
+
+      });
+    });
+  });
+
 });
 
 
