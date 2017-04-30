@@ -915,4 +915,19 @@ describe("ltrim", function(argument) {
       });
     });
   });
+
+  it("trims correctly for one negativ number", function(done) {
+    var r = redismock.createClient();
+    r.rpush(testKey3, 1, 2, 3, 4, 5, function(err, result) {
+      r.ltrim(testKey3, 1, -1, function(err, result) {
+        result.should.equal('OK');
+        r.lrange(testKey3, 0, 5, function(err, result) {
+          // result.should.have.length(3);
+          result.should.be.eql(["2", "3", "4", "5"]);
+          r.end(true);
+          done();
+        });
+      });
+    });
+  });
 });
