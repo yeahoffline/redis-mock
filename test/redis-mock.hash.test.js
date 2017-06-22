@@ -45,6 +45,26 @@ describe("basic hashing usage", function () {
 
   });
 
+  it("should toString on non-string values", function (done) {
+    var testArray = [1,2,3];
+    var r = redismock.createClient();
+
+    r.hset(testHash, testKey, testArray, function (err, result) {
+
+      r.hget(testHash, testKey, function (err, result) {
+
+        result.should.equal(testArray.toString());
+
+        r.end(true);
+
+        done();
+
+      });
+
+    });
+
+  });
+
   describe("more complex set/get/exist...", function () {
 
     beforeEach(function (done) {
@@ -477,7 +497,6 @@ describe("multiple get/set", function () {
     var r = redismock.createClient();
 
     r.hmget("random", mKey1, mKey2, function (err, result) {
-      debugger;
       result.should.be.an.Array().and.have.lengthOf(2);
       result.should.eql([null, null]);
       r.end(true);
