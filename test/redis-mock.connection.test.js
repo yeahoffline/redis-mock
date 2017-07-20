@@ -30,4 +30,11 @@ describe("select", function() {
       done();
     }); 
   });
+  
+  it('should not ensist on a callback', function() {
+    var r = redismock.createClient();
+
+    r.select(3);
+  });  
+  
 }); 
