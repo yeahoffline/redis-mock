@@ -39,7 +39,7 @@ describe("multi()", function () {
 
     it("should handle an array of commands", function (done) {
       r.set('foo', 3, function () {
-        var mulit = r.multi([
+        r.multi([
           ['get', 'foo'],
           ['incr', 'foo']
         ]).exec(function (err, results) {
