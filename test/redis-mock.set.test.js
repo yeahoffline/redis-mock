@@ -406,8 +406,6 @@ describe('smove', function () {
           done();
         });
       });
-
     });
   });
-
 });
