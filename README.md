@@ -41,6 +41,8 @@ Currently implemented are the following redis commands:
 * auth
 * end
 * multi
+  * exec
+  * discard
 
 ### Events
 * ready
