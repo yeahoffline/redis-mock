@@ -45,8 +45,5 @@
     "url": "https://github.com/yeahoffline/redis-mock/issues",
     "email": "frank.gasser@gmail.com"
   },
-  "engine": "node >= 0.10.0",
-  "dependencies": {
-    "redis": "^2.6.2"
-  }
+  "engine": "node >= 0.10.0"
 }

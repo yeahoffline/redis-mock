@@ -300,7 +300,7 @@ describe("setex", function () {
     r.setex(key, 1, "val", cb)
 
     function cb(err, result) {
-      result.should.be.ok;
+      result.should.be.ok();
 
       setTimeout(function () {
         r.exists(key, function (err, result) {
@@ -379,7 +379,7 @@ describe("mget", function () {
       r.set("multi3", "three", function (err, result) {
 
         r.mget("multi1", "multi2", "multi3", function (err, result) {
-          result.should.be.ok;
+          result.should.be.ok();
 
           result[0].should.equal("one");
 
