@@ -374,26 +374,90 @@ describe("mget", function () {
 
     var r = redismock.createClient();
 
-    r.set("multi1", "one", function (err, result) {
+    r.mset(["multi1", "one", "multi3", "three"], function (err, result) {
+      r.mget("multi1", "multi2", "multi3", function (err, result) {
+        result.should.be.ok();
 
-      r.set("multi3", "three", function (err, result) {
+        result[0].should.equal("one");
 
-        r.mget("multi1", "multi2", "multi3", function (err, result) {
-          result.should.be.ok();
+        should.not.exist(result[1]);
 
-          result[0].should.equal("one");
+        result[2].should.equal("three");
 
-          should.not.exist(result[1]);
-
-          result[2].should.equal("three");
-
-          r.end(true);
-          done();
-        });
+        r.end(true);
+        done();
 
       });
     });
   });
+});
+
+describe("mset", function () {
+
+  it("should set multiple keys at once using an array", function (done) {
+
+    var r = redismock.createClient();
+
+    r.mset(["msetkey1", 1, "msetkey2", 2], function (err, result) {
+      result.should.be.eql("OK");
+
+      r.mget(["msetkey1", "msetkey2"], function (err, results) {
+        results.should.deepEqual(["1", "2"]);
+        r.end(true);
+        done();
+      });
+    });
+  });
+
+  it("should set multiple keys at once using arguments", function (done) {
+
+    var r = redismock.createClient();
+
+    r.mset("msetkey1", 3, "msetkey2", 4, function (err, result) {
+      result.should.be.eql("OK");
+
+      r.mget(["msetkey1", "msetkey2"], function (err, results) {
+        results.should.deepEqual(["3", "4"]);
+        r.end(true);
+        done();
+      });
+    });
+  });
+
+
+  it("should fail when passed an array of odd length", function (done) {
+
+    var r = redismock.createClient();
+
+    r.mset(["failkey1", 1, "failkey2"], function (err, result) {
+      err.should.be.ok();
+      r.end(true);
+      done();
+    });
+  });
+
+  it("should fail when passing no arguments", function (done) {
+
+    var r = redismock.createClient();
+
+    r.mset(function (err, result) {
+      err.should.be.ok();
+      r.end(true);
+      done();
+    });
+  });
+
+  it("should fail when passing an empty array", function (done) {
+
+    var r = redismock.createClient();
+
+    r.mset([], function (err, result) {
+      err.should.be.ok();
+      r.end(true);
+      done();
+    });
+  });
+
 });
 
 describe("incr", function () {
