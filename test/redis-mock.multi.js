@@ -79,6 +79,22 @@ describe("multi()", function () {
           done();
         });
     });
+
+    it("should run atomically with its own callbacks", function (done) {
+      var multi = r.multi();
+      multi.set('key', 0, function() {
+        r.set('key', 0)
+      });
+      multi.incr('key', function() {
+        r.incr('key');
+      });
+      multi.exec(function() {
+        r.get('key', function(err, value) {
+          value.should.eql('1')
+          done();
+        });
+      });
+    });
   });
 
   describe("discard()", function () {
