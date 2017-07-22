@@ -460,6 +460,43 @@ describe("mset", function () {
 
 });
 
+describe("msetnx", function () {
+
+  it("should be able to set multiple non-existing keys", function (done) {
+
+    var r = redismock.createClient();
+
+    r.msetnx(["msetnxkey1", 1, "msetnxkey2", 2], function (err, result) {
+      result.should.be.eql(1);
+
+      r.mget(["msetnxkey1", "msetnxkey2"], function (err, results) {
+        results.should.deepEqual(["1", "2"]);
+        r.end(true);
+        done();
+      });
+    });
+  });
+
+  it("should fail to set any key if a single one exists already", function (done) {
+
+    var r = redismock.createClient();
+
+    r.set("msetnxkey1", 1, function (err, result) {
+
+      r.msetnx(["msetnxkey1", 1, "msetnxkey3", 3], function (err, result) {
+        result.should.be.eql(0);
+
+        r.mget(["msetnxkey1", "msetnxkey3"], function (err, results) {
+          results.should.deepEqual(["1", null]);
+          r.end(true);
+          done();
+        });
+      });
+    });
+  });
+
+});
+
 describe("incr", function () {
 
   it("should increment the number stored at key", function (done) {

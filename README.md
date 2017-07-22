@@ -79,6 +79,7 @@ Currently implemented are the following redis commands:
 * getset
 * mget
 * mset
+* msetnx
 * setex
 * setnx
 * ping
