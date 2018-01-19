@@ -251,8 +251,8 @@ describe('srandmember', function () {
     var r = redismock.createClient();
 
     r.sadd('foo', 'bar', 'baz', function (err, result) {
-      r.scard('qux', function (err, result) {
-        result.should.eql(0);
+      r.srandmember('foo', function (err, result) {
+        ['bar', 'baz'].should.containEql(result);
         r.end(true);
         done();
       });
@@ -289,7 +289,7 @@ describe('srandmember', function () {
 
     r.sadd('foo', 'bar', 'baz', function (err, result) {
       r.srandmember('qux', function (err, result) {
-        result.should.eql(null);
+        should(result).be.null();
         r.end(true);
         done();
       });
@@ -300,7 +300,7 @@ describe('srandmember', function () {
     var r = redismock.createClient();
 
     r.srandmember('foo', 2, function (err, result) {
-      result.should.be.an.Array();
+      should(result).be.Array();
       r.end(true);
       done();
     });
