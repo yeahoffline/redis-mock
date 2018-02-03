@@ -204,9 +204,51 @@ describe('sismember', function () {
     });
   });
 
+  it('should test if member not exists', function (done) {
+    var r = redismock.createClient();
+    r.sadd('foo3',  'baz', 'qux', function (err, result) {
+      r.sismember('foo2', 'bar', function (err, result) {
+        result.should.eql(0);
+        done();
+      });
+    });
+  });
+
+  it('should test if set not exists', function (done) {
+      var r = redismock.createClient();
+      r.sismember('foo4', 'bar', function (err, result) {
+        result.should.eql(0);
+        done();
+      });
+  });
 });
 
 // TODO: Add tests of SMEMBERS
+
+describe('smembers', function () {
+
+  it('should return the empty array', function (done) {
+    var r = redismock.createClient();
+    r.smembers("foo", function (err, result) {
+      result.should.be.instanceof(Array);
+      result.should.have.length(0);
+      done();
+    })
+  });
+
+  it('should return the empty array after all existing members', function (done) {
+    var r = redismock.createClient();
+    r.sadd('foo', 'bar', function (err, result) {
+      r.srem('foo', 'bar', function (err, result) {
+        r.smembers('foo', function (err, result) {
+          result.should.be.instanceof(Array);
+          result.should.have.length(0);
+          done();
+        });
+      });
+    });
+  });
+});
 
 describe('scard', function () {
 
