@@ -236,7 +236,7 @@ describe('smembers', function () {
     })
   });
 
-  it('should return the empty array after all existing members', function (done) {
+  it('should return the empty array when all members removed from set', function (done) {
     var r = redismock.createClient();
     r.sadd('foo', 'bar', function (err, result) {
       r.srem('foo', 'bar', function (err, result) {
