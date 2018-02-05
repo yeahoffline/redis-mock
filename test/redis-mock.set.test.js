@@ -225,6 +225,31 @@ describe('sismember', function () {
 
 // TODO: Add tests of SMEMBERS
 
+describe('smembers', function () {
+
+  it('should return the empty array', function (done) {
+    var r = redismock.createClient();
+    r.smembers("foo", function (err, result) {
+      result.should.be.instanceof(Array);
+      result.should.have.length(0);
+      done();
+    })
+  });
+
+  it('should return the empty array when all members removed from set', function (done) {
+    var r = redismock.createClient();
+    r.sadd('foo', 'bar', function (err, result) {
+      r.srem('foo', 'bar', function (err, result) {
+        r.smembers('foo', function (err, result) {
+          result.should.be.instanceof(Array);
+          result.should.have.length(0);
+          done();
+        });
+      });
+    });
+  });
+});
+
 describe('scard', function () {
 
   it('should return the number of elements', function (done) {
