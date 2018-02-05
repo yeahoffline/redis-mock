@@ -220,6 +220,67 @@ describe("ttl", function () {
 
 });
 
+describe("pttl", function () {
+  var r;
+  beforeEach(function () {
+    r = redismock.createClient();
+  });
+
+  it("should return remaining time before expiration in milliseconds", function (done) {
+    r.set("test", "test", function (err, result) {
+      r.expire("test", 100, function (err, result) {
+        result.should.equal(1);
+
+        setTimeout(function () {
+          r.pttl("test", function (err, pttl) {
+            if (err) {
+              done(err);
+            }
+
+            pttl.should.be.within(98000, 99000);
+            r.del("test");
+            r.end(true);
+
+            done();
+          });
+        }, 1500);
+      });
+
+    });
+
+  });
+
+  it("should return -2 for non-existing key", function (done) {
+    r.pttl("test", function (err, ttl) {
+      if (err) {
+        done(err);
+      }
+
+      ttl.should.equal(-2);
+      r.end(true);
+
+      done();
+    });
+  });
+
+  it("should return -1 for an existing key with no EXPIRE", function (done) {
+    r.set("test", "test", function (err, result) {
+      r.pttl("test", function (err, ttl) {
+        if (err) {
+          done(err);
+        }
+
+        ttl.should.equal(-1);
+        r.del("test");
+        r.end(true);
+
+        done();
+      });
+    });
+  });
+
+});
+
 describe("keys", function () {
 
   var r = redismock.createClient();
@@ -250,7 +311,7 @@ describe("keys", function () {
       keys.should.have.length(2);
       keys.should.containEql('hello');
       keys.should.containEql('hallo');
-      
+
       done();
     });
   });
@@ -273,7 +334,7 @@ describe("keys", function () {
       keys.should.containEql('hello');
       keys.should.containEql('hallo');
       keys.should.containEql('hxlo');
-      
+
       done();
     });
   });
