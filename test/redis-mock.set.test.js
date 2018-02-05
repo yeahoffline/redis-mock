@@ -194,7 +194,6 @@ describe('srem', function () {
 describe('sismember', function () {
 
   it('should test if member exists', function (done) {
-
     var r = redismock.createClient();
     r.sadd('foo2', 'bar', 'baz', 'qux', function (err, result) {
       r.sismember('foo2', 'bar', function (err, result) {
@@ -204,23 +203,24 @@ describe('sismember', function () {
     });
   });
 
-  it('should test if member not exists', function (done) {
+  it('should return 0 if member does not exist', function(done) {
     var r = redismock.createClient();
-    r.sadd('foo3',  'baz', 'qux', function (err, result) {
-      r.sismember('foo2', 'bar', function (err, result) {
+    r.sadd('foo2', 'bar', 'baz', function (err, result) {
+      r.sismember('foo2', 'qux', function(err, result) {
         result.should.eql(0);
         done();
       });
     });
   });
 
-  it('should test if set not exists', function (done) {
-      var r = redismock.createClient();
-      r.sismember('foo4', 'bar', function (err, result) {
-        result.should.eql(0);
-        done();
-      });
+  it('should return 0 if key is not set', function(done) {
+    var r = redismock.createClient();
+    r.sismember('foo3', 'bar', function(err, result) {
+      result.should.eql(0);
+      done();
+    });
   });
+
 });
 
 // TODO: Add tests of SMEMBERS
@@ -278,6 +278,80 @@ describe('scard', function () {
     var r = redismock.createClient();
     r.hset('foo', 'bar', 'baz', function (err, result) {
       r.scard('foo', function (err, result) {
+        err.message.should.eql('WRONGTYPE Operation against a key holding the wrong kind of value');
+        r.end(true);
+        done();
+      });
+    });
+  });
+
+});
+
+describe('srandmember', function () {
+
+  it('should return a string from a set', function (done) {
+    var r = redismock.createClient();
+
+    r.sadd('foo', 'bar', 'baz', function (err, result) {
+      r.srandmember('foo', function (err, result) {
+        ['bar', 'baz'].should.containEql(result);
+        r.end(true);
+        done();
+      });
+    });
+  });
+
+  it('should return an array from a set if a length param is provided', function (done) {
+    var r = redismock.createClient();
+
+    r.sadd('foo', 'bar', 'baz', 'bazing', function (err, result) {
+      r.srandmember('foo', 2, function (err, result) {
+        result.should.have.length(2);
+        r.end(true);
+        done();
+      });
+    });
+
+  });
+
+  it('should return an array that does not exceed the size of the set', function (done) {
+    var r = redismock.createClient();
+
+    r.sadd('foo', 'bar', 'baz', function (err, result) {
+      r.srandmember('foo', 3, function (err, result) {
+        result.should.have.length(2);
+        r.end(true);
+        done();
+      });
+    });
+  });
+
+  it('should return null if the key does not exist and no length is provided', function (done) {
+    var r = redismock.createClient();
+
+    r.sadd('foo', 'bar', 'baz', function (err, result) {
+      r.srandmember('qux', function (err, result) {
+        should(result).be.null();
+        r.end(true);
+        done();
+      });
+    });
+  });
+
+  it('should return an empty array if the key does not exist and a length is provided', function (done) {
+    var r = redismock.createClient();
+
+    r.srandmember('foo', 2, function (err, result) {
+      should(result).be.Array();
+      r.end(true);
+      done();
+    });
+  });
+
+  it('should return error when the value stored at the key is not a set', function (done) {
+    var r = redismock.createClient();
+    r.hset('foo', 'bar', 'baz', function (err, result) {
+      r.srandmember('foo', function (err, result) {
         err.message.should.eql('WRONGTYPE Operation against a key holding the wrong kind of value');
         r.end(true);
         done();
