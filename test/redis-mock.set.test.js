@@ -194,13 +194,30 @@ describe('srem', function () {
 describe('sismember', function () {
 
   it('should test if member exists', function (done) {
-
     var r = redismock.createClient();
     r.sadd('foo2', 'bar', 'baz', 'qux', function (err, result) {
       r.sismember('foo2', 'bar', function (err, result) {
         result.should.eql(1);
         done();
       });
+    });
+  });
+
+  it('should return 0 if member does not exist', function(done) {
+    var r = redismock.createClient();
+    r.sadd('foo2', 'bar', 'baz', function (err, result) {
+      r.sismember('foo2', 'qux', function(err, result) {
+        result.should.eql(0);
+        done();
+      });
+    });
+  });
+
+  it('should return 0 if key is not set', function(done) {
+    var r = redismock.createClient();
+    r.sismember('foo3', 'bar', function(err, result) {
+      result.should.eql(0);
+      done();
     });
   });
 
