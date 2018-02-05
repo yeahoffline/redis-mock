@@ -5,6 +5,9 @@ FLAGS=--reporter $(REPORTER)
 run-tests:
 	@./node_modules/.bin/mocha --timeout 3000 $(TESTS) $(FLAGS)
 
+watch-tests:
+	@./node_modules/.bin/mocha --timeout 3000 --watch $(TESTS) $(FLAGS)
+
 test:
 	@$(MAKE) NODE_PATH=lib TESTS="$(ALL_TESTS)" run-tests
 
