@@ -245,6 +245,80 @@ describe('scard', function () {
 
 });
 
+describe('srandmember', function () {
+
+  it('should return a string from a set', function (done) {
+    var r = redismock.createClient();
+
+    r.sadd('foo', 'bar', 'baz', function (err, result) {
+      r.srandmember('foo', function (err, result) {
+        ['bar', 'baz'].should.containEql(result);
+        r.end(true);
+        done();
+      });
+    });
+  });
+
+  it('should return an array from a set if a length param is provided', function (done) {
+    var r = redismock.createClient();
+
+    r.sadd('foo', 'bar', 'baz', 'bazing', function (err, result) {
+      r.srandmember('foo', 2, function (err, result) {
+        result.should.have.length(2);
+        r.end(true);
+        done();
+      });
+    });
+
+  });
+
+  it('should return an array that does not exceed the size of the set', function (done) {
+    var r = redismock.createClient();
+
+    r.sadd('foo', 'bar', 'baz', function (err, result) {
+      r.srandmember('foo', 3, function (err, result) {
+        result.should.have.length(2);
+        r.end(true);
+        done();
+      });
+    });
+  });
+
+  it('should return null if the key does not exist and no length is provided', function (done) {
+    var r = redismock.createClient();
+
+    r.sadd('foo', 'bar', 'baz', function (err, result) {
+      r.srandmember('qux', function (err, result) {
+        should(result).be.null();
+        r.end(true);
+        done();
+      });
+    });
+  });
+
+  it('should return an empty array if the key does not exist and a length is provided', function (done) {
+    var r = redismock.createClient();
+
+    r.srandmember('foo', 2, function (err, result) {
+      should(result).be.Array();
+      r.end(true);
+      done();
+    });
+  });
+
+  it('should return error when the value stored at the key is not a set', function (done) {
+    var r = redismock.createClient();
+    r.hset('foo', 'bar', 'baz', function (err, result) {
+      r.srandmember('foo', function (err, result) {
+        err.message.should.eql('WRONGTYPE Operation against a key holding the wrong kind of value');
+        r.end(true);
+        done();
+      });
+    });
+  });
+
+});
+
 describe('smove', function () {
 
   it('should remove the element from the source if it exists', function (done) {
