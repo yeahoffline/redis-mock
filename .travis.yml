@@ -5,6 +5,7 @@ node_js:
   - "7"
   - "8"
   - "9"
+  - "stable"
 services:
   - redis-server
 script: make check-tests && npm test
