@@ -439,7 +439,9 @@ describe("zrevrange", function () {
     1.2, 'm1.2',
     1.3, 'm1.3',
     1.4, 'm1.4',
-    1.5, 'm1.5'
+    1.5, 'm1.5',
+    10, 'm10',
+    10, 'm11'
   ];
 
   var aLen = args.length;
@@ -450,8 +452,10 @@ describe("zrevrange", function () {
     r.zadd([testKey1].concat(args), function(err, result) {
       result.should.equal(mLen);
       r.zrevrange([testKey1, '0', '-1', 'withscores'], function(err, result) {
-        should(result[0]).equal('m3');
-        should(result[1]).equal('3');
+        should(result[0]).equal('m11');
+        should(result[1]).equal('10');
+        should(result[2]).equal('m10');
+        should(result[3]).equal('10');
         should(result.length).equal(aLen);
         done();
       });
@@ -463,10 +467,10 @@ describe("zrevrange", function () {
     r.zadd([testKey2].concat(args), function(err, result) {
       result.should.equal(mLen);
       r.zrevrange([testKey2, '1', '5', 'withscores'], function(err, result) {
-        should(result[0]).equal('m2');
-        should(result[1]).equal('2');
-        should(result[2]).equal('m1.5');
-        should(result[3]).equal('1.5');
+        should(result[0]).equal('m10');
+        should(result[1]).equal('10');
+        should(result[2]).equal('m3');
+        should(result[3]).equal('3');
         should(result.length).equal(5 * 2);
         done();
       });
@@ -477,9 +481,9 @@ describe("zrevrange", function () {
     var r = redismock.createClient();
     r.zadd([testKey3].concat(args), function(err, result) {
       r.zrevrange([testKey3, '0', '-1'], function(err, result) {
-        should(result[0]).equal('m3');
-        should(result[1]).equal('m2');
-        should(result[2]).equal('m1.5');
+        should(result[0]).equal('m11');
+        should(result[1]).equal('m10');
+        should(result[2]).equal('m3');
         should(result.length).equal(mLen);
         done();
       });
@@ -491,8 +495,8 @@ describe("zrevrange", function () {
     r.zadd([testKey4].concat(args), function(err, result) {
       result.should.equal(mLen);
       r.zrevrange([testKey4, '1', '5'], function(err, result) {
-        should(result[0]).equal('m2');
-        should(result[1]).equal('m1.5');
+        should(result[0]).equal('m10');
+        should(result[1]).equal('m3');
         should(result.length).equal(5);
         done();
       });
