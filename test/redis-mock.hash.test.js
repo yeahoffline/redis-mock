@@ -425,7 +425,35 @@ describe("multiple get/set", function () {
 
     });
   });
+  it("should be able to set multiple keys as array", function (done) {
 
+    var r = redismock.createClient();
+
+    r.hmset(mHash, [mKey1, mValue1, mKey2, mValue2], function (err, result) {
+
+      result.should.equal("OK");
+
+      r.end(true);
+
+      done();
+
+    });
+  });
+
+  it("should be able to set hash and multiple keys as array", function (done) {
+
+    var r = redismock.createClient();
+
+    r.hmset([mHash, mKey1, mValue1, mKey2, mValue2], function (err, result) {
+
+      result.should.equal("OK");
+
+      r.end(true);
+
+      done();
+
+    });
+  });
   it("should be able to set multiple keys as an object", function (done) {
 
 
