@@ -42,6 +42,42 @@ describe("set", function () {
     });
   });
 
+  it("should allow arrays as first argument to the set function", function (done) {
+
+    var r = redismock.createClient();
+
+    r.set(["foo", "bar"], function (err, result) {
+      result.should.equal("OK");
+
+          r.get("foo", function (err, result) {
+
+            result.should.equal("bar");
+
+            r.end(true);
+
+            done();
+
+          });
+    });
+  });
+  it("should allow redis arguments to the set function", function (done) {
+
+    var r = redismock.createClient();
+
+    r.set("foo", "bar", 'EX', 10, function (err, result) {
+      result.should.equal("OK");
+
+          r.get("foo", function (err, result) {
+
+            result.should.equal("bar");
+
+            r.end(true);
+
+            done();
+
+          });
+    });
+  });
   it("should toString() values", function (done) {
 
     var r = redismock.createClient();
