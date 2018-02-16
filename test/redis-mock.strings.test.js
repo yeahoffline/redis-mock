@@ -1,20 +1,23 @@
-var redismock = require("../");
 var should = require("should");
 var events = require("events");
+var helpers = require("./helpers");
 
-if (process.env['VALID_TESTS']) {
-  redismock = require('redis');
-}
+var r;
+
+beforeEach(function () {
+  r = helpers.createClient();
+});
+
+afterEach(function () {
+  r.flushall();
+});
+
 
 describe("ping", function () {
   it("should return PONG", function (done) {
 
-    var r = redismock.createClient();
-
     r.ping(function (err, result) {
       result.should.equal("PONG");
-
-      r.end(true);
 
       done();
 
@@ -25,8 +28,6 @@ describe("ping", function () {
 describe("set", function () {
   it("should set a key", function (done) {
 
-    var r = redismock.createClient();
-
     r.set("foo", "bar", function (err, result) {
       result.should.equal("OK");
 
@@ -34,17 +35,22 @@ describe("set", function () {
 
             result.should.equal("bar");
 
-            r.end(true);
-
             done();
 
           });
     });
   });
 
-  it("should allow arrays as first argument to the set function", function (done) {
+  it("should allow buffers as second argument to the set function", function (done) {
+    r.set("foo", new Buffer("bar"), function (err, result) {
+      (err === null).should.be.true;
+      (result instanceof Buffer).should.be.true;
+      result.toString().should.equal("OK");
+      done();
+    });
+  });
 
-    var r = redismock.createClient();
+  it("should allow arrays as first argument to the set function", function (done) {
 
     r.set(["foo", "bar"], function (err, result) {
       result.should.equal("OK");
@@ -53,16 +59,13 @@ describe("set", function () {
 
             result.should.equal("bar");
 
-            r.end(true);
-
             done();
 
           });
     });
   });
-  it("should allow redis arguments to the set function", function (done) {
 
-    var r = redismock.createClient();
+  it("should allow redis arguments to the set function", function (done) {
 
     r.set("foo", "bar", 'EX', 10, function (err, result) {
       result.should.equal("OK");
@@ -71,16 +74,13 @@ describe("set", function () {
 
             result.should.equal("bar");
 
-            r.end(true);
-
             done();
 
           });
     });
   });
-  it("should toString() values", function (done) {
 
-    var r = redismock.createClient();
+  it("should call toString() on non-buffer, non-string values", function (done) {
 
     r.set("foo", {probably_not:'desired'}, function (err, result) {
       result.should.equal("OK");
@@ -89,7 +89,6 @@ describe("set", function () {
 
         result.should.equal("[object Object]");
 
-        r.end(true);
         done();
 
       });
@@ -97,8 +96,6 @@ describe("set", function () {
   });
 
   it("should set a key with ex", function (done) {
-
-    var r = redismock.createClient();
 
     r.set("foo", "bar", "ex", 1, function (err, result) {
       result.should.equal("OK");
@@ -110,7 +107,6 @@ describe("set", function () {
             setTimeout(function () {
               r.exists("foo", function (err, result) {
                 result.should.equal(0);
-                r.end(true);
                 done();
               });
             }, 1100);
@@ -120,8 +116,6 @@ describe("set", function () {
   });
 
   it("should set a key with EX and NX", function (done) {
-
-    var r = redismock.createClient();
 
     r.set("foo", "bar", "NX", "EX", 1, function (err, result) {
       result.should.equal("OK");
@@ -133,7 +127,6 @@ describe("set", function () {
             setTimeout(function () {
               r.exists("foo", function (err, result) {
                 result.should.equal(0);
-                r.end(true);
                 done();
               });
             }, 1100);
@@ -144,8 +137,6 @@ describe("set", function () {
 
   it("should not set a key with EX and NX", function (done) {
 
-    var r = redismock.createClient();
-
     r.set("foo", "bar", function (err, result) {
         result.should.equal("OK");
 
@@ -153,7 +144,6 @@ describe("set", function () {
             (err === null).should.be.true;
             (result === null).should.be.true;
 
-            r.end(true);
             done();
 
         });
@@ -161,8 +151,6 @@ describe("set", function () {
   });
 
   it("should set a key with px", function (done) {
-
-    var r = redismock.createClient();
 
     r.set("foo", "bar", "px", 1000, function (err, result) {
       result.should.equal("OK");
@@ -174,7 +162,6 @@ describe("set", function () {
         setTimeout(function () {
           r.exists("foo", function (err, result) {
             result.should.equal(0);
-            r.end(true);
             done();
           });
         }, 1100);
@@ -184,8 +171,6 @@ describe("set", function () {
   });
 
   it("should set a key with PX and NX", function (done) {
-
-    var r = redismock.createClient();
 
     r.set("foo", "bar", "NX", "PX", 1000, function (err, result) {
       result.should.equal("OK");
@@ -197,7 +182,6 @@ describe("set", function () {
         setTimeout(function () {
           r.exists("foo", function (err, result) {
             result.should.equal(0);
-            r.end(true);
             done();
           });
         }, 1100);
@@ -208,8 +192,6 @@ describe("set", function () {
 
   it("should not set a key with PX and NX", function (done) {
 
-    var r = redismock.createClient();
-
     r.set("foo", "bar", function (err, result) {
       result.should.equal("OK");
 
@@ -217,7 +199,6 @@ describe("set", function () {
         (err === null).should.be.true;
         (result === null).should.be.true;
 
-        r.end(true);
         done();
 
       });
@@ -228,10 +209,7 @@ describe("set", function () {
 
 
 describe("get", function () {
-
   it("should return the value of an existing key", function (done) {
-
-    var r = redismock.createClient();
 
     r.set("foo", "bar", function (err, result) {
 
@@ -239,7 +217,35 @@ describe("get", function () {
 
         result.should.equal("bar");
 
-        r.end(true);
+        done();
+
+      });
+    });
+  });
+
+  it("should return buffer if we use a buffer for the key", function (done) {
+
+    r.set("foo", "bar", function (err, result) {
+
+      r.get(new Buffer("foo"), function (err, result) {
+
+        (result instanceof Buffer).should.be.true;
+        result.toString().should.equal("bar");
+
+        done();
+
+      });
+    });
+  });
+
+  it("should return string even for buffer value if we use a string for the key", function (done) {
+
+    r.set("foo", new Buffer("bar"), function (err, result) {
+
+      r.get("foo", function (err, result) {
+
+        (result instanceof Buffer).should.be.false;
+        result.should.equal("bar");
 
         done();
 
@@ -249,33 +255,22 @@ describe("get", function () {
 
   it("should return null for a non-existing key", function (done) {
 
-    var r = redismock.createClient();
-
-
     r.get("does-not-exist", function (err, result) {
 
       should.not.exist(result);
-
-      r.end(true);
 
       done();
 
     });
   });
+
 });
 
 describe("getset", function () {
-  var r;
-
-  beforeEach(function () {
-    r = redismock.createClient();
-  });
-
   it("should return null for a non-existing key", function (done) {
     r.getset("does-not-exist", "newValue", function (err, result) {
       should.not.exist(result);
 
-      r.end(true);
       done();
     });
 
@@ -287,7 +282,6 @@ describe("getset", function () {
         result.should.equal("oldValue");
         r.get("test-key", function (err, result) {
           result.should.equal("newValue");
-          r.end(true);
           done();
         });
       });
@@ -300,7 +294,6 @@ describe("getset", function () {
       r.getset("test-key", "newValue", function (err, result) {
         err.message.should.eql("WRONGTYPE Operation against a key holding the wrong kind of value");
 
-        r.end(true);
         done();
       });
     });
@@ -312,20 +305,12 @@ describe("setex", function () {
 
   this.timeout(5000);
 
-  var r;
-
-  beforeEach(function () {
-    r = redismock.createClient();
-  });
-
-
   it("should set a key", function (done) {
     var key = 'test_persist';
     r.setex(key, 1000, "val", function (err, result) {
-        result.should.equal("OK");
+      result.should.equal("OK");
       r.get(key, function (err, result) {
         result.should.equal("val");
-        r.end(true);
         done();
       });
     });
@@ -341,7 +326,6 @@ describe("setex", function () {
       setTimeout(function () {
         r.exists(key, function (err, result) {
           result.should.equal(0);
-          r.end(true);
           done();
         });
       }, 2100);
@@ -357,7 +341,6 @@ describe("setex", function () {
       r.get(key, function (err, result) {
         result.should.equal("val");
         r.del(key);
-        r.end(true);
         done();
       });
     }, 100)
@@ -367,25 +350,19 @@ describe("setex", function () {
 });
 
 describe("setnx", function () {
-
   it("should set a key", function (done) {
-
-    var r = redismock.createClient();
 
     r.setnx("foo", "10", function (err, result) {
         result.should.eql(1);
 
       r.get("foo", function (err, result) {
         result.should.eql("10");
-        r.end(true);
         done();
       });
     });
   });
 
   it("should not re-set a key", function (done) {
-
-    var r = redismock.createClient();
 
     r.set("foo", "val", function (err, result) {
 
@@ -396,7 +373,6 @@ describe("setnx", function () {
         r.get("foo", function(err, result) {
             result.should.equal("val");
 
-            r.end(true);
             done();
         });
       });
@@ -408,8 +384,6 @@ describe("mget", function () {
 
   it("should fetch multiple values across multiple keys", function (done) {
 
-    var r = redismock.createClient();
-
     r.mset(["multi1", "one", "multi3", "three"], function (err, result) {
       r.mget("multi1", "multi2", "multi3", function (err, result) {
         result.should.be.ok();
@@ -420,7 +394,6 @@ describe("mget", function () {
 
         result[2].should.equal("three");
 
-        r.end(true);
         done();
 
       });
@@ -432,14 +405,11 @@ describe("mset", function () {
 
   it("should set multiple keys at once using an array", function (done) {
 
-    var r = redismock.createClient();
-
     r.mset(["msetkey1", 1, "msetkey2", 2], function (err, result) {
       result.should.be.eql("OK");
 
       r.mget(["msetkey1", "msetkey2"], function (err, results) {
         results.should.deepEqual(["1", "2"]);
-        r.end(true);
         done();
       });
     });
@@ -447,14 +417,11 @@ describe("mset", function () {
 
   it("should set multiple keys at once using arguments", function (done) {
 
-    var r = redismock.createClient();
-
     r.mset("msetkey1", 3, "msetkey2", 4, function (err, result) {
       result.should.be.eql("OK");
 
       r.mget(["msetkey1", "msetkey2"], function (err, results) {
         results.should.deepEqual(["3", "4"]);
-        r.end(true);
         done();
       });
     });
@@ -463,33 +430,24 @@ describe("mset", function () {
 
   it("should fail when passed an array of odd length", function (done) {
 
-    var r = redismock.createClient();
-
     r.mset(["failkey1", 1, "failkey2"], function (err, result) {
       err.should.be.ok();
-      r.end(true);
       done();
     });
   });
 
   it("should fail when passing no arguments", function (done) {
 
-    var r = redismock.createClient();
-
     r.mset(function (err, result) {
       err.should.be.ok();
-      r.end(true);
       done();
     });
   });
 
   it("should fail when passing an empty array", function (done) {
 
-    var r = redismock.createClient();
-
     r.mset([], function (err, result) {
       err.should.be.ok();
-      r.end(true);
       done();
     });
   });
@@ -500,22 +458,17 @@ describe("msetnx", function () {
 
   it("should be able to set multiple non-existing keys", function (done) {
 
-    var r = redismock.createClient();
-
     r.msetnx(["msetnxkey1", 1, "msetnxkey2", 2], function (err, result) {
       result.should.be.eql(1);
 
       r.mget(["msetnxkey1", "msetnxkey2"], function (err, results) {
         results.should.deepEqual(["1", "2"]);
-        r.end(true);
         done();
       });
     });
   });
 
   it("should fail to set any key if a single one exists already", function (done) {
-
-    var r = redismock.createClient();
 
     r.set("msetnxkey1", 1, function (err, result) {
 
@@ -524,7 +477,6 @@ describe("msetnx", function () {
 
         r.mget(["msetnxkey1", "msetnxkey3"], function (err, results) {
           results.should.deepEqual(["1", null]);
-          r.end(true);
           done();
         });
       });
@@ -537,8 +489,6 @@ describe("incr", function () {
 
   it("should increment the number stored at key", function (done) {
 
-    var r = redismock.createClient();
-
     r.set("foo", "10", function (err, result) {
 
       r.incr("foo", function (err, result) {
@@ -549,7 +499,6 @@ describe("incr", function () {
 
           result.should.eql("11");
 
-          r.end(true);
           done();
         });
       });
@@ -557,8 +506,6 @@ describe("incr", function () {
   });
 
   it("should set 0 before performing if the key does not exist", function (done) {
-
-    var r = redismock.createClient();
 
     r.incr("bar", function (err, result) {
 
@@ -568,7 +515,6 @@ describe("incr", function () {
 
         result.should.eql("1");
 
-        r.end(true);
         done();
       });
     });
@@ -576,15 +522,12 @@ describe("incr", function () {
 
   it("should return error if the key holds the wrong kind of value.", function (done) {
 
-    var r = redismock.createClient();
-
     r.hset("foo", "bar", "baz", function (err, result) {
 
       r.incr("foo", function (err, result) {
 
         err.message.should.eql("WRONGTYPE Operation against a key holding the wrong kind of value");
 
-        r.end(true);
         done();
       });
     });
@@ -592,15 +535,12 @@ describe("incr", function () {
 
   it("should return error if the key contains a string that can not be represented as integer.", function (done) {
 
-    var r = redismock.createClient();
-
     r.set("baz", "qux", function (err, result) {
 
       r.incr("baz", function (err, result) {
 
         err.message.should.equal("ERR value is not an integer or out of range");
 
-        r.end(true);
         done();
       });
     });
@@ -610,8 +550,6 @@ describe("incr", function () {
 describe("incrby", function () {
 
   it("should increment the number stored at key by 2", function (done) {
-
-    var r = redismock.createClient();
 
     r.set("foo", "10", function (err, result) {
 
@@ -623,7 +561,6 @@ describe("incrby", function () {
 
           result.should.eql("12");
 
-          r.end(true);
           done();
         });
       });
@@ -631,8 +568,6 @@ describe("incrby", function () {
   });
 
   it("should set 0 before performing if the key does not exist", function (done) {
-
-    var r = redismock.createClient();
 
     r.incrby("bar", 5, function (err, result) {
 
@@ -642,7 +577,6 @@ describe("incrby", function () {
 
         result.should.eql("5");
 
-        r.end(true);
         done();
       });
     });
@@ -650,15 +584,12 @@ describe("incrby", function () {
 
   it("should return error if the key holds the wrong kind of value.", function (done) {
 
-    var r = redismock.createClient();
-
     r.hset("foo", "bar", "baz", function (err, result) {
 
       r.incrby("foo", 5, function (err, result) {
 
         err.message.should.eql("WRONGTYPE Operation against a key holding the wrong kind of value");
 
-        r.end(true);
         done();
       });
     });
@@ -666,15 +597,12 @@ describe("incrby", function () {
 
   it("should return error if the key contains a string that can not be represented as integer.", function (done) {
 
-    var r = redismock.createClient();
-
     r.set("baz", "qux", function (err, result) {
 
       r.incrby("baz", 5, function (err, result) {
 
         err.message.should.equal("ERR value is not an integer or out of range");
 
-        r.end(true);
         done();
       });
     });
@@ -684,8 +612,6 @@ describe("incrby", function () {
 describe("incrbyfloat", function () {
 
   it("should increment the number stored at key by a float value", function (done) {
-
-    var r = redismock.createClient();
 
     r.set("foo", "1.5", function (err, result) {
 
@@ -697,7 +623,6 @@ describe("incrbyfloat", function () {
 
           result.should.eql("2");
 
-          r.end(true);
           done();
         });
       });
@@ -706,15 +631,12 @@ describe("incrbyfloat", function () {
 
   it("should set 0 before performing if the key does not exist", function (done) {
 
-    var r = redismock.createClient();
-
     r.incrbyfloat("bar", "1.5", function (err, result) {
       result.should.eql("1.5");
 
       r.get("bar", function (err, result) {
         result.should.eql("1.5");
 
-        r.end(true);
         done();
       });
     });
@@ -722,15 +644,12 @@ describe("incrbyfloat", function () {
 
   it("should return error if the key holds the wrong kind of value.", function (done) {
 
-    var r = redismock.createClient();
-
     r.hset("foo", "bar", "baz", function (err, result) {
 
       r.incrbyfloat("foo", "1.5", function (err, result) {
 
         err.message.should.eql("WRONGTYPE Operation against a key holding the wrong kind of value");
 
-        r.end(true);
         done();
       });
     });
@@ -738,15 +657,12 @@ describe("incrbyfloat", function () {
 
   it("should return error if the key contains a string that can not be represented as float.", function (done) {
 
-    var r = redismock.createClient();
-
     r.set("baz", "qux", function (err, result) {
 
       r.incrbyfloat("baz", "1.5",function (err, result) {
 
         err.message.should.equal("ERR value is not a valid float");
 
-        r.end(true);
         done();
       });
     });

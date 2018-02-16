@@ -1,16 +1,12 @@
-﻿var redismock = require("../");
-var should = require("should");
+﻿var should = require("should");
 var events = require("events");
-
-if (process.env['VALID_TESTS']) {
-  redismock = require('redis');
-}
+var helpers = require("./helpers");
 
 describe("publish and subscribe", function () {
 
   it("should subscribe and unsubscribe to a channel", function (done) {
 
-    var r = redismock.createClient();
+    var r = helpers.createClient();
 
     should.exist(r.subscribe);
     should.exist(r.unsubscribe);
@@ -36,7 +32,7 @@ describe("publish and subscribe", function () {
   });
 
   it("should psubscribe and punsubscribe to a channel", function (done) {
-    var r = redismock.createClient();
+    var r = helpers.createClient();
     var channelName = "testchannel";
 
     should.exist(r.psubscribe);
@@ -59,7 +55,7 @@ describe("publish and subscribe", function () {
     var channelName = "testchannel";
     var otherChannel = "otherchannel";
 
-    var r = redismock.createClient();
+    var r = helpers.createClient();
     r.subscribe(channelName);
 
     try {
@@ -77,7 +73,7 @@ describe("publish and subscribe", function () {
     var channelName = "testchannel";
     var otherChannel = "otherchannel";
 
-    var r = redismock.createClient();
+    var r = helpers.createClient();
     r.psubscribe(channelName);
 
     try {
@@ -96,8 +92,8 @@ describe("publish and subscribe", function () {
     var channelName = "testchannel";
     var otherChannel = "otherchannel";
 
-    var r = redismock.createClient();
-    var r2 = redismock.createClient();
+    var r = helpers.createClient();
+    var r2 = helpers.createClient();
     r.subscribe(channelName);
 
     r.on('message', function (ch, msg) {
@@ -121,8 +117,8 @@ describe("publish and subscribe", function () {
     var goodChannels = ["hllo*", "hello*", "heello*"];
     var badChannels = ["hllo", "hall", "hello*o"];
     var index = 0;
-    var r = redismock.createClient();
-    var r2 = redismock.createClient();
+    var r = helpers.createClient();
+    var r2 = helpers.createClient();
 
     r.psubscribe(pattern);
     r.on('pmessage', function (pattern, ch, msg) {
@@ -145,9 +141,9 @@ describe("publish and subscribe", function () {
     var channelName = "testchannel";
     var doneChannel = "donechannel";
 
-    var r = redismock.createClient();
-    var r2 = redismock.createClient();
-    var r3 = redismock.createClient();
+    var r = helpers.createClient();
+    var r2 = helpers.createClient();
+    var r3 = helpers.createClient();
 
     r.subscribe(channelName);
     r2.subscribe(channelName);
@@ -194,9 +190,9 @@ describe("publish and subscribe", function () {
     var channelName = "testchannel";
     var doneChannel = "donechannel";
 
-    var r = redismock.createClient();
-    var r2 = redismock.createClient();
-    var r3 = redismock.createClient();
+    var r = helpers.createClient();
+    var r2 = helpers.createClient();
+    var r3 = helpers.createClient();
 
     r.psubscribe(channelName);
     r2.psubscribe(channelName);
