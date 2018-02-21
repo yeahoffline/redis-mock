@@ -301,4 +301,30 @@ describe("keys", function () {
       done();
     });
   });
+  it("should scan all keys - *", function (done) {
+    var keys = [];
+    var index = 0;
+    var loop = function() {
+      r.scan(index, 'match', '*', 'count', 1000, function (err, indexAndKeys) {
+        if(err) {
+          done(err);
+          return;
+        }
+        keys = keys.concat(indexAndKeys[1]);
+        var index = indexAndKeys[0];
+        if (index !== '0') {
+          loop();
+        } else {
+          keys.should.be.instanceof(Array);
+          keys.should.containEql('hello');
+          keys.should.containEql('hallo');
+          keys.should.containEql('hxlo');
+          keys.should.have.length(3);
+          index.should.be.equal('0');
+          done();
+        }
+      });
+    };
+    loop();
+  });
 });
