@@ -1,9 +1,5 @@
-var redismock = require("../");
 var should = require("should");
-
-if (process.env['VALID_TESTS']) {
-  redismock = require('redis');
-}
+var helpers = require("./helpers");
 
 /**
   *** NOT IMPLEMENTED ***
@@ -15,6 +11,16 @@ if (process.env['VALID_TESTS']) {
   ZUNIONSTORE destination numkeys key [key ...] [WEIGHTS weight [weight ...]] [AGGREGATE SUM|MIN|MAX]
   ZSCAN key cursor [MATCH pattern] [COUNT count]
 */
+
+var r;
+
+beforeEach(function () {
+  r = helpers.createClient();
+});
+
+afterEach(function () {
+  r.flushall();
+});
 
 describe("zadd", function () {
   var testKey1 = "zaddKey1";
@@ -32,7 +38,6 @@ describe("zadd", function () {
   var aLen = args.length;
   var mLen = aLen / 2;
   it("should add scores and members", function (done) {
-    var r = redismock.createClient();
     r.zadd([testKey1].concat(args), function(err, result) {
       result.should.equal(mLen);
       // should only add new members
@@ -72,9 +77,8 @@ describe("zcard", function () {
   var testMember1 = JSON.stringify({'a': 'b'});
   var testScore2 = 2;
   var testMember2 = '2';
-  it("should add scores and members", function (done) {
-    var r = redismock.createClient();
 
+  it("should add scores and members", function (done) {
     r.zadd(testKey1, testScore1, testMember1, testScore2, testMember2,
       function(err, result) {
         result.should.equal(2);
@@ -104,7 +108,6 @@ describe("zcount", function () {
   var mLen = aLen / 2;
 
   it("should return the inclusive min & max count", function (done) {
-    var r = redismock.createClient();
     r.zadd([testKey1].concat(args), function(err, result) {
       result.should.equal(mLen);
 
@@ -123,7 +126,6 @@ describe("zincrby", function () {
   var testKey2 = "zincrbyKey2";
 
   it("should add and increment a member", function (done) {
-    var r = redismock.createClient();
     r.zadd([testKey1,  1, 'm1'], function(err, result) {
       result.should.equal(1);
       r.zincrby([testKey1, 5, 'm1'], function(err, result) {
@@ -134,7 +136,6 @@ describe("zincrby", function () {
   });
 
   it("should increment a non-existing member", function (done) {
-    var r = redismock.createClient();
     r.zincrby([testKey2, '5', 'm1'], function(err, result) {
       should(result).equal('5');
 
@@ -168,7 +169,6 @@ describe("zrange", function () {
   var mLen = aLen / 2;
 
   it("should return everything withscores", function (done) {
-    var r = redismock.createClient();
     r.zadd([testKey1].concat(args), function(err, result) {
       result.should.equal(mLen);
       r.zrange([testKey1, '0', '-1', 'withscores'], function(err, result) {
@@ -181,7 +181,6 @@ describe("zrange", function () {
   });
 
   it("should return the inclusive start & stop withscores", function (done) {
-    var r = redismock.createClient();
     r.zadd([testKey2].concat(args), function(err, result) {
       result.should.equal(mLen);
       r.zrange([testKey2, '1', '5', 'withscores'], function(err, result) {
@@ -195,7 +194,6 @@ describe("zrange", function () {
   });
 
   it("should return everything without scores", function (done) {
-    var r = redismock.createClient();
     r.zadd([testKey3].concat(args), function(err, result) {
       r.zrange([testKey3, '0', '-1'], function(err, result) {
         should(result[0]).equal('m1');
@@ -207,7 +205,6 @@ describe("zrange", function () {
   });
 
   it("should return the inclusive start & stop without scores", function (done) {
-    var r = redismock.createClient();
     r.zadd([testKey4].concat(args), function(err, result) {
       result.should.equal(mLen);
       r.zrange([testKey4, '1', '5'], function(err, result) {
@@ -220,7 +217,6 @@ describe("zrange", function () {
   });
 
   it("should return last two members", function (done) {
-    var r = redismock.createClient();
     r.zadd([testKey5].concat(args), function(err, result) {
       r.zrange([testKey5, '-2', '-1'], function(err, result) {
         should(result[0]).equal('m2');
@@ -255,7 +251,6 @@ describe("zrangebyscore", function () {
   var mLen = aLen / 2;
 
   it("should return the inclusive min & max range withscores", function (done) {
-    var r = redismock.createClient();
     r.zadd([testKey1].concat(args), function(err, result) {
       result.should.equal(mLen);
       r.zrangebyscore([testKey1, '0', '5', 'withscores'], function(err, result) {
@@ -266,7 +261,6 @@ describe("zrangebyscore", function () {
   });
 
   it("should return the inclusive min and max range withscores", function (done) {
-    var r = redismock.createClient();
     r.zadd([testKey2].concat(args), function(err, result) {
       r.zrangebyscore([testKey2, '0', '(3', 'withscores'], function(err, result) {
         should(result.length).equal(7 * 2);
@@ -277,7 +271,6 @@ describe("zrangebyscore", function () {
   });
 
  it("should return the min and inclusive max range withscores", function (done) {
-    var r = redismock.createClient();
     r.zadd([testKey3].concat(args), function(err, result) {
       r.zrangebyscore([testKey3, '(1.5', '3', 'withscores'], function(err, result) {
         should(result.length).equal(2 * 2);
@@ -287,7 +280,6 @@ describe("zrangebyscore", function () {
   });
 
   it("should return the min and max range withscores", function (done) {
-    var r = redismock.createClient();
     r.zadd([testKey4].concat(args), function(err, result) {
       r.zrangebyscore([testKey4, '(1', '(2', 'withscores'], function(err, result) {
         should(result.length).equal(5 * 2);
@@ -297,7 +289,6 @@ describe("zrangebyscore", function () {
   });
 
   it("should return the inclusive min & max range withscores", function (done) {
-    var r = redismock.createClient();
     r.zadd([testKey5].concat(args), function(err, result) {
       r.zrangebyscore([testKey5, '0', '5', 'withscores', 'limit', '1', '3'], function(err, result) {
         should(result.length).equal(6);
@@ -307,7 +298,6 @@ describe("zrangebyscore", function () {
   });
 
   it("should return the inclusive -inf & +inf range withscores", function (done) {
-    var r = redismock.createClient();
     r.zadd([testKey6, '-1', 'm-1'].concat(args), function(err, result) {
       r.zrangebyscore([testKey6, '-inf', '+inf', 'withscores'], function(err, result) {
         should(result[0]).equal('m-1');
@@ -321,7 +311,6 @@ describe("zrangebyscore", function () {
 });
 
 describe("zrank", function () {
-
   var testKey1 = "zrankKey1";
   var args = [
     1, 'm1',
@@ -334,7 +323,6 @@ describe("zrank", function () {
     1.5, 'm1.5'
   ];
   it("should return the rank for a member", function (done) {
-    var r = redismock.createClient();
     r.zadd([testKey1].concat(args), function(err, result) {
       r.zrank(testKey1, 'm1.1', function(err, result) {
         result.should.equal(1);
@@ -343,7 +331,6 @@ describe("zrank", function () {
     });
   });
   it("should return a null rank for a missing member", function (done) {
-    var r = redismock.createClient();
     r.zrank(testKey1, 'm999', function(err, result) {
       should(result).equal(null);
       done();
@@ -364,7 +351,6 @@ describe("zrem", function () {
     1.5, 'm1.5'
   ];
   it("should add and remove members", function (done) {
-    var r = redismock.createClient();
     r.zadd([testKey1].concat(args), function(err, result) {
         r.zrem([testKey1, 'm1', 'm2'], function(err, result) {
           result.should.equal(2);
@@ -390,7 +376,6 @@ describe("zremrangebyrank", function () {
     1.5, 'm1.5'
   ];
   it("should add and remove members by rank", function (done) {
-    var r = redismock.createClient();
     r.zadd([testKey1].concat(args), function(err, result) {
         r.zremrangebyrank([testKey1, '0', '1'], function(err, result) {
           result.should.equal(2);
@@ -415,7 +400,6 @@ describe("zremrangebyscore", function () {
     1.5, 'm1.5'
   ];
   it("should add and remove members by rank", function (done) {
-    var r = redismock.createClient();
     r.zadd([testKey1].concat(args), function(err, result) {
         r.zremrangebyscore([testKey1, '1.1', '1.5'], function(err, result) {
           result.should.equal(5);
@@ -448,7 +432,6 @@ describe("zrevrange", function () {
   var mLen = aLen / 2;
 
   it("should return everything withscores", function (done) {
-    var r = redismock.createClient();
     r.zadd([testKey1].concat(args), function(err, result) {
       result.should.equal(mLen);
       r.zrevrange([testKey1, '0', '-1', 'withscores'], function(err, result) {
@@ -463,7 +446,6 @@ describe("zrevrange", function () {
   });
 
   it("should return the inclusive start & stop withscores", function (done) {
-    var r = redismock.createClient();
     r.zadd([testKey2].concat(args), function(err, result) {
       result.should.equal(mLen);
       r.zrevrange([testKey2, '1', '5', 'withscores'], function(err, result) {
@@ -478,7 +460,6 @@ describe("zrevrange", function () {
   });
 
   it("should return everything without scores", function (done) {
-    var r = redismock.createClient();
     r.zadd([testKey3].concat(args), function(err, result) {
       r.zrevrange([testKey3, '0', '-1'], function(err, result) {
         should(result[0]).equal('m11');
@@ -491,7 +472,6 @@ describe("zrevrange", function () {
   });
 
   it("should return the inclusive start & stop without scores", function (done) {
-    var r = redismock.createClient();
     r.zadd([testKey4].concat(args), function(err, result) {
       result.should.equal(mLen);
       r.zrevrange([testKey4, '1', '5'], function(err, result) {
@@ -504,7 +484,6 @@ describe("zrevrange", function () {
   });
 
   it("should return last two members", function (done) {
-    var r = redismock.createClient();
     r.zadd([testKey5].concat(args), function(err, result) {
       r.zrevrange([testKey5, '-2', '-1'], function(err, result) {
         should(result[0]).equal('m1.1');
@@ -540,7 +519,6 @@ describe("zrevrangebyscore", function () {
   var mLen = aLen / 2;
 
   it("should return the inclusive min & max range withscores", function (done) {
-    var r = redismock.createClient();
     r.zadd([testKey1].concat(args), function(err, result) {
       result.should.equal(mLen);
       r.zrevrangebyscore([testKey1, '5', '0', 'withscores'], function(err, result) {
@@ -553,7 +531,6 @@ describe("zrevrangebyscore", function () {
   });
 
   it("should return the inclusive min and max range withscores", function (done) {
-    var r = redismock.createClient();
     r.zadd([testKey2].concat(args), function(err, result) {
       r.zrevrangebyscore([testKey2, '(3', '0', 'withscores'], function(err, result) {
         should(result[0]).equal('m2');
@@ -566,7 +543,6 @@ describe("zrevrangebyscore", function () {
   });
 
  it("should return the min and inclusive max range withscores", function (done) {
-    var r = redismock.createClient();
     r.zadd([testKey3].concat(args), function(err, result) {
       r.zrevrangebyscore([testKey3, '3', '(1.5', 'withscores'], function(err, result) {
         should(result[0]).equal('m3');
@@ -578,7 +554,6 @@ describe("zrevrangebyscore", function () {
   });
 
   it("should return the min and max range withscores", function (done) {
-    var r = redismock.createClient();
     r.zadd([testKey4].concat(args), function(err, result) {
       r.zrevrangebyscore([testKey4, '(2', '(1', 'withscores'], function(err, result) {
         should(result[0]).equal('m1.5');
@@ -590,7 +565,6 @@ describe("zrevrangebyscore", function () {
   });
 
   it("should return the inclusive min & max range withscores", function (done) {
-    var r = redismock.createClient();
     r.zadd([testKey5].concat(args), function(err, result) {
       r.zrevrangebyscore([testKey5, '5', '0', 'withscores', 'limit', '1', '3'], function(err, result) {
         should(result.length).equal(6);
@@ -600,7 +574,6 @@ describe("zrevrangebyscore", function () {
   });
 
   it("should return the inclusive -inf & +inf range withscores", function (done) {
-    var r = redismock.createClient();
     r.zadd([testKey6, '-1', 'm-1'].concat(args), function(err, result) {
       r.zrevrangebyscore([testKey6, '+inf', '-inf', 'withscores'], function(err, result) {
         should(result[0]).equal('m3');
@@ -628,7 +601,6 @@ describe("zrevrank", function () {
     1.5, 'm1.5'
   ];
   it("should return the rank for a member", function (done) {
-    var r = redismock.createClient();
     r.zadd([testKey1].concat(args), function(err, result) {
       r.zrevrank(testKey1, 'm2', function(err, result) {
         result.should.equal(1);
@@ -637,7 +609,6 @@ describe("zrevrank", function () {
     });
   });
   it("should return a null rank for a missing member", function (done) {
-    var r = redismock.createClient();
     r.zrevrank(testKey1, 'm999', function(err, result) {
       should(result).equal(null);
       done();
@@ -650,7 +621,6 @@ describe("zscore", function () {
   var testScore1 = 100.00;
   var testMember1 = JSON.stringify({'a': 'b'});
   it("should add and return member score", function (done) {
-    var r = redismock.createClient();
     r.zadd(testKey1, testScore1, testMember1, function(err, result) {
       result.should.equal(1);
 
@@ -666,7 +636,6 @@ describe("sortedset multi commands", function () {
   var testKey1 = "sortedsetmultiKey1";
 
   it("should handle multi exec", function (done) {
-    var r = redismock.createClient();
     var multi = r.multi();
     // smoke test that some of these work
     multi.zadd([testKey1, '1', 'm1'], function(err, result) {

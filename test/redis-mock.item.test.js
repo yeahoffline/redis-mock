@@ -58,6 +58,27 @@ describe("createString", function () {
   });
 });
 
+describe("createBuffer", function () {
+  it('should return a buffer when passed a string', function () {
+    var elt = "foo";
+    var item = RedisItem.createBuffer(elt);
+
+    item.type.should.equal("buffer");
+    item.expires.should.equal(-1);
+    item.value.toString().should.equal(elt);
+  });
+
+  it('should set expire when specified', function () {
+    var elt = "foo";
+    var item = RedisItem.createBuffer(elt, 1000);
+
+    item.type.should.equal("buffer");
+    item.expires.should.equal(1000);
+    item.value.toString().should.equal(elt);
+  });
+});
+
+
 describe("Item.createSortedSet", function () {
   it('should create an empty sortedset', function () {
     var item = RedisItem.createSortedSet();

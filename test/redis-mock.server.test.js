@@ -1,15 +1,19 @@
-var redismock = require("../"),
-  should = require("should");
+var should = require("should");
+var helpers = require("./helpers");
 
-if (process.env['VALID_TESTS']) {
-  redismock = require('redis');
-}
+var r;
+
+beforeEach(function () {
+  r = helpers.createClient();
+});
+
+afterEach(function () {
+  r.flushall();
+});
 
 describe("flushdb", function () {
 
   it("should clean database", function (done) {
-
-    var r = redismock.createClient();
 
     r.set("foo", "bar", function (err, result) {
       r.flushdb(function (err, result) {
@@ -19,10 +23,8 @@ describe("flushdb", function () {
 
           result.should.be.equal(0);
 
-          r.end(true);
           done();
-        })
-
+        });
 
       });
 
@@ -34,13 +36,9 @@ describe("flushdb", function () {
 
 describe("auth", function () {
   it("should always succeed and call back", function (done) {
-    var r = redismock.createClient();
-
     r.auth("secret", function (err, result) {
       result.should.equal('OK');
       done();
-      r.end(true); //Moved this after the done() call. For some reason, calling `end()` beforehand causes this test to fail.
     });
   });
 });
-

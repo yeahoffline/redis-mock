@@ -1,14 +1,18 @@
-var redismock = require("../")
 var should = require("should")
 var events = require("events");
+var helpers = require("./helpers");
 
-if (process.env['VALID_TESTS']) {
-  redismock = require('redis');
-}
+var r;
+
+beforeEach(function () {
+  r = helpers.createClient();
+});
+
+afterEach(function () {
+  r.flushall();
+});
 
 describe("multi()", function () {
-  var r = redismock.createClient();
-
   it("should exist", function () {
     should.exist(r.multi);
   });

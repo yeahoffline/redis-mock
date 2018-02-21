@@ -1,15 +1,11 @@
-var redismock = require("../"),
-  should = require("should"),
-  events = require("events");
-
-
-if (process.env['VALID_TESTS']) {
-  redismock = require('redis');
-}
+var should = require("should");
+var events = require("events");
+var helpers = require("./helpers");
+var redismock = require("../");
 
 // Clean the db after each test
 afterEach(function (done) {
-  r = redismock.createClient();
+  r = helpers.createClient();
   r.flushdb(function () {
     r.end(true);
     done();
