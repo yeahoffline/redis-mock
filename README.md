@@ -73,6 +73,7 @@ Currently implemented are the following redis commands:
 * incr
 * incrby
 * incrbyfloat
+* dbsize
 
 ### Strings
 * get
