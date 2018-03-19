@@ -337,7 +337,7 @@ describe("rename", function () {
           done(err);
           return;
         }
-        result.should.equal(true)
+        result.should.equal("OK")
         r.get("test", function (err, result) {
           should.not.exist(result);
           r.get("newTest", function (err, result) {
@@ -357,7 +357,7 @@ describe("rename", function () {
             done(err);
             return;
           }
-          result.should.equal(true)
+          result.should.equal("OK")
           r.get("test", function (err, result) {
             should.not.exist(result);
             r.get("newTest", function (err, result) {
