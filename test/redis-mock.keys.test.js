@@ -329,19 +329,68 @@ describe("keys", function () {
   });
 });
 
+describe("rename", function () {
+  it("should return true and set key to newKey when newKey is empty", function (done) {
+    r.set("test", "test", function (err, result) {
+      r.rename("test", "newTest", function (err, result) {
+        if(err) {
+          done(err);
+          return;
+        }
+        result.should.equal("OK")
+        r.get("test", function (err, result) {
+          should.not.exist(result);
+          r.get("newTest", function (err, result) {
+            result.should.equal("test")
+            done();
+          });
+        });
+      });
+    });
+  });
+
+  it("should return true and set key to newKey when newKey exists", function (done) {
+    r.set("newTest", "newTest", function (err, result) {
+      r.set("test", "test", function (err, result) {
+        r.rename("test", "newTest", function (err, result) {
+          if(err) {
+            done(err);
+            return;
+          }
+          result.should.equal("OK")
+          r.get("test", function (err, result) {
+            should.not.exist(result);
+            r.get("newTest", function (err, result) {
+              result.should.equal("test")
+              done();
+            });
+          });
+        });
+      });
+    });
+  });
+
+  it("should throw error when key does not exist", function (done) {
+    r.rename("test", "newTest", function (err, result) {
+      err.message.should.equal("ERR no such key")
+      done()
+    })
+  })
+})
+
 describe("dbsize", function () {
   it("should return 0 for empty storage", function(done) {
     r.dbsize(function(err, result) {
       result.should.equal(0)
       done()
-    })
-  })
+    });
+  });
   it("should return number of keys in storage", function(done) {
     r.set('test','test', function(err, result) {
       r.dbsize(function(err, result) {
         result.should.equal(1)
         done()
-      })
-    })
-  })
-})
+      });
+    });
+  });
+});
