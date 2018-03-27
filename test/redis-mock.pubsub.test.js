@@ -53,7 +53,6 @@ describe("publish and subscribe", function () {
     r.on("unsubscribe", function (ch) {
       channelsUnsubscribed++;
       if (channelsUnsubscribed == channelNames.length) {
-        should.deepEqual(r.subscriptions, {});
         r.end(true);
         done();
       }
