@@ -6,10 +6,14 @@ var redismock = require("../");
 // Clean the db after each test
 afterEach(function (done) {
   r = helpers.createClient();
-  r.flushdb(function () {
-    r.end(true);
+  try {
+    r.flushdb(function () {
+      r.end(true);
+      done();
+    });
+  } catch(err) {
     done();
-  });
+  }
 });
 
 describe("redis-mock", function () {
