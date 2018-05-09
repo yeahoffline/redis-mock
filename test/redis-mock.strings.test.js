@@ -520,6 +520,22 @@ describe("incr", function () {
     });
   });
 
+  it("should keep expires if it is set", function (done) {
+
+    r.set("foo", 10, "EX", 5, function (err, result) {
+
+      r.incr("foo", function (err, result) {
+
+        r.pttl("foo", function (err, result) {
+
+          (result === -1).should.be.false();
+
+          done();
+        });
+      });
+    });
+  });
+
   it("should return error if the key holds the wrong kind of value.", function (done) {
 
     r.hset("foo", "bar", "baz", function (err, result) {
@@ -582,6 +598,22 @@ describe("incrby", function () {
     });
   });
 
+  it("should keep expires if it is set", function (done) {
+
+    r.set("foo", 10, "EX", 5, function (err, result) {
+
+      r.incrby("foo", 1, function (err, result) {
+
+        r.pttl("foo", function (err, result) {
+
+          (result === -1).should.be.false();
+
+          done();
+        });
+      });
+    });
+  });
+
   it("should return error if the key holds the wrong kind of value.", function (done) {
 
     r.hset("foo", "bar", "baz", function (err, result) {
@@ -638,6 +670,22 @@ describe("incrbyfloat", function () {
         result.should.eql("1.5");
 
         done();
+      });
+    });
+  });
+
+  it("should keep expires if it is set", function (done) {
+
+    r.set("foo", 10, "EX", 5, function (err, result) {
+
+      r.incrbyfloat("foo", "1.5", function (err, result) {
+
+        r.pttl("foo", function (err, result) {
+
+          (result === -1).should.be.false();
+
+          done();
+        });
       });
     });
   });
