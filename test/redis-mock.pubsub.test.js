@@ -113,6 +113,7 @@ describe("publish and subscribe", function () {
   });
 
   it("should only receive message on channels psubscribed to", function (done) {
+    this.timeout(30000);
     var pattern = "h*llo\\*";
     var goodChannels = ["hllo*", "hello*", "heello*"];
     var badChannels = ["hllo", "hall", "hello*o"];

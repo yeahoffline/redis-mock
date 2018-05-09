@@ -9,7 +9,11 @@ function createClient() {
     detect_buffers: true,
     url: process.env['REDIS_URL'] || 'redis://127.0.0.1:6379'
   }
-  return redismock.createClient(options);
+  var client = redismock.createClient(options);
+  client.on('error', function (err) {
+
+  });
+  return client;
 }
 
 module.exports = {
