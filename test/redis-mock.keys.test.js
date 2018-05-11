@@ -121,10 +121,10 @@ describe("type", function() {
     });
   });
 
-  it('should return type "sortedset" for key that exists with zset value', function (done) {
+  it('should return type "zset" for key that exists with zset value', function (done) {
     r.zadd(["testKey",  1, 'm1'], function(err, result) {
       r.type("testKey", function(err, result) {
-        result.should.equal("sortedset");
+        result.should.equal("zset");
 
         done();
       });
