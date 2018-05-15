@@ -43,6 +43,8 @@ Currently implemented are the following redis commands:
 * multi
   * exec
   * discard
+  * exec_atomic
+* batch
 
 ### Events
 * ready
