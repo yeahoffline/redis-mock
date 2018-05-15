@@ -31,6 +31,37 @@ describe("publish and subscribe", function () {
     r.subscribe(channelName);
   });
 
+  it("should unsubscribe to all channels if no arguments are given", function (done) {
+
+    var r = helpers.createClient();
+
+    should.exist(r.subscribe);
+    should.exist(r.unsubscribe);
+
+    var channelNames = ["firstchannel", "secondchannel"];
+    var channelsSubscribed = 0;
+    var channelsUnsubscribed = 0;
+
+    r.on("subscribe", function (ch) {
+      channelsSubscribed++;
+
+      if (channelsSubscribed == channelNames.length) {
+        r.unsubscribe();
+      }
+    });
+
+    r.on("unsubscribe", function (ch) {
+      channelsUnsubscribed++;
+      if (channelsUnsubscribed == channelNames.length) {
+        r.end(true);
+        done();
+      }
+    });
+
+    r.subscribe(channelNames[0]);
+    r.subscribe(channelNames[1]);
+  });
+
   it("should psubscribe and punsubscribe to a channel", function (done) {
     var r = helpers.createClient();
     var channelName = "testchannel";
