@@ -437,3 +437,20 @@ describe("rename", function () {
     })
   })
 })
+
+describe("dbsize", function () {
+  it("should return 0 for empty storage", function(done) {
+    r.dbsize(function(err, result) {
+      result.should.equal(0)
+      done()
+    });
+  });
+  it("should return number of keys in storage", function(done) {
+    r.set('test','test', function(err, result) {
+      r.dbsize(function(err, result) {
+        result.should.equal(1)
+        done()
+      });
+    });
+  });
+});
