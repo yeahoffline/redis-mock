@@ -68,6 +68,7 @@ Currently implemented are the following redis commands:
 * keys
 * scan
 * exists
+* type
 * expire
 * ttl
 * incr

@@ -82,6 +82,66 @@ describe("exists", function () {
 
 });
 
+describe("type", function() {
+  it('should return "none" for non existent keys', function(done) {
+    r.type("testKey", function(err, result) {
+        result.should.equal("none");
+
+        done();
+    });
+  });
+
+  it('should return type "string" for key that exists with string value', function(done) {
+    r.set("testKey", "testValue", function(err, result) {
+      r.type("testKey", function(err, result) {
+        result.should.equal("string");
+
+        done();
+      });
+    });
+  });
+
+  it('should return type "list" for key that exists with list value', function(done) {
+    r.lpush("testValue", 1, function (err, result) {
+      r.type("testValue", function(err, result) {
+        result.should.equal("list");
+
+        done();
+      });
+    });
+  });
+
+  it('should return type "set" for key that exists with set value', function (done) {
+    r.sadd('testKey', 'testValue', function (err, result) {
+      r.type("testKey", function(err, result) {
+        result.should.equal("set");
+
+        done();
+      });
+    });
+  });
+
+  it('should return type "zset" for key that exists with zset value', function (done) {
+    r.zadd(["testKey",  1, 'm1'], function(err, result) {
+      r.type("testKey", function(err, result) {
+        result.should.equal("zset");
+
+        done();
+      });
+    });
+  });
+
+  it('should return type "hash" for key that exists with hash value', function (done) {
+    r.hset("testHash", "testKey", "test", function (err, result) {
+      r.type("testHash", function(err, result) {
+        result.should.equal("hash");
+
+        done();
+      });
+    });
+  });
+});
+
 describe("expire", function () {
 
   it("should return 0 for non-existing key", function (done) {

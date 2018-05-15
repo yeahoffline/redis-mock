@@ -83,7 +83,7 @@ describe("Item.createSortedSet", function () {
   it('should create an empty sortedset', function () {
     var item = RedisItem.createSortedSet();
 
-    item.type.should.equal("sortedset");
+    item.type.should.equal("zset");
     item.expires.should.equal(-1);
     item.value.should.eql({});
   });
