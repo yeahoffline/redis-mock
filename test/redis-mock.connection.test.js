@@ -19,20 +19,29 @@ describe("select", function() {
 
       done();
     });
-    
+
   });
-  
+
   it('should error when using and invalid database value', function(done) {
     r.select('db', function(err, result) {
       should.not.exist(result);
       should(err).Error;
 
       done();
-    }); 
+    });
   });
-  
+
+  it('should error when using and invalid database index', function(done) {
+    r.select(1000, function(err, result) {
+      should.not.exist(result);
+      should(err).Error;
+
+      done();
+    });
+  });
+
   it('should not ensist on a callback', function() {
     r.select(3);
-  });  
-  
-}); 
+  });
+
+});
