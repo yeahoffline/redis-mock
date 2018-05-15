@@ -25,6 +25,7 @@ describe("multi()", function () {
     should.exist(multi.SET);
     should.exist(multi.exists);
     should.exist(multi.hget);
+    should.exist(multi.exec_atomic);
   });
 
   describe("exec()", function () {
@@ -68,7 +69,8 @@ describe("multi()", function () {
       multi.get('foo1').incr('foo1', function (err, result) {
         should.equal(result, 1);
         done();
-      }).exec();
+      })
+      multi.exec();
     });
 
     it("should run sorted set operations in order", function (done) {
