@@ -436,7 +436,17 @@ describe("multiple get/set", function () {
 
       done();
     });
-  })
+  });
+
+  it("should return null for undefined keys and correct value for defined key", function (done) {
+
+    r.hmget(mHash2, mKey1, "random", function (err, result) {
+      result.should.be.an.Array().and.have.lengthOf(2);
+      result.should.eql([mValue1, null]);
+
+      done();
+    });
+  });
 
   //HKEYS
   it("should be able to get all keys for hash", function (done) {
