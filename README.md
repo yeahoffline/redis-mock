@@ -78,6 +78,7 @@ Currently implemented are the following redis commands:
 * incrbyfloat
 * rename
 * dbsize
+* renamenx
 
 ### Strings
 * get
