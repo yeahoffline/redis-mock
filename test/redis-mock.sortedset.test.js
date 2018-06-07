@@ -617,6 +617,8 @@ describe("zrevrank", function () {
 });
 
 describe("zscore", function () {
+  var nonExistentKey = '$#$#@#%%';
+  var nonExistentMember = '@#@##$';
   var testKey1 = "zscoreKey1";
   var testScore1 = 100.00;
   var testMember1 = JSON.stringify({'a': 'b'});
@@ -626,6 +628,16 @@ describe("zscore", function () {
 
       r.zscore([testKey1, testMember1], function(err, result) {
         result.should.equal(String(100.00));
+        done();
+      });
+    });
+  });
+  it("should return null on non existent key and/or member", function (done) {
+    r.zscore([nonExistentKey, nonExistentKey], function(err, result) {
+      should(result).be.null();
+
+      r.zscore([testKey1, nonExistentKey], function(err, result) {
+        should(result).be.null();
         done();
       });
     });
