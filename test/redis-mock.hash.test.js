@@ -19,6 +19,8 @@ describe("basic hashing usage", function () {
   var testValue = "myValue";
 
   var testKeyNotExist = "myKeyNonExistant";
+  var testKeyEmptyString = "myKeyEmptyString";
+  var testValueEmptyString = "";
 
   it("should not say that non-existant values exist", function (done) {
 
@@ -58,6 +60,16 @@ describe("basic hashing usage", function () {
 
     });
 
+  });
+
+  it("should treat empty string as existent", function (done) {
+    r.hset(testHash, testKeyEmptyString, testValueEmptyString, function (err, result) {
+      r.hexists(testHash, testKeyEmptyString, function (err, result) {
+        result.should.equal(1);
+
+        done();
+      });
+    });
   });
 
   describe("more complex set/get/exist...", function () {
