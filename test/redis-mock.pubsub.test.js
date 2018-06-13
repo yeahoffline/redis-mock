@@ -147,14 +147,15 @@ describe("publish and subscribe", function () {
     var pattern = "h*llo\\*";
     var goodChannels = ["hllo*", "hello*", "heello*"];
     var badChannels = ["hllo", "hall", "hello*o"];
+    var messages = ["msg1", "msg2", "msg3"]
     var index = 0;
     var r = helpers.createClient();
     var r2 = helpers.createClient();
 
     r.psubscribe(pattern);
     r.on('pmessage', function (pattern, ch, msg) {
-      ch.should.equal(ch);
-      msg.should.equal(goodChannels[index]);
+      ch.should.equal(goodChannels[index]);
+      msg.should.equal(messages[index]);
       index++;
       if(index === goodChannels.length) {
         r.punsubscribe(pattern);
@@ -163,8 +164,13 @@ describe("publish and subscribe", function () {
       }
     });
 
-    badChannels.forEach(function (channelName) { r2.publish(channelName, channelName); });
-    goodChannels.forEach(function (channelName) { r2.publish(channelName, channelName); });
+    badChannels.forEach(function (channelName, i) {
+      r2.publish(channelName, messages[i]);
+    });
+
+    goodChannels.forEach(function (channelName, i) {
+      r2.publish(channelName, messages[i]);
+    });
   });
 
   it("should support multiple subscribers", function (done) {
