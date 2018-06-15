@@ -191,6 +191,42 @@ describe("expire", function () {
 
 });
 
+describe("pexpire", function () {
+
+  it("should return 0 for non-existing key", function (done) {
+    r.pexpire("test", 10000, function (err, result) {
+      result.should.equal(0);
+      done();
+    });
+  });
+
+  it("should return 1 when timeout set on existing key", function (done) {
+    r.set("test", "test", function (err, result) {
+      r.pexpire("test", 10000, function (err, result) {
+        result.should.equal(1);
+        r.del("test");
+        done();
+      });
+    });
+  });
+
+  it("should make key disappear after the set time", function (done) {
+    r.set("test", "val", function (err, result) {
+      r.pexpire("test", 300, function (err, result) {
+        result.should.equal(1);
+        setTimeout(function () {
+          r.exists("test", function (err, result) {
+            result.should.equal(0);
+            done();
+          });
+        }, 500);
+      });
+    });
+  });
+
+});
+
+
 describe("ttl", function () {
 
   it("should return within expire seconds", function (done) {
