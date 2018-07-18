@@ -83,7 +83,7 @@ describe("exists", function () {
   it("should return an array for multiple existing keys, existing and not", function (done) {
     r.set("test", "test", function (err, result) {
       r.set("test2", "test", function (err, result) {
-        r.exists(["test", "test2", "nonexistant"], function (err, result) {
+        r.exists("test", "test2", "nonexistant", function (err, result) {
             result.should.eql(2);
             done();
         });
