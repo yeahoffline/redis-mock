@@ -84,10 +84,7 @@ describe("exists", function () {
     r.set("test", "test", function (err, result) {
       r.set("test2", "test", function (err, result) {
         r.exists(["test", "test2", "nonexistant"], function (err, result) {
-            result.should.be.instanceof(Array);
-            result.should.have.length(3);
-            result.should.eql([1, 1, 0]);
-
+            result.should.eql(2);
             done();
         });
       });
