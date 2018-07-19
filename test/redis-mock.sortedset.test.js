@@ -644,6 +644,97 @@ describe("zscore", function () {
   });
 });
 
+describe("zunionstore", function () {
+  var nonExistentKey = '$#$#@#%%';
+  var nonExistentMember = '@#@##$';
+  var testKey1 = "zscoreKey1";
+  var testScore1 = 100.00;
+  var testMember1 = JSON.stringify({'a': 'b'});
+
+  it("performs set union across three existing sets", function (done) {
+    r.zadd("zsrc1", 11, "mem:1:1", 21, "mem:1:2", 31, "mem:1:3", function(err, result) {
+      r.zadd("zsrc2", 12, "mem:2:1", 22, "mem:2:2", function(err, result) {
+        r.zadd("zsrc3", 13, "mem:3:1", 23, "mem:3:2", 33, "mem:3:3", function(err, result) {
+          // Store the union of all three
+          r.zunionstore("zdest1", 3, "zsrc1", "zsrc2", "zsrc3", function(error, result) {
+            // Pull members and inspect
+            result.should.equal(8)
+            r.zrange(['zdest1', '0', '-1', 'withscores'], function(err, result) {
+              result.should.deepEqual([ 
+              'mem:1:1',
+              '11',
+              'mem:2:1',
+              '12',
+              'mem:3:1',
+              '13',
+              'mem:1:2',
+              '21',
+              'mem:2:2',
+              '22',
+              'mem:3:2',
+              '23',
+              'mem:1:3',
+              '31',
+              'mem:3:3',
+              '33' ])
+              done();
+            });
+          })
+        });
+      });
+    });
+  });
+
+  it("supports non-existent sets", function (done) {
+    r.zadd("zsrc1", 11, "mem:1:1", 21, "mem:1:2", 31, "mem:1:3", function(err, result) {
+      r.zadd("zsrc2", 12, "mem:2:1", 22, "mem:2:2", function(err, result) {
+        // Store the union of all three (but third one does not exist)
+        r.zunionstore("zdest1", 3, "zsrc1", "zsrc2", "zsrc3", function(error, result) {
+          // Pull members and inspect
+          result.should.equal(5)
+          r.zrange(['zdest1', '0', '-1', 'withscores'], function(err, result) {
+            result.should.deepEqual([ 
+            'mem:1:1',
+            '11',
+            'mem:2:1',
+            '12',
+            'mem:1:2',
+            '21',
+            'mem:2:2',
+            '22',
+            'mem:1:3',
+            '31'])
+            done();
+          });
+        })
+      });
+    });
+  });
+
+  it("use to copy a single set", function (done) {
+    r.zadd("zsrc1", 11, "mem:1:1", 21, "mem:1:2", 31, "mem:1:3", function(err, result) {
+      // Store the union of all three (but third one does not exist)
+      r.zunionstore("zdest1", 1, "zsrc1", function(error, result) {
+        // Pull members and inspect
+        result.should.equal(3)
+        r.zrange(['zdest1', '0', '-1', 'withscores'], function(err, result) {
+          result.should.deepEqual([ 
+          'mem:1:1',
+          '11',
+          'mem:1:2',
+          '21',
+          'mem:1:3',
+          '31'])
+          done();
+        });
+      })
+    });
+  });
+
+  // TODO: [WEIGHTS weight [weight ...]] 
+  // TODO: [AGGREGATE SUM|MIN|MAX]
+});
+
 describe("sortedset multi commands", function () {
   var testKey1 = "sortedsetmultiKey1";
 
