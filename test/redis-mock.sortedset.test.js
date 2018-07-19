@@ -652,9 +652,9 @@ describe("zunionstore", function () {
   var testMember1 = JSON.stringify({'a': 'b'});
 
   it("performs set union across three existing sets", function (done) {
-    r.zadd("zsrc1", 1.1, "mem:1:1", 2.1, "mem:1:2", 3.1, "mem:1:3", function(err, result) {
-      r.zadd("zsrc2", 1.2, "mem:2:1", 2.2, "mem:2:2", function(err, result) {
-        r.zadd("zsrc3", 1.3, "mem:3:1", 2.3, "mem:3:2", 3.3, "mem:3:3", function(err, result) {
+    r.zadd("zsrc1", "1.1", "mem:1:1", "2.1", "mem:1:2", "3.1", "mem:1:3", function(err, result) {
+      r.zadd("zsrc2", "1.2", "mem:2:1", "2.2", "mem:2:2", function(err, result) {
+        r.zadd("zsrc3", "1.3", "mem:3:1", "2.3", "mem:3:2", "3.3", "mem:3:3", function(err, result) {
           // Store the union of all three
           r.zunionstore("zdest1", 3, "zsrc1", "zsrc2", "zsrc3", function(error, result) {
             // Pull members and inspect
@@ -686,8 +686,8 @@ describe("zunionstore", function () {
   });
 
   it("supports non-existent sets", function (done) {
-    r.zadd("zsrc1", 1.1, "mem:1:1", 2.1, "mem:1:2", 3.1, "mem:1:3", function(err, result) {
-      r.zadd("zsrc2", 1.2, "mem:2:1", 2.2, "mem:2:2", function(err, result) {
+    r.zadd("zsrc1", "1.1", "mem:1:1", "2.1", "mem:1:2", "3.1", "mem:1:3", function(err, result) {
+      r.zadd("zsrc2", "1.2", "mem:2:1", "2.2", "mem:2:2", function(err, result) {
         // Store the union of all three (but third one does not exist)
         r.zunionstore("zdest1", 3, "zsrc1", "zsrc2", "zsrc3", function(error, result) {
           // Pull members and inspect
@@ -712,7 +712,7 @@ describe("zunionstore", function () {
   });
 
   it("use to copy a single set", function (done) {
-    r.zadd("zsrc1", 1.1, "mem:1:1", 2.1, "mem:1:2", 3.1, "mem:1:3", function(err, result) {
+    r.zadd("zsrc1", "1.1", "mem:1:1", "2.1", "mem:1:2", "3.1", "mem:1:3", function(err, result) {
       // Store the union of all three (but third one does not exist)
       r.zunionstore("zdest1", 1, "zsrc1", function(error, result) {
         // Pull members and inspect
