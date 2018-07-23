@@ -440,6 +440,17 @@ describe("multiple get/set", function () {
     });
   });
 
+  it("should delete multiple keys as multiple arguments", function (done) {
+
+    r.hdel(mHash2, mKey1, mKey2, function (err, result) {
+
+      result.should.equal(2);
+
+      done();
+
+    });
+  });
+
   it("should return array of null values if key doesn't exist", function (done) {
 
     r.hmget("random", mKey1, mKey2, function (err, result) {
