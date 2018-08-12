@@ -38,6 +38,7 @@ Currently implemented are the following redis commands:
 
 ### General
 * createClient
+* duplicate
 * auth
 * end
 * multi
