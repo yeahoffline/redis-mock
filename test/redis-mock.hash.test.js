@@ -350,7 +350,7 @@ describe("hscan", function () {
 
   it("should return empty results on missing hscan hash", function (done) {
     var index = 0;
-      r.hscan("non-existant-hash", index, 'match', '*', 'count', 1000, function (err, indexAndKeys) {
+      r.hscan("non-existent-hash", index, 'match', '*', 'count', 1000, function (err, indexAndKeys) {
         if(err) {
           done(err);
           return;
@@ -367,15 +367,17 @@ describe("hscan", function () {
   });
 
 
-  it("should hscan all hash keys - *", function (done) {
+  it("should hscan find hash keys - *", function (done) {
     var keys = [];
     var index = 0;
+
     var loop = function() {
-      r.hscan(testHash, index, 1000, function (err, indexAndKeys) {
+      r.hscan(testHash, index, 'count', 1000, function (err, indexAndKeys) {
         if(err) {
           done(err);
           return;
         }
+
         keys = keys.concat(indexAndKeys[1]);
         var index = indexAndKeys[0];
         if (index !== '0') {
