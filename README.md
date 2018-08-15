@@ -100,6 +100,7 @@ Currently implemented are the following redis commands:
 * hdel
 * hlen
 * hgetall
+* hscan
 * hmset
 * hmget
 * hkeys

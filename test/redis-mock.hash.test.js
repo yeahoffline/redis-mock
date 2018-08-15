@@ -283,8 +283,8 @@ describe("hsetnx", function () {
 
   var testHash = "myHashSetNx";
   var testKey = "myKey";
-  var testKey2 = "myKey2";
   var testValue = "myValue";
+  var testKey2 = "myKey2";
   var testValue2 = "myNewTestValue";
 
   beforeEach(function (done) {
@@ -327,6 +327,101 @@ describe("hsetnx", function () {
 
   });
 
+});
+
+
+//HSCAN
+describe("hscan", function () {
+
+  var testHash = "myScanHash";
+  var testKey1 = "myKey";
+  var testValue1 = "myValue";
+  var testKey2 = "myKey2XXYYZZ";
+  var testValue2 = "myNewTestValue";
+
+  beforeEach(function (done) {
+    r.hset(testHash, testKey1, testValue1, function (err, result) {
+      r.hset(testHash, testKey2, testValue2, function (err, result) {
+        done();
+      });
+    });
+  });
+
+
+  it("should return empty results on missing hscan hash", function (done) {
+    var index = 0;
+      r.hscan("non-existent-hash", index, 'match', '*', 'count', 1000, function (err, indexAndKeys) {
+        if(err) {
+          done(err);
+          return;
+        }
+        index = indexAndKeys[0];
+        index.should.be.equal('0');
+
+        var keys = indexAndKeys[1];
+        keys.should.be.instanceof(Array);
+        keys.should.have.length(0);
+        done();
+
+      });
+  });
+
+
+  it("should hscan find hash keys - *", function (done) {
+    var keys = [];
+    var index = 0;
+
+    var loop = function() {
+      r.hscan(testHash, index, 'count', 1000, function (err, indexAndKeys) {
+        if(err) {
+          done(err);
+          return;
+        }
+
+        keys = keys.concat(indexAndKeys[1]);
+        var index = indexAndKeys[0];
+        if (index !== '0') {
+          loop();
+        } else {
+          keys.should.be.instanceof(Array);
+          keys.should.containEql(testKey1);
+          keys.should.containEql(testValue1);
+          keys.should.containEql(testKey2);
+          keys.should.containEql(testValue2);
+          keys.should.have.length(4);
+          index.should.be.equal('0');
+          done();
+        }
+      });
+    };
+    loop();
+  });
+
+  it("should hscan hash keys with a pattern - *XXYYZZ*", function (done) {
+    var keys = [];
+    var index = 0;
+    var loop = function() {
+      r.hscan(testHash, index, 'match', '*XXYYZZ*', 'count', 1000, function (err, indexAndKeys) {
+        if(err) {
+          done(err);
+          return;
+        }
+        keys = keys.concat(indexAndKeys[1]);
+        var index = indexAndKeys[0];
+        if (index !== '0') {
+          loop();
+        } else {
+          keys.should.be.instanceof(Array);
+          keys.should.containEql(testKey2);
+          keys.should.containEql(testValue2);
+          keys.should.have.length(2);
+          index.should.be.equal('0');
+          done();
+        }
+      });
+    };
+    loop();
+  });
 });
 
 describe("multiple get/set", function () {
