@@ -99,6 +99,19 @@ describe("redis-mock", function () {
 
   });
 
+  it("should have '.connected' boolean property that reflects 'ready' state", function (done) {
+
+    var r = redismock.createClient();
+
+    r.connected.should.be.an.instanceof(Boolean);
+    r.connected.should.eql(false);
+    r.on("ready", function () {
+      r.connected.should.eql(true);
+    });
+    r.end(true);
+    done();
+  });
+
   /** This test doesn't seem to work on node_redis
    it("should have function end() that emits event 'end'", function (done) {
 
