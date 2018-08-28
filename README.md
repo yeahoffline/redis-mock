@@ -38,6 +38,7 @@ Currently implemented are the following redis commands:
 
 ### General
 * createClient
+* duplicate
 * auth
 * end
 * multi
@@ -99,6 +100,7 @@ Currently implemented are the following redis commands:
 * hdel
 * hlen
 * hgetall
+* hscan
 * hmset
 * hmget
 * hkeys

@@ -1,6 +1,6 @@
 {
   "name": "redis-mock",
-  "version": "0.27.0",
+  "version": "0.32.0",
   "description": "Redis client mock object for unit testing",
   "author": "Kristian Faeldt <kristian.faeldt@gmail.com>",
   "main": "./lib/redis-mock",
@@ -39,7 +39,8 @@
     "yeahoffline (Frank) <frank.gasser@gmail.com>",
     "cmawhorter (cory) <cory.mawhorter@gmail.com>",
     "pmarques (Patrick Marques) <>",
-    "matthewmatician (Matthew Larson) <matthewmatician@gmail.com>"
+    "matthewmatician (Matthew Larson) <matthewmatician@gmail.com>",
+    "christian-muertz (Christian Mürtz) <teraarts@t-online.de>"
   ],
   "bugs": {
     "url": "https://github.com/yeahoffline/redis-mock/issues",
