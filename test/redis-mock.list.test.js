@@ -266,6 +266,88 @@ describe("lrange", function () {
   });
 });
 
+describe("lrem", function () {
+  var key1 = "lrem1";
+  var key2 = "lrem2";
+  var key3 = "lrem3";
+  var key4 = "lrem4";
+  var key5 = "lrem5";
+  var keyU = "keyMissing";
+
+  it("removing from a non-exisiting list", function (done) {
+    r.lrem(keyU, 0, 5, function (err, result) {
+      result.should.be.equal(0);
+      done();
+    });
+  });
+
+  it("removing all instances of a value", function (done) {
+    r.rpush(key1, 1, 2, 2, 3, function() {
+      r.lrange(key1, 0, -1, function (err, result) {
+        result.should.deepEqual(["1", "2", "2", "3"]);
+        r.lrem(key1, 0, 2, function (err, result) {
+          result.should.be.equal(2);
+          r.lrange(key1, 0, -1, function (err, result) {
+            result.should.deepEqual(["1", "3"]);
+            done();
+          });
+        });
+      });
+    });
+  });
+
+  it("removing some instances of a value (l to r)", function (done) {
+    r.rpush(key2, 1, 2, 2, 4, 2, 2, 3, function() {
+      r.lrem(key2, 3, 2, function (err, result) {
+        result.should.be.equal(3);
+        r.lrange(key2, 0, -1, function (err, result) {
+          result.should.deepEqual(["1", "4", "2", "3"]);
+          done();
+        });
+      });
+    });
+  });
+
+  it("removing some instances of a value (r to l)", function (done) {
+    r.rpush(key3, 1, 2, 2, 4, 2, 2, 3, function() {
+      r.lrem(key3, -1, 2, function (err, result) {
+        result.should.be.equal(1);
+        r.lrange(key3, 0, -1, function (err, result) {
+          result.should.deepEqual(["1", "2", "2", "4", "2", "3"]);
+          done();
+        });
+      });
+    });
+  });
+
+  it("removing some instances of a value (r to l)", function (done) {
+    r.rpush(key4, 1, 2, 2, 4, 2, 2, 2, function() {
+      r.lrem(key4, -3, 2, function (err, result) {
+        result.should.be.equal(3);
+        r.lrange(key4, 0, -1, function (err, result) {
+          result.should.deepEqual(["1", "2", "2", "4"]);
+          done();
+        });
+      });
+    });
+  });
+
+  it("removing no instances of a value", function (done) {
+    r.rpush(key5, 1, 2, 3, 4, function() {
+      r.lrange(key5, 0, -1, function (err, result) {
+        result.should.deepEqual(["1", "2", "3", "4"]);
+        r.lrem(key5, 0, 5, function (err, result) {
+          result.should.be.equal(0);
+          r.lrange(key5, 0, -1, function (err, result) {
+            result.should.deepEqual(["1", "2", "3", "4"]);
+            done();
+          });
+        });
+      });
+    });
+  });
+});
+
 describe("lset", function () {
 
   var testKey = "myKey4";

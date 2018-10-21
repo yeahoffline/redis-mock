@@ -120,6 +120,7 @@ Currently implemented are the following redis commands:
 * brpop
 * lindex
 * lrange
+* lrem
 * lset
 
 ### Sets
