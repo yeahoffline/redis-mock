@@ -144,6 +144,7 @@ Currently implemented are the following redis commands:
 * zrevrange
 * zrevrank
 * zunionstore (Partial: no support for `WEIGHTS` or `AGGREGATE` yet)
+* zinterstore (Partial: no support for `WEIGHTS` or `AGGREGATE` yet)
 * zscore
 
 ### Server

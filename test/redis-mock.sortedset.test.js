@@ -645,12 +645,6 @@ describe("zscore", function () {
 });
 
 describe("zunionstore", function () {
-  var nonExistentKey = '$#$#@#%%';
-  var nonExistentMember = '@#@##$';
-  var testKey1 = "zscoreKey1";
-  var testScore1 = 100.00;
-  var testMember1 = JSON.stringify({'a': 'b'});
-
   it("performs set union across three existing sets", function (done) {
     r.zadd("zsrc1", 11, "mem:1:1", 21, "mem:1:2", 31, "mem:1:3", function(err, result) {
       r.zadd("zsrc2", 12, "mem:2:1", 22, "mem:2:2", function(err, result) {
@@ -728,6 +722,52 @@ describe("zunionstore", function () {
           done();
         });
       })
+    });
+  });
+
+  // TODO: Test that scores for values are aggregated with SUM by default
+  // TODO: [WEIGHTS weight [weight ...]] 
+  // TODO: [AGGREGATE SUM|MIN|MAX]
+});
+
+
+describe("zinterstore", function () {
+  it("performs set intersection between three existing sets", function (done) {
+    r.zadd("zsrc1", 11, "cat", 21, "dog", 31, "parrot", function(err, result) {
+      r.zadd("zsrc2", 12, "human", 22, "monkey", 10, "parrot", 1, "cat", function(err, result) {
+        r.zadd("zsrc3", 13, "bird", 23, "parrot", 2, "cat", 33, "eagle", function(err, result) {
+          // Store the intersection (should be: cat, parrot )
+          r.zinterstore("zdest1", 3, "zsrc1", "zsrc2", "zsrc3", function(error, result) {
+            // Pull members and inspect
+            result.should.equal(2)
+            r.zrange(['zdest1', '0', '-1', 'withscores'], function(err, result) {
+              result.should.deepEqual([ 
+              'cat',
+              '14', // Sum: 11 + 1 + 2
+              'parrot',
+              '64' // Sum: 31 + 23 + 10
+              ])
+              done();
+            });
+          })
+        });
+      });
+    });
+  });
+
+  it("supports non-existent sets", function (done) {
+    r.zadd("zsrc1", 11, "mem:1:1", 21, "mem:1:2", 31, "mem:1:3", function(err, result) {
+      r.zadd("zsrc2", 12, "mem:2:1", 22, "mem:2:2", function(err, result) {
+        // Store the union of all three (but third one does not exist)
+        r.zinterstore("zdest1", 3, "zsrc1", "zsrc2", "zsrc3", function(error, result) {
+          // Pull members and inspect
+          result.should.equal(0)
+          r.zrange(['zdest1', '0', '-1', 'withscores'], function(err, result) {
+            result.should.deepEqual([])
+            done();
+          });
+        })
+      });
     });
   });
 
