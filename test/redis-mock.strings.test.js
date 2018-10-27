@@ -662,6 +662,24 @@ describe("incrbyfloat", function () {
     });
   });
 
+  it("should accept negative float values", function (done) {
+
+    r.set("foo", "1.5", function (err, result) {
+
+      r.incrbyfloat("foo", "-0.5", function (err, result) {
+
+        result.should.eql("1");
+
+        r.get("foo", function (err, result) {
+
+          result.should.eql("1");
+
+          done();
+        });
+      });
+    });
+  });
+
   it("should set 0 before performing if the key does not exist", function (done) {
 
     r.incrbyfloat("bar", "1.5", function (err, result) {
@@ -711,6 +729,162 @@ describe("incrbyfloat", function () {
       r.incrbyfloat("baz", "1.5",function (err, result) {
 
         err.message.should.equal("ERR value is not a valid float");
+
+        done();
+      });
+    });
+  });
+});
+
+describe("decr", function () {
+
+  it("should decrement the number stored at key", function (done) {
+
+    r.set("foo", "10", function (err, result) {
+
+      r.decr("foo", function (err, result) {
+
+        result.should.eql(9);
+
+        r.get("foo", function (err, result) {
+
+          result.should.eql("9");
+
+          done();
+        });
+      });
+    });
+  });
+
+  it("should set 0 before performing if the key does not exist", function (done) {
+
+    r.decr("bar", function (err, result) {
+
+      result.should.eql(-1);
+
+      r.get("bar", function (err, result) {
+
+        result.should.eql("-1");
+
+        done();
+      });
+    });
+  });
+
+  it("should keep expires if it is set", function (done) {
+
+    r.set("foo", 10, "EX", 5, function (err, result) {
+
+      r.decr("foo", function (err, result) {
+
+        r.pttl("foo", function (err, result) {
+
+          (result === -1).should.be.false();
+
+          done();
+        });
+      });
+    });
+  });
+
+  it("should return error if the key holds the wrong kind of value.", function (done) {
+
+    r.hset("foo", "bar", "baz", function (err, result) {
+
+      r.decr("foo", function (err, result) {
+
+        err.message.should.eql("WRONGTYPE Operation against a key holding the wrong kind of value");
+
+        done();
+      });
+    });
+  });
+
+  it("should return error if the key contains a string that can not be represented as integer.", function (done) {
+
+    r.set("baz", "qux", function (err, result) {
+
+      r.decr("baz", function (err, result) {
+
+        err.message.should.equal("ERR value is not an integer or out of range");
+
+        done();
+      });
+    });
+  });
+});
+
+describe("decrby", function () {
+
+  it("should decrement the number stored at key by 2", function (done) {
+
+    r.set("foo", "10", function (err, result) {
+
+      r.decrby("foo", 2, function (err, result) {
+
+        result.should.eql(8);
+
+        r.get("foo", function (err, result) {
+
+          result.should.eql("8");
+
+          done();
+        });
+      });
+    });
+  });
+
+  it("should set 0 before performing if the key does not exist", function (done) {
+
+    r.decrby("bar", 5, function (err, result) {
+
+      result.should.eql(-5);
+
+      r.get("bar", function (err, result) {
+
+        result.should.eql("-5");
+
+        done();
+      });
+    });
+  });
+
+  it("should keep expires if it is set", function (done) {
+
+    r.set("foo", 10, "EX", 5, function (err, result) {
+
+      r.decrby("foo", 1, function (err, result) {
+
+        r.pttl("foo", function (err, result) {
+
+          (result === -1).should.be.false();
+
+          done();
+        });
+      });
+    });
+  });
+
+  it("should return error if the key holds the wrong kind of value.", function (done) {
+
+    r.hset("foo", "bar", "baz", function (err, result) {
+
+      r.decrby("foo", 5, function (err, result) {
+
+        err.message.should.eql("WRONGTYPE Operation against a key holding the wrong kind of value");
+
+        done();
+      });
+    });
+  });
+
+  it("should return error if the key contains a string that can not be represented as integer.", function (done) {
+
+    r.set("baz", "qux", function (err, result) {
+
+      r.decrby("baz", 5, function (err, result) {
+
+        err.message.should.equal("ERR value is not an integer or out of range");
 
         done();
       });

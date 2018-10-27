@@ -77,6 +77,8 @@ Currently implemented are the following redis commands:
 * incr
 * incrby
 * incrbyfloat
+* decr
+* decrby
 * rename
 * dbsize
 * renamenx
