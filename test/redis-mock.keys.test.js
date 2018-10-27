@@ -10,6 +10,7 @@ beforeEach(function () {
 
 afterEach(function () {
   r.flushall();
+  r.quit();
 });
 
 describe("del", function () {

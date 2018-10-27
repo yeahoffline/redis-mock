@@ -5,7 +5,7 @@ var redismock = require("../");
 
 // Clean the db after each test
 afterEach(function (done) {
-  r = helpers.createClient();
+  var r = helpers.createClient();
   r.flushdb(function () {
     r.end(true);
     done();
@@ -112,19 +112,19 @@ describe("redis-mock", function () {
     done();
   });
 
-  /** This test doesn't seem to work on node_redis
-   it("should have function end() that emits event 'end'", function (done) {
 
-        var r = redismock.createClient();
+  it("should have function end() that emits event 'end'", function (done) {
 
-        r.on("end", function () {
+    var r = redismock.createClient();
 
-            done();
+    r.on("end", function () {
 
-        });
-
-        r.end(true);
+      done();
 
     });
-   */
+
+    r.end(true);
+
+  });
+
 });
