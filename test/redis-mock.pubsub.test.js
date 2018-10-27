@@ -152,7 +152,6 @@ describe("publish and subscribe", function () {
     var r = helpers.createClient();
     var r2 = helpers.createClient();
 
-    r.psubscribe(pattern);
     r.on('pmessage', function (pattern, ch, msg) {
       ch.should.equal(goodChannels[index]);
       msg.should.equal(messages[index]);
@@ -164,13 +163,19 @@ describe("publish and subscribe", function () {
       }
     });
 
-    badChannels.forEach(function (channelName, i) {
-      r2.publish(channelName, messages[i]);
-    });
+    r.psubscribe(pattern);
 
-    goodChannels.forEach(function (channelName, i) {
-      r2.publish(channelName, messages[i]);
-    });
+    // Wait for redis to register the subscription
+    setTimeout(function() {
+      badChannels.forEach(function (channelName, i) {
+        r2.publish(channelName, messages[i]);
+      });
+
+      goodChannels.forEach(function (channelName, i) {
+        r2.publish(channelName, messages[i]);
+      });
+    }, 50);
+
   });
 
   it("should support multiple subscribers", function (done) {

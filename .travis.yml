@@ -8,4 +8,4 @@ node_js:
   - "stable"
 services:
   - redis-server
-script: make check-tests && npm test
+script: npm run lint && make check-tests && npm test

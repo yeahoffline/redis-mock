@@ -16,7 +16,8 @@
     "redis": "^2.6.2"
   },
   "scripts": {
-    "test": "make test"
+    "test": "make test",
+    "lint": "eslint ./lib ./test"
   },
   "keywords": [
     "redis",

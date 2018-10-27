@@ -9,6 +9,7 @@ beforeEach(function () {
 
 afterEach(function () {
   r.flushall();
+  r.quit();
 });
 
 describe("flushdb", function () {

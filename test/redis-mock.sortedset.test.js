@@ -20,6 +20,7 @@ beforeEach(function () {
 
 afterEach(function () {
   r.flushall();
+  r.quit();
 });
 
 describe("zadd", function () {
@@ -32,7 +33,7 @@ describe("zadd", function () {
     1.4, 'm1.4',
     1.5, 'm1.5',
     2, 'm2',
-    3, 'm3',
+    3, 'm3'
   ];
 
   var aLen = args.length;
@@ -101,7 +102,7 @@ describe("zcount", function () {
     1.4, 'm1.4',
     1.5, 'm1.5',
     2, 'm2',
-    3, 'm3',
+    3, 'm3'
   ];
 
   var aLen = args.length;
@@ -244,7 +245,7 @@ describe("zrangebyscore", function () {
     1.4, 'm1.4',
     1.5, 'm1.5',
     2, 'm2',
-    3, 'm3',
+    3, 'm3'
   ];
 
   var aLen = args.length;
@@ -512,7 +513,7 @@ describe("zrevrangebyscore", function () {
     1.4, 'm1.4',
     1.5, 'm1.5',
     2, 'm2',
-    3, 'm3',
+    3, 'm3'
   ];
 
   var aLen = args.length;
@@ -654,7 +655,7 @@ describe("zunionstore", function () {
             // Pull members and inspect
             result.should.equal(8)
             r.zrange(['zdest1', '0', '-1', 'withscores'], function(err, result) {
-              result.should.deepEqual([ 
+              result.should.deepEqual([
               'mem:1:1',
               '11',
               'mem:2:1',
@@ -687,7 +688,7 @@ describe("zunionstore", function () {
           // Pull members and inspect
           result.should.equal(5)
           r.zrange(['zdest1', '0', '-1', 'withscores'], function(err, result) {
-            result.should.deepEqual([ 
+            result.should.deepEqual([
             'mem:1:1',
             '11',
             'mem:2:1',
@@ -712,7 +713,7 @@ describe("zunionstore", function () {
         // Pull members and inspect
         result.should.equal(3)
         r.zrange(['zdest1', '0', '-1', 'withscores'], function(err, result) {
-          result.should.deepEqual([ 
+          result.should.deepEqual([
           'mem:1:1',
           '11',
           'mem:1:2',
@@ -726,7 +727,7 @@ describe("zunionstore", function () {
   });
 
   // TODO: Test that scores for values are aggregated with SUM by default
-  // TODO: [WEIGHTS weight [weight ...]] 
+  // TODO: [WEIGHTS weight [weight ...]]
   // TODO: [AGGREGATE SUM|MIN|MAX]
 });
 
@@ -741,7 +742,7 @@ describe("zinterstore", function () {
             // Pull members and inspect
             result.should.equal(2)
             r.zrange(['zdest1', '0', '-1', 'withscores'], function(err, result) {
-              result.should.deepEqual([ 
+              result.should.deepEqual([
               'cat',
               '14', // Sum: 11 + 1 + 2
               'parrot',
@@ -771,7 +772,7 @@ describe("zinterstore", function () {
     });
   });
 
-  // TODO: [WEIGHTS weight [weight ...]] 
+  // TODO: [WEIGHTS weight [weight ...]]
   // TODO: [AGGREGATE SUM|MIN|MAX]
 });
 
