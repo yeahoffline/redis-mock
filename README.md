@@ -73,6 +73,7 @@ Currently implemented are the following redis commands:
 * exists
 * type
 * expire
+* expireat
 * ttl
 * incr
 * incrby

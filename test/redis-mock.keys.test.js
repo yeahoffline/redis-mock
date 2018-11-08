@@ -237,6 +237,41 @@ describe("pexpire", function () {
 
 });
 
+describe("expireat", function () {
+
+    it("should return 0 for non-existing key", function (done) {
+        r.expireat("test", Date.now() + 10000, function (err, result) {
+            result.should.equal(0);
+            done();
+        });
+    });
+
+    it("should return 1 when timeout set on existing key", function (done) {
+        r.set("test", "test", function (err, result) {
+            r.expireat("test", Date.now() + 10000, function (err, result) {
+                result.should.equal(1);
+                r.del("test");
+                done();
+            });
+        });
+    });
+
+    it("should make key disappear after the set time", function (done) {
+        r.set("test", "val", function (err, result) {
+            r.expireat("test", Date.now() + 300, function (err, result) {
+                result.should.equal(1);
+                setTimeout(function () {
+                    r.exists("test", function (err, result) {
+                        result.should.equal(0);
+                        done();
+                    });
+                }, 500);
+            });
+        });
+    });
+
+});
+
 
 describe("ttl", function () {
 
