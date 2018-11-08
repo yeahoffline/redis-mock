@@ -24,6 +24,8 @@ describe("multi()", function () {
     should.exist(multi.set);
     should.exist(multi.GET);
     should.exist(multi.SET);
+    should.exist(multi.DECR);
+    should.exist(multi.decrby);
     should.exist(multi.exists);
     should.exist(multi.hget);
     should.exist(multi.exec_atomic);
