@@ -817,6 +817,34 @@ describe("blpop", function () {
       done();
     }, 1500);
   });
+
+  it("should not block when an element is already in the list", function(done) {
+    var r2 = helpers.createClient();
+    var time = false;
+
+    r2.rpush("foo11", "bar");
+    r.blpop("foo11", 1, function (err, result) {
+      result[0].should.equal("foo11");
+      result[1].should.equal("bar");
+      time.should.equal(false);
+      done();
+    });
+
+    setTimeout(function () {
+      time = true
+    }, 200);
+  });
+
+  it("should return an array of key followed by value when an element is already in the list", function(done) {
+    var r2 = helpers.createClient();
+
+    r2.rpush("foo11", "bar");
+    r.blpop("foo11", 1, function (err, result) {
+      result[0].should.equal("foo11");
+      result[1].should.equal("bar");
+      done();
+    });
+  });
 });
 
 describe("ltrim", function(argument) {
