@@ -23,9 +23,8 @@ describe("publish and subscribe", function () {
 
       should.equal(ch, channelName);
 
-      r.end(true);
+      r.quit(done);
 
-      done();
     });
 
     r.subscribe(channelName);
@@ -53,8 +52,7 @@ describe("publish and subscribe", function () {
     r.on("unsubscribe", function (ch) {
       channelsUnsubscribed++;
       if (channelsUnsubscribed == channelNames.length) {
-        r.end(true);
-        done();
+        r.quit(done);
       }
     });
 
@@ -76,8 +74,7 @@ describe("publish and subscribe", function () {
 
     r.on("punsubscribe", function (ch) {
       should.equal(ch, channelName);
-      r.end(true);
-      done();
+      r.quit(done);
     });
     r.psubscribe(channelName);
   });
@@ -95,7 +92,6 @@ describe("publish and subscribe", function () {
       }).should.throwError();
     } catch (e) {
       r.end(true);
-
       done();
     }
   });
@@ -113,7 +109,6 @@ describe("publish and subscribe", function () {
       }).should.throwError();
     } catch (e) {
       r.end(true);
-
       done();
     }
   });
@@ -132,9 +127,8 @@ describe("publish and subscribe", function () {
 
       r.unsubscribe(channelName);
 
-      r.end(true);
+      r.quit(done);
 
-      done();
     });
 
     r2.publish(otherChannel, "");
@@ -158,8 +152,7 @@ describe("publish and subscribe", function () {
       index++;
       if(index === goodChannels.length) {
         r.punsubscribe(pattern);
-        r.end(true);
-        done();
+        r.quit(done);
       }
     });
 
@@ -211,10 +204,12 @@ describe("publish and subscribe", function () {
         r2.unsubscribe(channelName);
         r2.unsubscribe(doneChannel);
 
-        r.end(true);
-        r2.end(true);
-
-        done();
+        r.quit(function (err) {
+          if (err) {
+            should.fail(err, null, "Expected null error.", "");
+          }
+          r2.quit(done);
+        })
       }
     });
     // Ensure the messages has got time to get to the server
@@ -256,9 +251,12 @@ describe("publish and subscribe", function () {
         r2.punsubscribe(channelName);
         r2.punsubscribe(doneChannel);
 
-        r.end(true);
-        r2.end(true);
-        done();
+        r.quit(function (err) {
+          if (err) {
+            should.fail(err, null, "Expected null error.", "");
+          }
+          r2.quit(done);
+        })
       }
     });
     // Ensure the messages has got time to get to the server

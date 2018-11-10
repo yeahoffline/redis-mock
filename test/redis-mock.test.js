@@ -14,7 +14,7 @@ afterEach(function (done) {
 
 describe("redis-mock", function () {
 
-  it("should create an instance of RedisClient which inherits from EventEmitter", function () {
+  it("should create an instance of RedisClient which inherits from EventEmitter", function (done) {
 
     should.exist(redismock.createClient);
 
@@ -23,11 +23,11 @@ describe("redis-mock", function () {
     r.should.be.an.instanceof(redismock.RedisClient);
     r.should.be.an.instanceof(events.EventEmitter);
 
-    r.end(true);
+    r.quit(done);
 
   });
 
-  it("should create a new RedisClient with duplicate(), not using callback", function() {
+  it("should create a new RedisClient with duplicate(), not using callback", function(done) {
     should.exist(redismock.createClient);
     var r = redismock.createClient();
     should.exist(r);
@@ -39,8 +39,12 @@ describe("redis-mock", function () {
     r2.should.be.an.instanceof(redismock.RedisClient);
     r2.should.be.an.instanceof(events.EventEmitter);
 
-    r.end(true);
-    r2.end(true);
+    r.quit(function (err) {
+      if (err) {
+        should.fail(err, null, "Expected null error.", "");
+      }
+      r2.quit(done);
+    });
   });
 
   it("should create a new RedisClient with duplicate(), using the callback", function(done) {
@@ -58,9 +62,12 @@ describe("redis-mock", function () {
       r2.should.be.an.instanceof(redismock.RedisClient);
       r2.should.be.an.instanceof(events.EventEmitter);
 
-      r.end(true);
-      r2.end(true);
-      done();
+      r.quit(function (err) {
+        if (err) {
+          should.fail(err, null, "Expected null error.", "");
+        }
+        r2.quit(done);
+      })
     });
   });
 
@@ -77,9 +84,8 @@ describe("redis-mock", function () {
 
         didOtherPassed = true;
 
-        r.end(true);
+        r.quit(done);
 
-        done();
       }
 
     });
@@ -90,9 +96,8 @@ describe("redis-mock", function () {
 
         didOtherPassed = true;
 
-        r.end(true);
+        r.quit(done);
 
-        done();
       }
 
     });
@@ -108,10 +113,27 @@ describe("redis-mock", function () {
     r.on("ready", function () {
       r.connected.should.eql(true);
     });
-    r.end(true);
-    done();
+    r.quit(done);
   });
 
+
+  it("should not be connected after end() is called", function (done) {
+
+    var r = redismock.createClient();
+
+    r.on("connect", function () {
+      r.connected.should.eql(true);
+
+      r.quit(function (err) {
+        if (err) {
+          should.fail(err, null, "Expected null error.", "");
+        }
+        r.connected.should.eql(false);
+        done();
+      });
+    });
+
+  });
 
   it("should have function end() that emits event 'end'", function (done) {
 
@@ -123,7 +145,7 @@ describe("redis-mock", function () {
 
     });
 
-    r.end(true);
+    r.quit();
 
   });
 

@@ -7,9 +7,9 @@ beforeEach(function () {
   r = helpers.createClient();
 });
 
-afterEach(function () {
+afterEach(function (done) {
   r.flushall();
-  r.quit();
+  r.quit(done);
 });
 
 describe("flushdb", function () {
