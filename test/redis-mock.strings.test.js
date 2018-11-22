@@ -42,6 +42,29 @@ describe("set", function () {
     });
   });
 
+  it("should set `null` as value", function(done) {
+    r.set("foo", null, function (err, result) {
+      result.should.equal("OK");
+      
+      r.get("foo", function(err, result) {
+        result.should.equal("null");
+        done();
+      });
+    });
+  });
+  
+
+  it("should set `undefined` as value", function(done) {
+    r.set("foo", undefined, function (err, result) {
+      result.should.equal("OK");
+      
+      r.get("foo", function(err, result) {
+        result.should.equal("undefined");
+        done();
+      });
+    });
+  });
+
   it("should allow buffers as second argument to the set function", function (done) {
     r.set("foo", new Buffer("bar"), function (err, result) {
       (err === null).should.be.true;
