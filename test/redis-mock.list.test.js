@@ -102,6 +102,44 @@ describe("basic pushing/poping list", function () {
   });
 });
 
+describe('rpoplpush', function () {
+  var testSrcKey = "mySourceKey";
+  var testDestKey = "myDestKey";
+  var testValues = ['1', '2', '3', '4'];
+
+  it('should rotate an item from the end to the start of the same list', function (done) {
+    r.lpush(testSrcKey, testValues[0], testValues[1], testValues[2], function (err, result) {
+      result.should.equal(3);
+      r.rpoplpush(testSrcKey, testSrcKey, function(err, result) {
+        result.should.equal(testValues[0]);
+        r.lpop(testSrcKey, function(err, result) {
+          result.should.equal(testValues[0]);
+          done();
+        });
+      });
+    });
+  });
+
+  it('should rotate an item from the end of one list to the start of another', function (done) {
+    r.lpush(testSrcKey, testValues[0], testValues[1], testValues[2], function (err, result) {
+      result.should.equal(3);
+      r.lpush(testDestKey, testValues[3], function (err, result) {
+        result.should.equal(1);
+        r.rpoplpush(testSrcKey, testDestKey, function(err, result) {
+          result.should.equal(testValues[0]);
+          r.lpop(testDestKey, function (err, result) {
+            result.should.equal(testValues[0]);
+            r.lpop(testSrcKey, function (err, result) {
+              result.should.equal(testValues[2]);
+              done();
+            });
+          });
+        });
+      });
+    });
+  });
+})
+
 describe("llen", function () {
   var testKey = "myKey3";
   var testValues = [1, 2, 3, 4, 5];

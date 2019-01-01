@@ -104,6 +104,24 @@ describe("multi()", function () {
         });
       });
     });
+
+    it('should allow rpoplpush to work', function (done) {
+      var key1 = 'a';
+      var key2 = 'b';
+      var val = 'myval';
+      r.rpush(key1, val, function (err, result) {
+        result.should.equal(1);
+        var multi = r.multi();
+        multi.rpoplpush(key1, key2);
+        multi.exec(function (err, result) {
+          should.deepEqual(result, [val]);
+          r.lrange('b', 0, -1, function (err, result) {
+            should.deepEqual(result, [val]);
+            done();
+          });
+        });
+      });
+    });
   });
 
   describe("discard()", function () {
