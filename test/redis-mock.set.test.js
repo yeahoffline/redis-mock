@@ -73,6 +73,21 @@ describe('sadd', function () {
     });
   });
 
+  it('should support arguments as array', function (done) {
+    r.sadd('foo', ['bar', 'baz'], function (err, result) {
+      result.should.eql(2);
+
+      r.smembers('foo', function (err, result) {
+        result.should.be.instanceof(Array);
+        result.should.have.length(2);
+        result.should.containEql('bar');
+        result.should.containEql('baz');
+
+        done();
+      });
+    });
+  });
+
   it('should support arguments without callback', function (done) {
     r.sadd('foo', 'bar', 'baz');
     r.smembers('foo', function (err, result) {
@@ -155,6 +170,18 @@ describe('srem', function () {
 
       r.srem('foo', 'bar', function (err, result) {
         err.message.should.eql('WRONGTYPE Operation against a key holding the wrong kind of value');
+
+        done();
+      });
+    });
+  });
+
+  it('should support arguments as array', function (done) {
+    r.sadd('foo', 'bar', 'baz', function (err, result) {
+      r.srem('foo', ['bar', 'baz']);
+      r.smembers('foo', function (err, result) {
+        result.should.be.instanceof(Array);
+        result.should.have.length(0);
 
         done();
       });
