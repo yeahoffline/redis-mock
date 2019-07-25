@@ -211,7 +211,7 @@ describe('persist', function () {
     });
   });
 
-  it("should return 0 for when timeout is not set on existing key", function (done) {
+  it("should return 0 when timeout is not set on existing key", function (done) {
     r.set("test", "val", function (err, result) {
       r.persist("test", function (err, result) {
         result.should.equal(0);
@@ -220,7 +220,7 @@ describe('persist', function () {
     });
   });
 
-  it("should return 1 for when timeout is set on existing key", function (done) {
+  it("should return 1 when timeout is set on existing key", function (done) {
     r.setex("test", 10, "val", function (err, result) {
       r.persist("test", function (err, result) {
         result.should.equal(1);
