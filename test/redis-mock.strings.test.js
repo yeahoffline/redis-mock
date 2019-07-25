@@ -66,7 +66,7 @@ describe("set", function () {
   });
 
   it("should allow buffers as second argument to the set function", function (done) {
-    r.set("foo", new Buffer("bar"), function (err, result) {
+    r.set("foo", Buffer.from("bar"), function (err, result) {
       (err === null).should.be.true;
       (result instanceof Buffer).should.be.true;
       result.toString().should.equal("OK");
@@ -251,7 +251,7 @@ describe("get", function () {
 
     r.set("foo", "bar", function (err, result) {
 
-      r.get(new Buffer("foo"), function (err, result) {
+      r.get(Buffer.from("foo"), function (err, result) {
 
         (result instanceof Buffer).should.be.true;
         result.toString().should.equal("bar");
@@ -264,7 +264,7 @@ describe("get", function () {
 
   it("should return string even for buffer value if we use a string for the key", function (done) {
 
-    r.set("foo", new Buffer("bar"), function (err, result) {
+    r.set("foo", Buffer.from("bar"), function (err, result) {
 
       r.get("foo", function (err, result) {
 
