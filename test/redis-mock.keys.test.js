@@ -202,6 +202,58 @@ describe("expire", function () {
 
 });
 
+describe('persist', function () {
+
+  it("should return 0 for non-existing key", function (done) {
+    r.persist("test", function (err, result) {
+      result.should.equal(0);
+      done();
+    });
+  });
+
+  it("should return 0 when timeout is not set on existing key", function (done) {
+    r.set("test", "val", function (err, result) {
+      r.persist("test", function (err, result) {
+        result.should.equal(0);
+        done();
+      });
+    });
+  });
+
+  it("should return 1 when timeout is set on existing key", function (done) {
+    r.setex("test", 10, "val", function (err, result) {
+      r.persist("test", function (err, result) {
+        result.should.equal(1);
+        done();
+      });
+    });
+  });
+
+  it("should reset ttl to -1", function (done) {
+    r.setex("test", 10, "val", function (err, result) {
+      r.persist("test", function (err, result) {
+        r.ttl("test", function (err, result) {
+          result.should.equal(-1);
+          done();
+        })
+      });
+    });
+  });
+
+  it("should prevent key from disappearing after initial ttl", function (done) {
+    r.setex("test", 1, "val", function (err, result) {
+      r.persist("test", function (err, result) {
+        setTimeout(function () {
+          r.get("test", function (err, result) {
+            result.should.equal("val");
+            done();
+          })
+        }, 1500);
+      });
+    });
+  });
+})
+
 describe("pexpire", function () {
 
   it("should return 0 for non-existing key", function (done) {
