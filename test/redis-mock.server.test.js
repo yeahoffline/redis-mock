@@ -43,3 +43,24 @@ describe("auth", function () {
     });
   });
 });
+
+describe("select", function() {
+  it("should change the currently selected database", function (done) {
+    r.select(0, function(err, result) {
+      result.should.equal('OK');
+      r.set("a", "1", function(err, result) {
+        r.select(1, function(err, result) {
+          r.get("a", function(err, result) {
+            result.should.equal(null);
+            r.select(0, function (err, result) {
+              r.get("a", function(err, result) {
+                result.should.equal("1");
+                done();
+              });
+            });
+          });
+        });
+      });
+    });
+  });
+});
