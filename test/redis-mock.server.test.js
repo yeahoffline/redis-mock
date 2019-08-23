@@ -14,7 +14,7 @@ afterEach(function (done) {
 
 describe("flushdb", function () {
 
-  it("should clean database", function (done) {
+  it("should clean the current database", function (done) {
 
     r.set("foo", "bar", function (err, result) {
       r.flushdb(function (err, result) {
@@ -33,6 +33,22 @@ describe("flushdb", function () {
 
   });
 
+  it("should leave other databases intact", function(done) {
+    r.select(0, function(err, result) {
+      r.set("a", "1", function(err, result) {    
+        r.select(3, function(err, result) {
+          r.flushdb(function(err, result) {
+            r.select(0, function(err, result) {
+              r.get("a", function(err, result) {
+                result.should.be.equal("1");
+                done();
+              })
+            });
+          });
+        });
+      });
+    });
+  });
 });
 
 describe("auth", function () {
@@ -47,14 +63,14 @@ describe("auth", function () {
 describe("select", function() {
   it("should change the currently selected database", function (done) {
     r.select(0, function(err, result) {
-      result.should.equal('OK');
+      result.should.be.equal('OK');
       r.set("a", "1", function(err, result) {
         r.select(1, function(err, result) {
-          r.get("a", function(err, result) {
-            result.should.equal(null);
+          r.exists("a", function(err, result) {
+            result.should.be.equal(0);
             r.select(0, function (err, result) {
               r.get("a", function(err, result) {
-                result.should.equal("1");
+                result.should.be.equal("1");
                 done();
               });
             });
