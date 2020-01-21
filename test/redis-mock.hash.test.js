@@ -567,6 +567,15 @@ describe("multiple get/set", function () {
     });
   });
 
+  it("should produce the correct error if called with an empty of keys", function(done) {
+    r.hmget(mHash2, [], function(err, result) {
+      should.not.exist(result);
+      err.message.should.equal("ERR wrong number of arguments for 'hmget' command");
+
+      done();
+    });
+  });
+
   //HKEYS
   it("should be able to get all keys for hash", function (done) {
 
