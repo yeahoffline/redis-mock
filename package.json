@@ -1,6 +1,6 @@
 {
   "name": "redis-mock",
-  "version": "0.48.0",
+  "version": "0.49.0",
   "description": "Redis client mock object for unit testing",
   "author": "Kristian Faeldt <kristian.faeldt@gmail.com>",
   "main": "./lib/redis-mock",
