@@ -54,6 +54,16 @@ describe("multi()", function () {
       });
     });
 
+    it("exec() should execute callback", function (done) {
+      r.multi().
+        incr('foo1').
+        incrby('foo2', 2).
+        exec(function (err, results) {
+          should.deepEqual(results, [1,2]);
+          done();
+        });
+    });
+
     it("should handle an array of commands", function (done) {
       r.set('foo', 3, function () {
         r.multi([
