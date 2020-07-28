@@ -104,6 +104,28 @@ describe("set", function () {
     });
   });
 
+  it("should accept the tll argument as a string", function (done) {
+
+    r.set("foo", "bar", 'EX', '10', function (err, result) {
+      result.should.equal("OK");
+
+          r.get("foo", function (err, result) {
+
+            result.should.equal("bar");
+
+            // done();
+            r.ttl("foo", function (err, result) {
+              
+              result.should.not.equal(-1)
+
+              done()
+
+            });
+
+          });
+    });
+  });
+
   it("should call toString() on non-buffer, non-string values", function (done) {
 
     r.set("foo", {probably_not:'desired'}, function (err, result) {
