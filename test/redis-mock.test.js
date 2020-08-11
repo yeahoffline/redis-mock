@@ -135,6 +135,37 @@ describe("redis-mock", function () {
 
   });
 
+  it("should have '.ready' boolean property that reflects 'ready' state", function (done) {
+
+    var r = redismock.createClient();
+
+    r.ready.should.be.an.instanceof(Boolean);
+    r.ready.should.eql(false);
+    r.on("ready", function () {
+      r.ready.should.eql(true);
+    });
+    r.quit(done);
+  });
+
+
+  it("should not be ready after end() is called", function (done) {
+
+    var r = redismock.createClient();
+
+    r.on("ready", function () {
+      r.ready.should.eql(true);
+
+      r.quit(function (err) {
+        if (err) {
+          should.fail(err, null, "Expected null error.", "");
+        }
+        r.ready.should.eql(false);
+        done();
+      });
+    });
+
+  });
+
   it("should have function end() that emits event 'end'", function (done) {
 
     var r = redismock.createClient();
