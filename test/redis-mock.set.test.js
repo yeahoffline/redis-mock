@@ -254,7 +254,7 @@ describe('smembers', function () {
       });
     });
   });
-  it('should not mutate retrieved array of members with srem', function (done) {
+  it('should return a copy and not a mutable reference', function (done) {
     r.sadd('foo', 'bar', function () {
       r.smembers('foo', function (err, membersBeforeRemoval) {
         r.srem('foo', 'bar', function (err, result) {
