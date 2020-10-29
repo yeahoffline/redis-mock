@@ -254,6 +254,18 @@ describe('smembers', function () {
       });
     });
   });
+  it('should not mutate retrieved array of members with srem', function (done) {
+    r.sadd('foo', 'bar', function () {
+      r.smembers('foo', function (err, membersBeforeRemoval) {
+        r.srem('foo', 'bar', function (err, result) {
+          membersBeforeRemoval.should.be.instanceof(Array);
+          membersBeforeRemoval.should.have.length(1);
+          result.should.eql(1);
+          return done();
+        });
+      });
+    });
+  });
 });
 
 describe('scard', function () {
