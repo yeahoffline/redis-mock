@@ -131,6 +131,7 @@ Currently implemented are the following redis commands:
 * smembers
 * scard
 * sismember
+* sscan
 
 ### Sorted Sets
 * zadd
