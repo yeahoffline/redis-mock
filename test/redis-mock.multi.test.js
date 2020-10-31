@@ -29,6 +29,11 @@ describe("multi()", function () {
     should.exist(multi.exists);
     should.exist(multi.hget);
     should.exist(multi.exec_atomic);
+
+    should.exist(multi.setex);
+    should.exist(multi.ttl);
+    should.exist(multi.incr);
+    should.exist(multi.renamenx);
   });
 
   describe("exec()", function () {
@@ -51,6 +56,24 @@ describe("multi()", function () {
           should.deepEqual(results, ['3',4]);
           done();
         });
+      });
+    });
+
+    it("multi renamenx should work", function (done) {
+      var key = 'my_key';
+      var tempKey = 'temp:' + key;
+      var realKey = 'real:' + key;
+      r.multi().setex(tempKey, 60, 0)
+        .renamenx(tempKey, realKey)
+        .incr(realKey)
+        .ttl(realKey)
+        .exec(function(err, results) {
+          should(err).not.be.ok();
+          should(results[0]).equal('OK');
+          should(results[1]).equal(1);
+          should(results[2]).equal(1);
+          (results[3]<= 60 ).should.be.true();
+          done();
       });
     });
 
