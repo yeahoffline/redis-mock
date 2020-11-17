@@ -11,9 +11,9 @@
   },
   "devDependencies": {
     "eslint": "^2.10.2",
-    "should": "8.3.2",
-    "mocha": "2.2.1",
-    "redis": "^2.6.2"
+    "mocha": "^8.2.1",
+    "redis": "^2.6.2",
+    "should": "8.3.2"
   },
   "scripts": {
     "test": "make test",
