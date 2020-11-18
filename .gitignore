@@ -1,5 +1,8 @@
 .DS_Store
 *.log
 node_modules
-.idea
 yarn.lock
+
+# Intellij Idea
+.idea
+*.iml
