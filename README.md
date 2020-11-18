@@ -181,7 +181,31 @@ redis-mock is work in progress, feel free to report an issue
 * 0.4.7 update devDependencies (should, mocha)
 
 
+# Example usage
 
+## Jest
+
+In order to make sure that your tests use the `redis-mock` instead of the actual `redis` implementation,
+update your `jest.config.js`, by adding `setupFileAfterEnv`, as follows:
+
+```javascript
+module.exports = {
+    // other properties...
+    setupFilesAfterEnv: ['./jest.setup.redis-mock.js'],
+};
+```
+
+From this point on, jest will always trigger the content of `jest.setup.redis-mock.js` before the execution of all tests.
+
+Now, let's create the file `jest.setup.redis-mock.js` in the same directory as `jest.config.js` and paste the following
+content:
+
+```javascript
+jest.mock('redis', () => jest.requireActual('redis-mock'));
+```
+
+This will make sure that the actual `redis` is never loaded and whenever any file tries to import/require `redis`,
+`redis-mock` will be returned instead.
 
 ## LICENSE - "MIT License"
 
