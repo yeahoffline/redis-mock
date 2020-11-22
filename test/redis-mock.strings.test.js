@@ -42,26 +42,20 @@ describe("set", function () {
     });
   });
 
-  it("should set `null` as value", function(done) {
+  it("should give an error when setting `null` as value", function(done) {
     r.set("foo", null, function (err, result) {
-      result.should.equal("OK");
-      
-      r.get("foo", function(err, result) {
-        result.should.equal("null");
-        done();
-      });
+      err.should.not.be.undefined();
+      should(result).be.undefined();
+      done();
     });
   });
-  
 
-  it("should set `undefined` as value", function(done) {
+
+  it("should give an error when setting `undefined` as value", function(done) {
     r.set("foo", undefined, function (err, result) {
-      result.should.equal("OK");
-      
-      r.get("foo", function(err, result) {
-        result.should.equal("undefined");
-        done();
-      });
+      err.should.not.be.undefined();
+      should(result).be.undefined();
+      done();
     });
   });
 
@@ -115,7 +109,7 @@ describe("set", function () {
 
             // done();
             r.ttl("foo", function (err, result) {
-              
+
               result.should.not.equal(-1)
 
               done()
@@ -126,18 +120,11 @@ describe("set", function () {
     });
   });
 
-  it("should call toString() on non-buffer, non-string values", function (done) {
-
+  it("should give error on non-buffer, non-string values", function (done) {
     r.set("foo", {probably_not:'desired'}, function (err, result) {
-      result.should.equal("OK");
-
-      r.get("foo", function (err, result) {
-
-        result.should.equal("[object Object]");
-
-        done();
-
-      });
+      err.should.not.be.undefined();
+      should(result).be.undefined();
+      done();
     });
   });
 

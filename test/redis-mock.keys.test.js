@@ -1,7 +1,9 @@
-var should = require("should");
-var helpers = require("./helpers");
+'use strict';
 
-var r;
+const should = require("should");
+const helpers = require("./helpers");
+
+let r;
 
 beforeEach(function () {
   r = helpers.createClient();
@@ -640,6 +642,30 @@ describe('scan', function () {
       });
     };
     loop();
+  });
+
+  it("no 'count' parameter specified, should return everything", function (done) {
+    r.scan('0', 'match', 'hel*', function (err, indexAndKeys) {
+      if(err) {
+        done(err);
+        return;
+      }
+      const keys = indexAndKeys[1];
+      keys.should.have.length(1);
+      done();
+    });
+  });
+
+  it("no optional parameter specified, should return everything", function (done) {
+    r.scan('0', function (err, indexAndKeys) {
+      if(err) {
+        done(err);
+        return;
+      }
+      const keys = indexAndKeys[1];
+      keys.should.have.length(3);
+      done();
+    });
   });
 
 });

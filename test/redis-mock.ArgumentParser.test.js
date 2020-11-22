@@ -2,6 +2,7 @@
 
 const should = require("should");
 const {ArgumentParser} = require("../lib/ArgumentParser");
+const { set } = require('../lib/argParsers');
 
 
 describe('ArgumentParser', () => {
@@ -31,7 +32,8 @@ describe('ArgumentParser', () => {
         named: {
           match: '*',
           count: 5
-        }
+        },
+        flags: {}
       });
     });
 
@@ -42,7 +44,8 @@ describe('ArgumentParser', () => {
         default: {},
         named: {
           match: '*'
-        }
+        },
+        flags: {}
       });
     });
 
@@ -53,7 +56,8 @@ describe('ArgumentParser', () => {
         default: {},
         named: {
           count: 5
-        }
+        },
+        flags: {}
       });
     });
 
@@ -66,7 +70,100 @@ describe('ArgumentParser', () => {
 
       result.should.be.deepEqual({
         default: {},
-        named: {}
+        named: {},
+        flags: {}
+      });
+    });
+
+  });
+
+  describe('When parsing 2 mutually exclusive named arguments', () => {
+
+    const parser = new ArgumentParser('test', {
+      named: {
+        ex: {
+          type: Number,
+          exclusivityKey: 'time'
+        },
+        px: {
+          type: Number,
+          exclusivityKey: 'time'
+        }
+      }
+    });
+
+    it('and both of them are provided, then an error is thrown', () => {
+      should.throws(() => parser.parse(['px', 1, 'ex', 2]));
+    });
+
+    it('and only the first one is provided, then the arguments are parsed successfully', () => {
+      const result = parser.parse(['ex', 2]);
+
+      should(result).deepEqual({
+        default: {},
+        named: {
+          ex: 2,
+        },
+        flags: {}
+      });
+    });
+
+    it('and only the second one is provided, then the arguments are parsed successfully', () => {
+      const result = parser.parse(['px', 1]);
+
+      should(result).deepEqual({
+        default: {},
+        named: {
+          px: 1,
+        },
+        flags: {}
+      });
+    });
+
+  });
+
+  describe('When parsing a flag and and a named parameter sharing the same exclusivityKey', () => {
+    const parser = new ArgumentParser('test', {
+      named: {
+        px: {
+          type: Number,
+          exclusivityKey: 'time'
+        },
+      },
+      flags: {
+        keepttl: {
+          exclusivityKey: 'time'
+        }
+      }
+    });
+
+    it('and both of them are provided, then an error is thrown', () => {
+      should.throws(() => parser.parse(['px', 1, 'keepttl']));
+    });
+
+    it('and only the named parameter is provided, then the arguments are parsed successfully', () => {
+      const result = parser.parse(['px', 1]);
+
+      should(result).deepEqual({
+        default: {},
+        named: {
+          px: 1,
+        },
+        flags: {
+          keepttl: false
+        }
+      });
+    });
+
+    it('and only the flag is provided, then the arguments are parsed successfully', () => {
+      const result = parser.parse(['keepttl']);
+
+      should(result).deepEqual({
+        default: {},
+        named: {},
+        flags: {
+          keepttl: true
+        }
       });
     });
 
@@ -90,7 +187,8 @@ describe('ArgumentParser', () => {
         default: {},
         named: {
           required: 'test'
-        }
+        },
+        flags: {}
       });
     });
 
@@ -124,7 +222,8 @@ describe('ArgumentParser', () => {
         default: {
           testDefault: 'defaultValue'
         },
-        named: {}
+        named: {},
+        flags: {}
       });
     });
 
@@ -137,7 +236,8 @@ describe('ArgumentParser', () => {
         },
         named: {
           named: 'namedValue'
-        }
+        },
+        flags: {}
       });
     });
 
@@ -150,4 +250,108 @@ describe('ArgumentParser', () => {
     });
   });
 
+  describe('when parsing flags', () => {
+
+    const parser = new ArgumentParser('test', {
+      default: [
+        {
+          type: String,
+          name: 'testDefault'
+        }
+      ],
+      named: {
+        named: {
+          type: String,
+          required: false
+        }
+      },
+      flags: {
+        flag1: {},
+        flag2: {}
+      }
+    });
+
+    it('and no flags are actually provided as parameters, Then the 2 flags have the value of false', () => {
+      const result = parser.parse(['testValue']);
+
+      should(result.flags).deepEqual({
+        flag1: false,
+        flag2: false
+      });
+    });
+
+    it('and 1 out of 2 flags is provided as parameters, Then the specified flag has the value of true,' +
+      'and the other one is false', () => {
+      const result = parser.parse(['testValue', 'flag2']);
+
+      should(result.flags).deepEqual({
+        flag1: false,
+        flag2: true
+      });
+    });
+
+
+    it('and 2 out of 2 flags is provided as parameters, Then they both receive value true', () => {
+      const result = parser.parse(['testValue', 'flag2', 'flag1']);
+
+      should(result.flags).deepEqual({
+        flag1: true,
+        flag2: true
+      });
+    });
+
+    it('and defining an invalid flag, then an error is thrown', () => {
+      should.throws(() => parser.parse(['testValue', 'wrongFlag']));
+    });
+
+    it('when 2 flags are mutually exclusive, then specifying each one of them separately is fine,' +
+      'but defining them both at once results in an error', () => {
+
+      const mutuallyExclusiveParser = new ArgumentParser('test', {
+        flags: {
+          flag1: {
+            exclusivityKey: 'onlyOne'
+          },
+          flag2: {
+            exclusivityKey: 'onlyOne'
+          }
+        }
+      });
+
+      should(mutuallyExclusiveParser.parse(['flag1']).flags).deepEqual({
+        flag1: true,
+        flag2: false
+      });
+      should(mutuallyExclusiveParser.parse(['flag2']).flags).deepEqual({
+        flag1: false,
+        flag2: true
+      });
+
+      should.throws(() => mutuallyExclusiveParser.parse(['flag1', 'flag2']));
+    });
+
+  });
+
+  describe('When defining the parameters in order other than default', () => {
+
+    it('by defining the flags before the named parameters, Then the input is still correctly parsed', () => {
+      const result = set.parse(['testKey', 'testValue', 'nx', 'ex', '2']);
+
+      should(result).deepEqual({
+        default: {
+          key: 'testKey',
+          value: 'testValue'
+        },
+        named: {
+          ex: 2
+        },
+        flags: {
+          keepttl: false,
+          nx: true,
+          xx: false
+        }
+      })
+    });
+
+  });
 });
