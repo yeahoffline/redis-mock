@@ -551,7 +551,7 @@ describe('scan', function () {
     var iterations = 0;
 
     var loop = function() {
-      iterations ++;
+      iterations++;
       r.scan(index, 'match', '*', 'count', 2, function (err, indexAndKeys) {
         if(err) {
           done(err);
