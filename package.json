@@ -10,13 +10,14 @@
     "url": "https://github.com/yeahoffline/redis-mock"
   },
   "devDependencies": {
-    "eslint": "^7.13.0",
-    "mocha": "8.2.1",
+    "eslint": "^5.16.0",
+    "mocha": "6.2.3",
     "redis": "^3.0.2",
     "should": "13.2.3"
   },
   "scripts": {
-    "test": "make test",
+    "test": "mocha --timeout 5000",
+    "test:valid": "VALID_TESTS=true mocha --timeout 5000 --exit",
     "lint": "eslint ./lib ./test"
   },
   "files": [

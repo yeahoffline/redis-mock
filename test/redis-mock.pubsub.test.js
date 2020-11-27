@@ -44,14 +44,14 @@ describe("publish and subscribe", function () {
     r.on("subscribe", function (ch) {
       channelsSubscribed++;
 
-      if (channelsSubscribed == channelNames.length) {
+      if (channelsSubscribed === channelNames.length) {
         r.unsubscribe();
       }
     });
 
     r.on("unsubscribe", function (ch) {
       channelsUnsubscribed++;
-      if (channelsUnsubscribed == channelNames.length) {
+      if (channelsUnsubscribed === channelNames.length) {
         r.quit(done);
       }
     });
@@ -195,9 +195,9 @@ describe("publish and subscribe", function () {
 
     r2.on('message', function (ch, msg) {
 
-      if (ch == channelName) {
+      if (ch === channelName) {
         channelNameCallsRecieved++;
-      } else if (ch == doneChannel) {
+      } else if (ch === doneChannel) {
 
         channelNameCallsRecieved.should.equal(4);
         r.unsubscribe(channelName);
@@ -243,9 +243,9 @@ describe("publish and subscribe", function () {
     });
 
     r2.on('pmessage', function (pattern, ch, msg) {
-      if (ch == channelName) {
+      if (ch === channelName) {
         channelNameCallsRecieved++;
-      } else if (ch == doneChannel) {
+      } else if (ch === doneChannel) {
         channelNameCallsRecieved.should.equal(4);
         r.punsubscribe(channelName);
         r2.punsubscribe(channelName);

@@ -1,8 +1,7 @@
-var helpers = require("./helpers");
-var should = require("should");
-var events = require("events");
+const helpers = require("./helpers");
+const should = require("should");
 
-var r;
+let r;
 
 beforeEach(function () {
   r = helpers.createClient();
@@ -15,13 +14,13 @@ afterEach(function (done) {
 
 describe("basic hashing usage", function () {
 
-  var testHash = "myHash";
-  var testKey = "myKey";
-  var testValue = "myValue";
+  const testHash = "myHash";
+  const testKey = "myKey";
+  const testValue = "myValue";
 
-  var testKeyNotExist = "myKeyNonExistant";
-  var testKeyEmptyString = "myKeyEmptyString";
-  var testValueEmptyString = "";
+  const testKeyNotExist = "myKeyNonExistant";
+  const testKeyEmptyString = "myKeyEmptyString";
+  const testValueEmptyString = "";
 
   it("should not say that non-existant values exist", function (done) {
 

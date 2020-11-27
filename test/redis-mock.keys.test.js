@@ -545,33 +545,38 @@ describe('scan', function () {
     });
   });
 
-  it("when count is 2, should return 2 elements and an index allowing to get the rest", function (done) {
-    var keys = [];
-    var index = 0;
-    var iterations = 0;
+  if (!process.env.VALID_TEST) {
+    // this can randomly fail with the real client.
+    // redis does its best effort to match the count, but the truth is that often, the returned number
+    // is different from the one requested
+    it("when count is 2, should return 2 elements and an index allowing to get the rest", function (done) {
+      let keys = [];
+      let index = 0;
+      let iterations = 0;
 
-    var loop = function() {
-      iterations++;
-      r.scan(index, 'match', '*', 'count', 2, function (err, indexAndKeys) {
-        if(err) {
-          done(err);
-          return;
-        }
-        keys = keys.concat(indexAndKeys[1]);
-        index = indexAndKeys[0];
-        if (index !== '0') {
-          loop();
-        } else {
-          keys.should.be.instanceof(Array);
-          keys.should.have.length(3);
-          index.should.be.equal('0');
-          iterations.should.be.equal(2);
-          done();
-        }
-      });
-    };
-    loop();
-  });
+      const loop = function() {
+        iterations++;
+        r.scan(index, 'match', '*', 'count', 2, function (err, indexAndKeys) {
+          if(err) {
+            done(err);
+            return;
+          }
+          keys = keys.concat(indexAndKeys[1]);
+          index = indexAndKeys[0];
+          if (index !== '0') {
+            loop();
+          } else {
+            keys.should.be.instanceof(Array);
+            keys.should.have.length(3);
+            index.should.be.equal('0');
+            iterations.should.be.equal(2);
+            done();
+          }
+        });
+      };
+      loop();
+    });
+  }
 
   it("should scan all keys - *", function (done) {
     var keys = [];
