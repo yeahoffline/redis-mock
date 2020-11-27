@@ -1,8 +1,9 @@
-var should = require("should")
-var events = require("events");
-var helpers = require("./helpers");
+'use strict';
 
-var r;
+const should = require("should");
+const helpers = require("./helpers");
+
+let r;
 
 beforeEach(function () {
   r = helpers.createClient();
@@ -485,7 +486,6 @@ describe("keys", function () {
         r.set("hxlo", "test", done);
       });
     });
-
   });
 
   it("should return all existing keys if pattern equal - *", function (done) {
@@ -533,6 +533,46 @@ describe("keys", function () {
       done();
     });
   });
+});
+
+describe('scan', function () {
+
+  beforeEach(function (done) {
+    r.set("hello", "test", function () {
+      r.set("hallo", "test", function () {
+        r.set("hxlo", "test", done);
+      });
+    });
+  });
+
+  it("when count is 2, should return 2 elements and an index allowing to get the rest", function (done) {
+    var keys = [];
+    var index = 0;
+    var iterations = 0;
+
+    var loop = function() {
+      iterations++;
+      r.scan(index, 'match', '*', 'count', 2, function (err, indexAndKeys) {
+        if(err) {
+          done(err);
+          return;
+        }
+        keys = keys.concat(indexAndKeys[1]);
+        index = indexAndKeys[0];
+        if (index !== '0') {
+          loop();
+        } else {
+          keys.should.be.instanceof(Array);
+          keys.should.have.length(3);
+          index.should.be.equal('0');
+          iterations.should.be.equal(2);
+          done();
+        }
+      });
+    };
+    loop();
+  });
+
   it("should scan all keys - *", function (done) {
     var keys = [];
     var index = 0;
@@ -543,7 +583,7 @@ describe("keys", function () {
           return;
         }
         keys = keys.concat(indexAndKeys[1]);
-        var index = indexAndKeys[0];
+        index = indexAndKeys[0];
         if (index !== '0') {
           loop();
         } else {
@@ -559,6 +599,75 @@ describe("keys", function () {
     };
     loop();
   });
+
+  it("when match specified, should return only the matching values", function (done) {
+    r.scan('0', 'match', 'hel*', 'count', 1000, function (err, indexAndKeys) {
+      if(err) {
+        done(err);
+        return;
+      }
+      var keys = indexAndKeys[1];
+      var index = indexAndKeys[0];
+      index.should.be.equal('0');
+      keys.should.be.instanceof(Array);
+      keys.should.containEql('hello');
+      keys.should.have.length(1);
+      index.should.be.equal('0');
+      done();
+    });
+  });
+
+  it("no 'match' parameter specified, should default to '*'", function (done) {
+    var keys = [];
+    var index = 0;
+    var loop = function() {
+      r.scan(index, 'count', 1000, function (err, indexAndKeys) {
+        if(err) {
+          done(err);
+          return;
+        }
+        keys = keys.concat(indexAndKeys[1]);
+        index = indexAndKeys[0];
+        if (index !== '0') {
+          loop();
+        } else {
+          keys.should.be.instanceof(Array);
+          keys.should.containEql('hello');
+          keys.should.containEql('hallo');
+          keys.should.containEql('hxlo');
+          keys.should.have.length(3);
+          index.should.be.equal('0');
+          done();
+        }
+      });
+    };
+    loop();
+  });
+
+  it("no 'count' parameter specified, should return everything", function (done) {
+    r.scan('0', 'match', 'hel*', function (err, indexAndKeys) {
+      if(err) {
+        done(err);
+        return;
+      }
+      const keys = indexAndKeys[1];
+      keys.should.have.length(1);
+      done();
+    });
+  });
+
+  it("no optional parameter specified, should return everything", function (done) {
+    r.scan('0', function (err, indexAndKeys) {
+      if(err) {
+        done(err);
+        return;
+      }
+      const keys = indexAndKeys[1];
+      keys.should.have.length(3);
+      done();
+    });
+  });
+
 });
 
 describe("rename", function () {

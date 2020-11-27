@@ -63,11 +63,11 @@ describe("multi()", function () {
       var key = 'my_key';
       var tempKey = 'temp:' + key;
       var realKey = 'real:' + key;
-      r.multi().setex(tempKey, 60, 0)
-        .renamenx(tempKey, realKey)
-        .incr(realKey)
-        .ttl(realKey)
-        .exec(function(err, results) {
+      r.multi().setex(tempKey, 60, 0).
+        renamenx(tempKey, realKey).
+        incr(realKey).
+        ttl(realKey).
+        exec(function(err, results) {
           should(err).not.be.ok();
           should(results[0]).equal('OK');
           should(results[1]).equal(1);

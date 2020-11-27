@@ -507,14 +507,14 @@ describe('smove', function () {
 
 describe('sscan', function () {
   it('should return empty results on missing set', function (done) {
-    r.sscan('foo', function (err, result) {
+    r.sscan('foo', 0, function (err, result) {
       result.should.eql(['0', []]);
       return done(err);
     })
   });
   it('should return empty results on string type', function (done) {
     r.set('foo', 'bar', function () {
-      r.sscan('foo', function (err, result) {
+      r.sscan('foo', 0, function (err, result) {
         result.should.eql(['0', []]);
         return done(err);
       });
@@ -523,7 +523,7 @@ describe('sscan', function () {
   it('should add and scan through all added members with default attributes', function (done) {
     r.sadd('foo', 'bar', 'baz', function (err, result) {
       result.should.eql(2);
-      r.sscan('foo', function(err, result) {
+      r.sscan('foo', 0, function(err, result) {
         result.should.eql(['0', ['bar', 'baz']]);
         return done(err);
       });
@@ -541,8 +541,8 @@ describe('sscan', function () {
   it('should add and scan through added keys via pattern', function (done) {
     r.sadd('foo', 'bar', 'baz', 'qux', 'quux', 'quuz', function (err, result) {
       result.should.eql(5);
-      r.sscan('foo', 'match', 'qu*', function(err, result) {
-        result.should.eql(['0', ['qux', 'quux', 'quuz']])
+      r.sscan('foo', '0', 'match', 'qu*', function(err, result) {
+        result.should.eql(['0', ['qux', 'quux', 'quuz']]);
         return done(err);
       });
     });

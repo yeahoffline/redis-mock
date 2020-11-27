@@ -1,7 +1,8 @@
 {
-"env": {
-  "node": true,
-  "mocha": true
+  "env": {
+    "node": true,
+    "mocha": true,
+    "es6": true
   },
   "extends": "eslint:recommended",
   "rules": {
@@ -12,18 +13,26 @@
     "arrow-parens": "error",
     "arrow-spacing": "error",
     "block-scoped-var": "off",
-    "block-spacing": [ "error", "always" ],
+    "block-spacing": [
+      "error",
+      "always"
+    ],
     "brace-style": [
       "error",
       "1tbs",
-      { "allowSingleLine": true }
+      {
+        "allowSingleLine": true
+      }
     ],
     "callback-return": "error",
     "camelcase": "off",
     "comma-spacing": "off",
     "comma-style": "off",
     "complexity": "error",
-    "computed-property-spacing": [ "error", "never" ],
+    "computed-property-spacing": [
+      "error",
+      "never"
+    ],
     "consistent-return": "off",
     "consistent-this": "off",
     "curly": "error",
@@ -46,7 +55,10 @@
     "jsx-quotes": "error",
     "key-spacing": "off",
     "keyword-spacing": "off",
-    "linebreak-style": [ "error", "unix" ],
+    "linebreak-style": [
+      "error",
+      "unix"
+    ],
     "lines-around-comment": "off",
     "max-depth": "off",
     "max-len": "off",
@@ -60,7 +72,12 @@
     "newline-per-chained-call": "error",
     "no-alert": "error",
     "no-array-constructor": "error",
-    "no-bitwise": [ "error", {"int32Hint": true } ],
+    "no-bitwise": [
+      "error",
+      {
+        "int32Hint": true
+      }
+    ],
     "no-caller": "error",
     "no-catch-shadow": "error",
     "no-confusing-arrow": "error",
@@ -79,7 +96,10 @@
     "no-implicit-globals": "off",
     "no-implied-eval": "error",
     "no-inline-comments": "off",
-    "no-inner-declarations": [ "error", "functions" ],
+    "no-inner-declarations": [
+      "error",
+      "functions"
+    ],
     "no-invalid-this": "error",
     "no-iterator": "error",
     "no-label-var": "error",
@@ -159,7 +179,12 @@
     "require-yield": "error",
     "semi": "off",
     "semi-spacing": [
-    "error", { "after": true, "before": false } ],
+      "error",
+      {
+        "after": true,
+        "before": false
+      }
+    ],
     "sort-imports": "error",
     "sort-vars": "off",
     "space-before-blocks": "error",
@@ -168,10 +193,12 @@
     "space-infix-ops": "off",
     "space-unary-ops": [
       "error",
-      { "nonwords": false, "words": false }
+      {
+        "nonwords": false,
+        "words": false
+      }
     ],
     "spaced-comment": "off",
-    "strict": [ "error", "never" ],
     "template-curly-spacing": "error",
     "valid-jsdoc": "off",
     "vars-on-top": "off",
