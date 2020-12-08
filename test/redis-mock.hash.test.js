@@ -46,23 +46,6 @@ describe("basic hashing usage", function () {
 
   });
 
-  it("should toString on non-string values", function (done) {
-    var testArray = [1,2,3];
-
-    r.hset(testHash, testKey, testArray, function (err, result) {
-
-      r.hget(testHash, testKey, function (err, result) {
-
-        result.should.equal(testArray.toString());
-
-        done();
-
-      });
-
-    });
-
-  });
-
   it("should treat empty string as existent", function (done) {
     r.hset(testHash, testKeyEmptyString, testValueEmptyString, function (err, result) {
       r.hexists(testHash, testKeyEmptyString, function (err, result) {
@@ -122,7 +105,8 @@ describe("basic hashing usage", function () {
 
       r.hget(testHash, testKeyNotExist, function (err, result) {
 
-        should.not.exist(result);
+        should(result).be.null();
+        should(err).be.null();
 
         done();
 
