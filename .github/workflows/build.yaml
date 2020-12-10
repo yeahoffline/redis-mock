@@ -1,4 +1,4 @@
-name: Testing the library
+name: Build
 
 on:
   push:
