@@ -3,8 +3,7 @@ redis-mock
 
 [![NPM](https://nodei.co/npm/redis-mock.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/redis-mock/)
 
-[![Build Status](https://travis-ci.org/yeahoffline/redis-mock.svg?branch=master)](https://travis-ci.org/yeahoffline/redis-mock)
-[![Coverage Status](https://coveralls.io/repos/yeahoffline/redis-mock/badge.svg)](https://coveralls.io/r/yeahoffline/redis-mock)
+![Build status](https://github.com/yeahoffline/redis-mock/workflows/Testing%20the%20library/badge.svg?branch=master)
 
 The goal of the `redis-mock` project is to create a feature-complete mock of [node_redis](https://github.com/NodeRedis/node_redis), which may be used interchangeably when writing unit tests for code that depends on `redis`.
 
