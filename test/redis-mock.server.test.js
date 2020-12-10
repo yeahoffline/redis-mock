@@ -13,12 +13,25 @@ afterEach(function (done) {
 });
 
 describe("auth", function () {
-  it("should always succeed and call back", function (done) {
-    r.auth("secret", function (err, result) {
-      result.should.equal('OK');
-      done();
+  if (process.env.VALID_TESTS) {
+
+    it("should always succeed and call back", function (done) {
+      r.auth("secret", function (err, result) {
+        err.message.should.match(/ERR AUTH <password> called without any password configured for the default user/)
+        done();
+      });
     });
-  });
+
+  } else {
+    //this doesn't work with VALID_TESTS unless you preconfigure your redis to use password
+    it("should always succeed and call back", function (done) {
+      r.auth("secret", function (err, result) {
+        result.should.equal('OK');
+        done();
+      });
+    });
+
+  }
 });
 
 describe("select", function () {

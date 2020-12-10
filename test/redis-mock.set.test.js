@@ -1,7 +1,8 @@
-var should = require('should');
-var helpers = require('./helpers');
+const should = require('should');
+const helpers = require('./helpers');
+const arrayEqualInAnyOrder = require('./test-utils').arrayEqualInAnyOrder;
 
-var r;
+let r;
 
 beforeEach(function () {
   r = helpers.createClient();
@@ -512,11 +513,12 @@ describe('sscan', function () {
       return done(err);
     })
   });
-  it('should return empty results on string type', function (done) {
+  it('should throw an error when scanning from a string instead of a set', function (done) {
     r.set('foo', 'bar', function () {
       r.sscan('foo', 0, function (err, result) {
-        result.should.eql(['0', []]);
-        return done(err);
+        err.message.should.match(/WRONGTYPE Operation against a key holding the wrong kind of value/);
+        should(result).be.undefined();
+        return done();
       });
     });
   });
@@ -524,7 +526,8 @@ describe('sscan', function () {
     r.sadd('foo', 'bar', 'baz', function (err, result) {
       result.should.eql(2);
       r.sscan('foo', 0, function(err, result) {
-        result.should.eql(['0', ['bar', 'baz']]);
+        result[0].should.equal('0');
+        arrayEqualInAnyOrder(result[1], ['bar', 'baz']).should.be.true();
         return done(err);
       });
     });
@@ -533,7 +536,8 @@ describe('sscan', function () {
     r.sadd('foo', 'bar', 'baz', function (err, result) {
       result.should.eql(2);
       r.sscan('foo', 0, 'count', 1, function(err, result) {
-        result.should.eql(['2', ['bar']]);
+        result[0].should.eql('2');
+        result[1].length.should.equal(1);
         return done(err);
       })
     });
@@ -542,7 +546,9 @@ describe('sscan', function () {
     r.sadd('foo', 'bar', 'baz', 'qux', 'quux', 'quuz', function (err, result) {
       result.should.eql(5);
       r.sscan('foo', '0', 'match', 'qu*', function(err, result) {
-        result.should.eql(['0', ['qux', 'quux', 'quuz']]);
+        result.length.should.equal(2);
+        result[0].should.equal('0');
+        arrayEqualInAnyOrder(result[1], ['qux', 'quux', 'quuz']).should.be.true();
         return done(err);
       });
     });

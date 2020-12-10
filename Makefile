@@ -1,18 +1,18 @@
-TESTS = $(shell find test/ -name '*.test.js')
 REPORTER?=spec
 FLAGS=--reporter $(REPORTER)
 
-run-tests:
-	@./node_modules/.bin/mocha --timeout 5000 $(TESTS) $(FLAGS)
+# Runs the tests against a mock
+test:
+	npm test -- $(FLAGS)
 
 watch-tests:
-	@./node_modules/.bin/mocha --timeout 5000 --watch $(TESTS) $(FLAGS)
+	npm test -- --watch $(FLAGS)
 
-test:
-	@$(MAKE) NODE_PATH=lib TESTS="$(ALL_TESTS)" run-tests
+# Runs the tests against a real redis to make sure they are valid
+validate-tests:
+	npm run test:valid -- $(FLAGS)
 
-#This is used to validate the tests work on redis_mock
-check-tests:
-	@$(MAKE) NODE_PATH=lib VALID_TESTS="TRUE" TESTS="$(ALL_TESTS)" run-tests
+lint:
+	npm run lint
 
-.PHONY: test
+test-all: lint validate-tests test
