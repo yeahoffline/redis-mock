@@ -12,8 +12,11 @@
   "devDependencies": {
     "eslint": "^5.16.0",
     "mocha": "6.2.3",
-    "redis": "^3.0.2",
-    "should": "13.2.3"
+    "should": "13.2.3",
+    "redis": "^3.0.2"
+  },
+  "peerDependencies": {
+    "redis": "^3.0.2"
   },
   "scripts": {
     "test": "mocha --timeout 5000",
