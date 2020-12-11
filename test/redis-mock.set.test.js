@@ -1,6 +1,6 @@
 const should = require('should');
 const helpers = require('./helpers');
-const arrayEqualInAnyOrder = require('./test-utils').arrayEqualInAnyOrder;
+const arrayEqualInAnyOrder = require('./test-utils/comparators').arrayEqualInAnyOrder;
 
 let r;
 

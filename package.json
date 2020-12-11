@@ -1,6 +1,6 @@
 {
   "name": "redis-mock",
-  "version": "0.55.0",
+  "version": "0.55.1",
   "description": "Redis client mock object for unit testing",
   "author": "Kristian Faeldt <kristian.faeldt@gmail.com>",
   "main": "./lib/redis-mock",
@@ -12,8 +12,11 @@
   "devDependencies": {
     "eslint": "^5.16.0",
     "mocha": "6.2.3",
-    "redis": "^3.0.2",
-    "should": "13.2.3"
+    "should": "13.2.3",
+    "redis": "^3.0.2"
+  },
+  "peerDependencies": {
+    "redis": "^3.0.2"
   },
   "scripts": {
     "test": "mocha --timeout 5000",
