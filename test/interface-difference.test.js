@@ -1,7 +1,7 @@
 'use strict';
 
 const redis = require('redis');
-const redisMock = require('../lib/redis-mock');
+const redisMock = require('../lib');
 const getAllPublicMethods = require('./test-utils/getAllPublicMethods');
 
 require("should");
@@ -33,6 +33,8 @@ describe.skip('Given real redis library and the mock', () => {
     });
 
     // TODO: verify that not only all methods are in place, but also that they have the same number of parameters
+
+    // TODO: verify that all classes that are exported from the index have the same methods
   });
 
 });
