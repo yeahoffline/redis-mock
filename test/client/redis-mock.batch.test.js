@@ -1,5 +1,5 @@
 var should = require("should");
-var helpers = require("./helpers");
+var helpers = require("../helpers");
 
 var r;
 

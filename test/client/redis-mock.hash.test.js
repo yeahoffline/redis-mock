@@ -1,4 +1,4 @@
-const helpers = require("./helpers");
+const helpers = require("../helpers");
 const should = require("should");
 
 let r;

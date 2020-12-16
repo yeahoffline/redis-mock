@@ -1,7 +1,7 @@
-var should = require("should");
-var events = require("events");
-var helpers = require("./helpers");
-var redismock = require("../");
+const should = require("should");
+const events = require("events");
+const helpers = require("../helpers");
+const redismock = require("../../lib");
 
 // Clean the db after each test
 afterEach(function (done) {

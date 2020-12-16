@@ -1,8 +1,8 @@
 'use strict';
 
 const should = require("should");
-const {ArgumentParser} = require("../lib/ArgumentParser");
-const { set } = require('../lib/argParsers');
+const {ArgumentParser} = require("../../lib/client/ArgumentParser");
+const { set } = require('../../lib/client/argParsers');
 
 
 describe('ArgumentParser', () => {

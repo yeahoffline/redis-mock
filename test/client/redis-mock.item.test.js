@@ -1,4 +1,4 @@
-var RedisItem = require("../lib/item.js"),
+var RedisItem = require("../../lib/server/item.js"),
   should = require("should");
 
 describe("createString", function () {

@@ -1,4 +1,4 @@
-﻿var helpers = require("../lib/helpers")
+﻿var helpers = require("../../lib/helpers")
 var should = require("should")
 
 describe("patternToRegex", function () {
