@@ -1,6 +1,6 @@
 var should = require("should");
 var events = require("events");
-var helpers = require("./helpers");
+var helpers = require("../helpers");
 
 var r;
 

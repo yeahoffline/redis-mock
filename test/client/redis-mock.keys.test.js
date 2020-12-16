@@ -1,7 +1,7 @@
 'use strict';
 
 const should = require("should");
-const helpers = require("./helpers");
+const helpers = require("../helpers");
 
 let r;
 

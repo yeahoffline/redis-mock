@@ -1,5 +1,5 @@
 const should = require("should");
-const helpers = require("./helpers");
+const helpers = require("../helpers");
 
 /**
   *** NOT IMPLEMENTED ***

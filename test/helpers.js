@@ -1,11 +1,9 @@
-var redismock = require("../");
-
-if (process.env['VALID_TESTS']) {
-  redismock = require('redis');
-}
+const redismock = process.env['VALID_TESTS']
+  ? require('redis')
+  : require("../");
 
 function createClient() {
-  var options = {
+  const options = {
     detect_buffers: true,
     url: process.env['REDIS_URL'] || 'redis://127.0.0.1:6379'
   }

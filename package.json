@@ -15,12 +15,9 @@
     "should": "13.2.3",
     "redis": "^3.0.2"
   },
-  "peerDependencies": {
-    "redis": "^3.0.2"
-  },
   "scripts": {
-    "test": "mocha --timeout 5000",
-    "test:valid": "VALID_TESTS=true mocha --timeout 5000 --exit",
+    "test": "mocha --timeout 5000 --recursive",
+    "test:valid": "VALID_TESTS=true npm run test -- --exit",
     "lint": "eslint ./lib ./test"
   },
   "files": [

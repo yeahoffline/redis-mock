@@ -1,8 +1,8 @@
 'use strict';
 
 const redis = require('redis');
-const redisMock = require('../lib');
-const getAllPublicMethods = require('./test-utils/getAllPublicMethods');
+const redisMock = require('../../lib');
+const getAllPublicMethods = require('../test-utils/getAllPublicMethods');
 
 require("should");
 
