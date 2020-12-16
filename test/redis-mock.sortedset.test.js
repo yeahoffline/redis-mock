@@ -1,5 +1,5 @@
-var should = require("should");
-var helpers = require("./helpers");
+const should = require("should");
+const helpers = require("./helpers");
 
 /**
   *** NOT IMPLEMENTED ***
@@ -12,7 +12,7 @@ var helpers = require("./helpers");
   ZSCAN key cursor [MATCH pattern] [COUNT count]
 */
 
-var r;
+let r;
 
 beforeEach(function () {
   r = helpers.createClient();
