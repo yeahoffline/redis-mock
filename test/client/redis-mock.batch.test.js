@@ -1,7 +1,7 @@
-var should = require("should");
-var helpers = require("../helpers");
+const should = require("should");
+const helpers = require("../helpers");
 
-var r;
+let r;
 
 beforeEach(function () {
   r = helpers.createClient();
@@ -86,7 +86,7 @@ describe("batch()", function () {
     });
 
     it("should run atomically with its own callbacks", function (done) {
-      var batch = r.batch();
+      const batch = r.batch();
       batch.set('key', 0, function() {
         r.set('key', 0)
       });

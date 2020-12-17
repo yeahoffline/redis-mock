@@ -2,15 +2,15 @@
 
 const redis = require('redis');
 const redisMock = require('../../lib');
-const getAllPublicMethods = require('../test-utils/getAllPublicMethods');
+const types = require('../../lib/utils/types');
 
 require("should");
 
 describe.skip('Given real redis library and the mock', () => {
 
   const findMissingRealMethods = (real, mock) => {
-    const realMethods = getAllPublicMethods(redis);
-    const mockMethods = getAllPublicMethods(mock);
+    const realMethods = types.getMethods(redis).public();
+    const mockMethods = types.getMethods(mock).public();
 
     return realMethods.filter((realMethod) => !mockMethods.find((mockMethod) => mockMethod === realMethod));
   };
