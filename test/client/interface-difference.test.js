@@ -6,6 +6,11 @@ const types = require('../../lib/utils/types');
 
 require("should");
 
+// this is just a unit test. No need to run this against the real redis
+if (process.env.VALID_TESTS) {
+  return;
+}
+
 describe.skip('Given real redis library and the mock', () => {
 
   const findMissingRealMethods = (real, mock) => {
