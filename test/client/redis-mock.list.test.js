@@ -1,8 +1,7 @@
-var should = require("should")
-var events = require("events");
-var helpers = require("../helpers");
+const should = require("should");
+const helpers = require("../helpers");
 
-var r;
+let r;
 
 beforeEach(function () {
   r = helpers.createClient();
@@ -15,10 +14,10 @@ afterEach(function (done) {
 
 
 describe("basic pushing/poping list", function () {
-  var testKey = "myKey";
-  var testKey2 = "myKey2";
-  var testValues = [1, JSON.stringify({foo: "bar"}), 3, 4, 5];
-  var testValue = 10;
+  const testKey = "myKey";
+  const testKey2 = "myKey2";
+  const testValues = [1, JSON.stringify({foo: "bar"}), 3, 4, 5];
+  const testValue = 10;
 
   it("should not get any value from the end", function (done) {
     r.rpop(testKey, function (err, result) {
@@ -818,8 +817,8 @@ describe("blpop", function () {
   });
 
   it("push with multiple elements should be considered as one", function (done) {
-    var r2 = helpers.createClient();
-    var time = false;
+    const r2 = helpers.createClient();
+    let time = false;
 
     r.blpop("foo14", 1, function (err, result) {
       result[0].should.equal("foo14");

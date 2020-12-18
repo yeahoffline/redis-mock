@@ -2,6 +2,8 @@
 *.log
 node_modules
 yarn.lock
+dump.rdb
+.nyc_output
 
 # Intellij Idea
 .idea
