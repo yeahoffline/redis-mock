@@ -366,7 +366,7 @@ describe('ArgumentParser', () => {
           xx: false
         },
         multiple: []
-      })
+      });
     });
 
   });

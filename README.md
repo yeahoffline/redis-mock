@@ -153,6 +153,7 @@ Currently implemented are the following redis commands:
 ### Server
 * flushdb
 * flushall
+* time
 
 
 # Cross verification
