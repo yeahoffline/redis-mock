@@ -161,24 +161,14 @@ If you want to add new tests to the test base it is important that they work too
 You can therefore run the tests using `redis` instead of `redis-mock`. To do so:
 
 ````bash
-$ make check-tests
+$ npm test:valid
 ````
-
 
 You will need to have a running instance of `redis` on you machine and our tests use flushdb a lot so make sure you don't have anything important on it.
 
 
 # Roadmap
 redis-mock is work in progress, feel free to report an issue
-
-
-# Versions
-* 0.5.1 setex bug + readme update (thanks to gswalden)
-* 0.5.0 "Add an AUTH method" + other pr (thanks to aredridel)
-* 0.4.9 merge getset + expire fix (thanks to sobotklp)
-* 0.4.8 merge issue #1 (thanks to williamkapke)
-* 0.4.7 update devDependencies (should, mocha)
-
 
 # Example usage
 
