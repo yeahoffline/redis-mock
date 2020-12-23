@@ -25,7 +25,7 @@ describe("select", () => {
                 });
               });
             });
-          })
+          });
         });
       });
     });
@@ -84,7 +84,7 @@ describe("select", () => {
             should(result).be.null();
             done();
           });
-        })
+        });
       });
     });
   });
@@ -110,7 +110,7 @@ describe("select", () => {
             should(result).be.null();
             done();
           });
-        })
+        });
       });
     });
   });

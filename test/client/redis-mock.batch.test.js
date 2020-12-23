@@ -68,17 +68,17 @@ describe("batch()", function () {
       batch.get('foo1').incr('foo1', function (err, result) {
         should.equal(result, 1);
         done();
-      })
+      });
       batch.exec();
     });
 
     it("should run sorted set operations in order", function (done) {
       r.zadd('myzset', 1, 'a');
       r.zadd('myzset', 2, 'b');
-      r.batch().
-        zremrangebyscore('myzset', 0, 1).
-        zadd('myzset', 'NX', 3, 'a').
-        exec(function (err, result) {
+      r.batch()
+        .zremrangebyscore('myzset', 0, 1)
+        .zadd('myzset', 'NX', 3, 'a')
+        .exec(function (err, result) {
           should(err).not.be.ok();
           should.deepEqual(result, [1, 1]);
           done();
@@ -88,14 +88,14 @@ describe("batch()", function () {
     it("should run atomically with its own callbacks", function (done) {
       const batch = r.batch();
       batch.set('key', 0, function() {
-        r.set('key', 0)
+        r.set('key', 0);
       });
       batch.incr('key', function() {
         r.incr('key');
       });
       batch.exec(function() {
         r.get('key', function(err, value) {
-          value.should.eql('1')
+          value.should.eql('1');
           done();
         });
       });
@@ -109,7 +109,7 @@ describe("batch()", function () {
         batch.incr('foo', function () {
           // Discarded queues aren't calling their callbacks.
           should.not.be.ok(true);
-        })
+        });
         batch.discard();
         r.get('foo', function (err, value) {
           value.should.eql('3');

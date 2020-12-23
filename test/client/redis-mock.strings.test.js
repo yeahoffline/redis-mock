@@ -110,9 +110,9 @@ describe("set", function () {
             // done();
             r.ttl("foo", function (err, result) {
 
-              result.should.not.equal(-1)
+              result.should.not.equal(-1);
 
-              done()
+              done();
 
             });
 
@@ -350,8 +350,8 @@ describe("setex", function () {
   });
 
   it("should set a disappearing key", function (done) {
-    var key = 'test_disappearing'
-    r.setex(key, 1, "val", cb)
+    var key = 'test_disappearing';
+    r.setex(key, 1, "val", cb);
 
     function cb(err, result) {
       result.should.be.ok();
@@ -376,7 +376,7 @@ describe("setex", function () {
         r.del(key);
         done();
       });
-    }, 100)
+    }, 100);
 
   });
 

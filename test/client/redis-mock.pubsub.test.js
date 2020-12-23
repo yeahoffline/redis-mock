@@ -141,7 +141,7 @@ describe("publish and subscribe", function () {
     var pattern = "h*llo\\*";
     var goodChannels = ["hllo*", "hello*", "heello*"];
     var badChannels = ["hllo", "hall", "hello*o"];
-    var messages = ["msg1", "msg2", "msg3"]
+    var messages = ["msg1", "msg2", "msg3"];
     var index = 0;
     var r = helpers.createClient();
     var r2 = helpers.createClient();
@@ -209,7 +209,7 @@ describe("publish and subscribe", function () {
             should.fail(err, null, "Expected null error.", "");
           }
           r2.quit(done);
-        })
+        });
       }
     });
     // Ensure the messages has got time to get to the server
@@ -256,7 +256,7 @@ describe("publish and subscribe", function () {
             should.fail(err, null, "Expected null error.", "");
           }
           r2.quit(done);
-        })
+        });
       }
     });
     // Ensure the messages has got time to get to the server

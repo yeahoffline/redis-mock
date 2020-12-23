@@ -1,4 +1,4 @@
-var should = require("should")
+var should = require("should");
 var events = require("events");
 var helpers = require("../helpers");
 
@@ -63,11 +63,11 @@ describe("multi()", function () {
       var key = 'my_key';
       var tempKey = 'temp:' + key;
       var realKey = 'real:' + key;
-      r.multi().setex(tempKey, 60, 0).
-        renamenx(tempKey, realKey).
-        incr(realKey).
-        ttl(realKey).
-        exec(function(err, results) {
+      r.multi().setex(tempKey, 60, 0)
+        .renamenx(tempKey, realKey)
+        .incr(realKey)
+        .ttl(realKey)
+        .exec(function(err, results) {
           should(err).not.be.ok();
           should(results[0]).equal('OK');
           should(results[1]).equal(1);
@@ -95,17 +95,17 @@ describe("multi()", function () {
       multi.get('foo1').incr('foo1', function (err, result) {
         should.equal(result, 1);
         done();
-      })
+      });
       multi.exec();
     });
 
     it("should run sorted set operations in order", function (done) {
       r.zadd('myzset', 1, 'a');
       r.zadd('myzset', 2, 'b');
-      r.multi().
-        zremrangebyscore('myzset', 0, 1).
-        zadd('myzset', 'NX', 3, 'a').
-        exec(function (err, result) {
+      r.multi()
+        .zremrangebyscore('myzset', 0, 1)
+        .zadd('myzset', 'NX', 3, 'a')
+        .exec(function (err, result) {
           should(err).not.be.ok();
           should.deepEqual(result, [1, 1]);
           done();
@@ -115,14 +115,14 @@ describe("multi()", function () {
     it("should run atomically with its own callbacks", function (done) {
       var multi = r.multi();
       multi.set('key', 0, function() {
-        r.set('key', 0)
+        r.set('key', 0);
       });
       multi.incr('key', function() {
         r.incr('key');
       });
       multi.exec(function() {
         r.get('key', function(err, value) {
-          value.should.eql('1')
+          value.should.eql('1');
           done();
         });
       });
@@ -150,22 +150,22 @@ describe("multi()", function () {
   describe("discard()", function () {
     it("should properly discard the command queue", function (done) {
       r.set('foo', 3, function() {
-        var multi = r.multi()
+        var multi = r.multi();
         multi.incr('foo', function () {
           // Discarded queues aren't calling their callbacks.
           should.not.be.ok(true);
-        })
+        });
         multi.discard();
         r.get('foo', function (err, value) {
-          value.should.eql('3')
+          value.should.eql('3');
           done();
         });
       });
     });
 
     it("should now allow to re-run the command queue", function (done) {
-      var multi = r.multi()
-      multi.discard()
+      var multi = r.multi();
+      multi.discard();
       multi.exec(function (err, value) {
         should(value).not.be.ok();
         err.should.be.ok();

@@ -205,7 +205,7 @@ describe("expire", function () {
 
 describe("expireat", function () {
   function expireat () {
-    return Math.floor(new Date().getTime() / 1000)
+    return Math.floor(new Date().getTime() / 1000);
   }
 
   it("should return 0 for non-existing key", function (done) {
@@ -274,7 +274,7 @@ describe('persist', function () {
         r.ttl("test", function (err, result) {
           result.should.equal(-1);
           done();
-        })
+        });
       });
     });
   });
@@ -286,12 +286,12 @@ describe('persist', function () {
           r.get("test", function (err, result) {
             result.should.equal("val");
             done();
-          })
+          });
         }, 1500);
       });
     });
   });
-})
+});
 
 describe("pexpire", function () {
 
@@ -683,11 +683,11 @@ describe("rename", function () {
           done(err);
           return;
         }
-        result.should.equal("OK")
+        result.should.equal("OK");
         r.get("test", function (err, result) {
           should.not.exist(result);
           r.get("newTest", function (err, result) {
-            result.should.equal("test")
+            result.should.equal("test");
             done();
           });
         });
@@ -703,11 +703,11 @@ describe("rename", function () {
             done(err);
             return;
           }
-          result.should.equal("OK")
+          result.should.equal("OK");
           r.get("test", function (err, result) {
             should.not.exist(result);
             r.get("newTest", function (err, result) {
-              result.should.equal("test")
+              result.should.equal("test");
               done();
             });
           });
@@ -718,11 +718,11 @@ describe("rename", function () {
 
   it("should throw error when key does not exist", function (done) {
     r.rename("test", "newTest", function (err, result) {
-      err.message.should.equal("ERR no such key")
-      done()
-    })
-  })
-})
+      err.message.should.equal("ERR no such key");
+      done();
+    });
+  });
+});
 
 describe("renamenx", function () {
   it("should return true and set key to newKey when newKey does not exist", function (done) {
@@ -732,11 +732,11 @@ describe("renamenx", function () {
           done(err);
           return;
         }
-        result.should.equal(1)
+        result.should.equal(1);
         r.get("test", function (err, result) {
           should.not.exist(result);
           r.get("newTest", function (err, result) {
-            result.should.equal("test")
+            result.should.equal("test");
             done();
           });
         });
@@ -756,7 +756,7 @@ describe("renamenx", function () {
           r.get("test", function (err, result) {
             result.should.equal("test");
             r.get("newTest", function (err, result) {
-              result.should.equal("newTest")
+              result.should.equal("newTest");
               done();
             });
           });
@@ -767,17 +767,17 @@ describe("renamenx", function () {
 
   it("should throw error when key does not exist", function (done) {
     r.rename("test", "newTest", function (err, result) {
-      err.message.should.equal("ERR no such key")
-      done()
-    })
+      err.message.should.equal("ERR no such key");
+      done();
+    });
   });
 
   it("should throw error when key does not exist and newKey exists", function (done) {
     r.set("newTest", "newTest", function (err, result) {
       r.rename("test", "newTest", function (err, result) {
-        err.message.should.equal("ERR no such key")
-        done()
-      })
+        err.message.should.equal("ERR no such key");
+        done();
+      });
     });
   });
 });
@@ -785,15 +785,15 @@ describe("renamenx", function () {
 describe("dbsize", function () {
   it("should return 0 for empty storage", function(done) {
     r.dbsize(function(err, result) {
-      result.should.equal(0)
-      done()
+      result.should.equal(0);
+      done();
     });
   });
   it("should return number of keys in storage", function(done) {
     r.set('test','test', function(err, result) {
       r.dbsize(function(err, result) {
-        result.should.equal(1)
-        done()
+        result.should.equal(1);
+        done();
       });
     });
   });

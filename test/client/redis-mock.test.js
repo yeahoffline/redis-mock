@@ -67,7 +67,7 @@ describe("redis-mock", function () {
           should.fail(err, null, "Expected null error.", "");
         }
         r2.quit(done);
-      })
+      });
     });
   });
 
@@ -76,7 +76,7 @@ describe("redis-mock", function () {
     var r = redismock.createClient();
 
     var didEmitOther = true;
-    var didOtherPassed = false
+    var didOtherPassed = false;
 
     r.on("ready", function () {
 

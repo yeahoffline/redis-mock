@@ -17,7 +17,7 @@ describe("auth", function () {
 
     it("should always succeed and call back", function (done) {
       r.auth("secret", function (err, result) {
-        err.message.should.match(/ERR AUTH <password> called without any password configured for the default user/)
+        err.message.should.match(/ERR AUTH <password> called without any password configured for the default user/);
         done();
       });
     });
@@ -94,7 +94,7 @@ describe("flushdb", function () {
               r.get("a", function (err, result) {
                 result.should.be.equal("1");
                 done();
-              })
+              });
             });
           });
         });

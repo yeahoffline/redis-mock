@@ -137,7 +137,7 @@ describe('rpoplpush', function () {
       });
     });
   });
-})
+});
 
 describe("llen", function () {
   var testKey = "myKey3";
@@ -625,7 +625,7 @@ describe("brpop", function () {
         });
 
         setTimeout(function () {
-          time = true
+          time = true;
         }, 500);
       });
     });
@@ -643,7 +643,7 @@ describe("brpop", function () {
     });
 
     setTimeout(function () {
-      time = true
+      time = true;
     }, 1000);
 
     setTimeout(function () {
@@ -663,7 +663,7 @@ describe("brpop", function () {
     });
 
     setTimeout(function () {
-      time = true
+      time = true;
     }, 500);
 
     setTimeout(function () {
@@ -682,7 +682,7 @@ describe("brpop", function () {
     });
 
     setTimeout(function () {
-      time = true
+      time = true;
     }, 500);
 
     setTimeout(function () {
@@ -742,7 +742,7 @@ describe("blpop", function () {
     });
 
     setTimeout(function () {
-      time = true
+      time = true;
     }, 500);
 
   });
@@ -756,7 +756,7 @@ describe("blpop", function () {
     });
 
     setTimeout(function () {
-      time = true
+      time = true;
     }, 500);
   });
 
@@ -771,7 +771,7 @@ describe("blpop", function () {
         });
 
         setTimeout(function () {
-          time = true
+          time = true;
         }, 500);
       });
     });
@@ -789,7 +789,7 @@ describe("blpop", function () {
     });
 
     setTimeout(function () {
-      time = true
+      time = true;
     }, 200);
 
     setTimeout(function () {
@@ -809,7 +809,7 @@ describe("blpop", function () {
     });
 
     setTimeout(function () {
-      time = true
+      time = true;
     }, 200);
     setTimeout(function () {
       r2.rpush("foo12", "bim");
@@ -828,7 +828,7 @@ describe("blpop", function () {
     });
 
     setTimeout(function () {
-      time = true
+      time = true;
     }, 200);
 
     setTimeout(function () {
@@ -868,7 +868,7 @@ describe("blpop", function () {
     });
 
     setTimeout(function () {
-      time = true
+      time = true;
     }, 200);
   });
 

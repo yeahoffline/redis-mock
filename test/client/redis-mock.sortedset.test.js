@@ -662,7 +662,7 @@ describe("zunionstore", function () {
           // Store the union of all three
           r.zunionstore("zdest1", 3, "zsrc1", "zsrc2", "zsrc3", function(error, result) {
             // Pull members and inspect
-            result.should.equal(8)
+            result.should.equal(8);
             r.zrange(['zdest1', '0', '-1', 'withscores'], function(err, result) {
               result.should.deepEqual([
               'mem:1:1',
@@ -680,10 +680,10 @@ describe("zunionstore", function () {
               'mem:1:3',
               '31',
               'mem:3:3',
-              '33' ])
+              '33' ]);
               done();
             });
-          })
+          });
         });
       });
     });
@@ -695,7 +695,7 @@ describe("zunionstore", function () {
         // Store the union of all three (but third one does not exist)
         r.zunionstore("zdest1", 3, "zsrc1", "zsrc2", "zsrc3", function(error, result) {
           // Pull members and inspect
-          result.should.equal(5)
+          result.should.equal(5);
           r.zrange(['zdest1', '0', '-1', 'withscores'], function(err, result) {
             result.should.deepEqual([
             'mem:1:1',
@@ -707,10 +707,10 @@ describe("zunionstore", function () {
             'mem:2:2',
             '22',
             'mem:1:3',
-            '31'])
+            '31']);
             done();
           });
-        })
+        });
       });
     });
   });
@@ -720,7 +720,7 @@ describe("zunionstore", function () {
       // Store the union of all three (but third one does not exist)
       r.zunionstore("zdest1", 1, "zsrc1", function(error, result) {
         // Pull members and inspect
-        result.should.equal(3)
+        result.should.equal(3);
         r.zrange(['zdest1', '0', '-1', 'withscores'], function(err, result) {
           result.should.deepEqual([
           'mem:1:1',
@@ -728,10 +728,10 @@ describe("zunionstore", function () {
           'mem:1:2',
           '21',
           'mem:1:3',
-          '31'])
+          '31']);
           done();
         });
-      })
+      });
     });
   });
 
@@ -749,17 +749,17 @@ describe("zinterstore", function () {
           // Store the intersection (should be: cat, parrot )
           r.zinterstore("zdest1", 3, "zsrc1", "zsrc2", "zsrc3", function(error, result) {
             // Pull members and inspect
-            result.should.equal(2)
+            result.should.equal(2);
             r.zrange(['zdest1', '0', '-1', 'withscores'], function(err, result) {
               result.should.deepEqual([
               'cat',
               '14', // Sum: 11 + 1 + 2
               'parrot',
               '64' // Sum: 31 + 23 + 10
-              ])
+              ]);
               done();
             });
-          })
+          });
         });
       });
     });
@@ -771,12 +771,12 @@ describe("zinterstore", function () {
         // Store the union of all three (but third one does not exist)
         r.zinterstore("zdest1", 3, "zsrc1", "zsrc2", "zsrc3", function(error, result) {
           // Pull members and inspect
-          result.should.equal(0)
+          result.should.equal(0);
           r.zrange(['zdest1', '0', '-1', 'withscores'], function(err, result) {
-            result.should.deepEqual([])
+            result.should.deepEqual([]);
             done();
           });
-        })
+        });
       });
     });
   });

@@ -37,8 +37,8 @@
     "consistent-this": "off",
     "curly": "error",
     "default-case": "error",
-    "dot-location": "error",
-    "dot-notation": "off",
+    "dot-location": ["error", "property"],
+    "dot-notation": "error",
     "eol-last": "off",
     "eqeqeq": "error",
     "func-names": "off",
@@ -176,7 +176,7 @@
     "radix": "error",
     "require-jsdoc": "off",
     "require-yield": "error",
-    "semi": "off",
+    "semi": "error",
     "semi-spacing": [
       "error",
       {

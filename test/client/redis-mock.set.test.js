@@ -241,7 +241,7 @@ describe('smembers', function () {
       result.should.be.instanceof(Array);
       result.should.have.length(0);
       done();
-    })
+    });
   });
 
   it('should return the empty array when all members removed from set', function (done) {
@@ -511,7 +511,7 @@ describe('sscan', function () {
     r.sscan('foo', 0, function (err, result) {
       result.should.eql(['0', []]);
       return done(err);
-    })
+    });
   });
   it('should throw an error when scanning from a string instead of a set', function (done) {
     r.set('foo', 'bar', function () {
@@ -539,7 +539,7 @@ describe('sscan', function () {
         result[0].should.eql('2');
         result[1].length.should.equal(1);
         return done(err);
-      })
+      });
     });
   });
   it('should add and scan through added keys via pattern', function (done) {

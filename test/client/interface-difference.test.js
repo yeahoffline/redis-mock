@@ -27,7 +27,7 @@ describe.skip('Given real redis library and the mock', () => {
       missingMethods.length.should.be.equal(
         0,
         'The mock is missing the following methods that are present in the real library: ' + missingMethods.join(', ')
-      )
+      );
 
       const wtfMethods = findMissingRealMethods(redisMock, redis);
 
