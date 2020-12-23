@@ -1,6 +1,6 @@
 {
   "name": "redis-mock",
-  "version": "0.56.2",
+  "version": "0.56.3",
   "description": "Redis client mock object for unit testing",
   "author": "Kristian Faeldt <kristian.faeldt@gmail.com>",
   "main": "./lib/index",
@@ -18,7 +18,8 @@
   "scripts": {
     "test": "mocha --timeout 5000 --recursive",
     "test:valid": "VALID_TESTS=true npm run test -- --exit",
-    "lint": "eslint ./lib ./test"
+    "lint": "eslint ./lib ./test",
+    "preversion": "node ./bin/updateMockedCoverage.js && git add README.md && git commit --amend --no-edit"
   },
   "files": [
     "lib"
