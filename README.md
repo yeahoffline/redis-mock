@@ -5,6 +5,7 @@ redis-mock
 
 ![Build status](https://github.com/yeahoffline/redis-mock/workflows/Build/badge.svg?branch=master)
 ![node-current](https://img.shields.io/node/v/redis-mock)
+![mock-completeness](https://img.shields.io/badge/Methods%20mocked-46%25%20(222%2F482)-red)
 [![GitHub issues](https://img.shields.io/github/issues/yeahoffline/redis-mock)](https://github.com/yeahoffline/redis-mock/issues)
 
 The goal of the `redis-mock` project is to create a feature-complete mock of [node_redis](https://github.com/NodeRedis/node_redis), which may be used interchangeably when writing unit tests for code that depends on `redis`.

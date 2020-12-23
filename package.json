@@ -18,7 +18,8 @@
   "scripts": {
     "test": "mocha --timeout 5000 --recursive",
     "test:valid": "VALID_TESTS=true npm run test -- --exit",
-    "lint": "eslint ./lib ./test"
+    "lint": "eslint ./lib ./test",
+    "preversion": "node ./bin/updateMockedCoverage.js && git add README.md && git commit --amend --no-edit"
   },
   "files": [
     "lib"
