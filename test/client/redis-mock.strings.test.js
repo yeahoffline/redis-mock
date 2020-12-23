@@ -1,8 +1,9 @@
-var should = require("should");
-var events = require("events");
-var helpers = require("../helpers");
+'use strict';
 
-var r;
+const should = require("should");
+const helpers = require("../helpers");
+
+let r;
 
 beforeEach(function () {
   r = helpers.createClient();
@@ -336,7 +337,7 @@ describe("getset", function () {
 
 describe("setex", function () {
 
-  this.timeout(5000);
+  this.timeout(5000); // eslint-disable-line no-invalid-this
 
   it("should set a key", function (done) {
     var key = 'test_persist';
@@ -922,4 +923,35 @@ describe("decrby", function () {
       });
     });
   });
+});
+
+describe('append', () => {
+
+  it('When the string does not yet exist, Then it gets created', (done) => {
+    r.append('appendKey', 'appendValue', (err, res) => {
+      should(err).be.null();
+      res.should.equal(11);
+      r.get('appendKey', (err, result) => {
+        should(err).be.null();
+        result.should.equal('appendValue');
+        done();
+      });
+    });
+  });
+
+  it('When the string already exists, then the new value is appended to it', (done) => {
+    r.set('existingAppendKey', 'aaa', (err, result) => {
+      should(err).be.null();
+      r.append('existingAppendKey', 'bbb', (err, res) => {
+        should(err).be.null();
+        res.should.equal(6);
+        r.get('existingAppendKey', (err, result) => {
+          should(err).be.null();
+          result.should.equal('aaabbb');
+          done();
+        });
+      });
+    });
+  });
+
 });
