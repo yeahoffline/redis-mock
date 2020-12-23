@@ -38,6 +38,15 @@ describe("zadd", function () {
 
   var aLen = args.length;
   var mLen = aLen / 2;
+
+  it('should throw an error when too few arguments', (done) => {
+    r.zadd('zaddKey', 1, (err, result) => {
+      err.should.not.be.undefined();
+      should(result).be.undefined();
+      done();
+    });
+  });
+
   it("should add scores and members", function (done) {
     r.zadd([testKey1].concat(args), function(err, result) {
       result.should.equal(mLen);
