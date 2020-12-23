@@ -1,7 +1,9 @@
-var should = require("should");
-var helpers = require("../helpers");
+'use strict';
 
-var r;
+const should = require("should");
+const helpers = require("../helpers");
+
+let r;
 
 beforeEach(function () {
   r = helpers.createClient();
@@ -100,5 +102,15 @@ describe("flushdb", function () {
         });
       });
     });
+  });
+});
+
+it('time', (done) => {
+  r.time((err, result) => {
+    should(err).be.null();
+    result.length.should.equal(2);
+    should(typeof result[0] === 'string' && result[0].length === 10 && !isNaN(result[0])).equal(true);
+    should(typeof result[1] === 'string' && result[1].length <= 6 && !isNaN(result[1])).equal(true);
+    done();
   });
 });
