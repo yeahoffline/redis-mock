@@ -1,9 +1,13 @@
 'use strict';
 
 const should = require("should");
-const {ArgumentParser} = require("../../lib/client/ArgumentParser");
-const { set } = require('../../lib/client/argParsers');
+const {ArgumentParser} = require("../../../lib/client/args/ArgumentParser");
+const { set } = require('../../../lib/client/args/argParsers');
 
+// this is just a unit test. No need to run this against the real redis
+if (process.env.VALID_TESTS) {
+  return;
+}
 
 describe('ArgumentParser', () => {
 
@@ -33,7 +37,8 @@ describe('ArgumentParser', () => {
           match: '*',
           count: 5
         },
-        flags: {}
+        flags: {},
+        multiple: []
       });
     });
 
@@ -45,7 +50,8 @@ describe('ArgumentParser', () => {
         named: {
           match: '*'
         },
-        flags: {}
+        flags: {},
+        multiple: []
       });
     });
 
@@ -57,7 +63,8 @@ describe('ArgumentParser', () => {
         named: {
           count: 5
         },
-        flags: {}
+        flags: {},
+        multiple: []
       });
     });
 
@@ -71,7 +78,8 @@ describe('ArgumentParser', () => {
       result.should.be.deepEqual({
         default: {},
         named: {},
-        flags: {}
+        flags: {},
+        multiple: []
       });
     });
 
@@ -104,7 +112,8 @@ describe('ArgumentParser', () => {
         named: {
           ex: 2,
         },
-        flags: {}
+        flags: {},
+        multiple: []
       });
     });
 
@@ -116,7 +125,8 @@ describe('ArgumentParser', () => {
         named: {
           px: 1,
         },
-        flags: {}
+        flags: {},
+        multiple: []
       });
     });
 
@@ -151,7 +161,8 @@ describe('ArgumentParser', () => {
         },
         flags: {
           keepttl: false
-        }
+        },
+        multiple: []
       });
     });
 
@@ -163,7 +174,8 @@ describe('ArgumentParser', () => {
         named: {},
         flags: {
           keepttl: true
-        }
+        },
+        multiple: []
       });
     });
 
@@ -188,7 +200,8 @@ describe('ArgumentParser', () => {
         named: {
           required: 'test'
         },
-        flags: {}
+        flags: {},
+        multiple: []
       });
     });
 
@@ -223,7 +236,8 @@ describe('ArgumentParser', () => {
           testDefault: 'defaultValue'
         },
         named: {},
-        flags: {}
+        flags: {},
+        multiple: []
       });
     });
 
@@ -237,7 +251,8 @@ describe('ArgumentParser', () => {
         named: {
           named: 'namedValue'
         },
-        flags: {}
+        flags: {},
+        multiple: []
       });
     });
 
@@ -349,9 +364,94 @@ describe('ArgumentParser', () => {
           keepttl: false,
           nx: true,
           xx: false
-        }
+        },
+        multiple: []
       })
     });
 
   });
+
+  describe('When parsing all possible parameter types', () => {
+
+    const parser = new ArgumentParser('test', {
+      default: [
+        {
+          name: 'key',
+          type: String
+        }
+      ],
+      named: {
+        ex: {
+          type: Number
+        },
+      },
+      flags: {
+        gt: {}
+      },
+      multiple: [
+        {
+          name: 'score',
+          type: Number
+        },
+        {
+          name: 'member',
+          type: String
+        }
+      ]
+    });
+
+    it('And all values are provided, Then they are all successfully parsed', () => {
+      const result = parser.parse(['testKey', 'gt', 'ex', '1', '1', 'one', '2', 'two']);
+
+      result.should.deepEqual({
+        default: {
+          key: 'testKey'
+        },
+        named: {
+          ex: 1
+        },
+        flags: {
+          gt: true
+        },
+        multiple: [
+          {
+            score: 1,
+            member: 'one'
+          },
+          {
+            score: 2,
+            member: 'two'
+          }
+        ]
+      });
+    });
+
+    it('And all values except for the flag are provided, Then they are all successfully parsed', () => {
+      const result = parser.parse(['testKey', 'ex', '1', '1', 'one', '2', 'two']);
+
+      result.should.deepEqual({
+        default: {
+          key: 'testKey'
+        },
+        named: {
+          ex: 1
+        },
+        flags: {
+          gt: false
+        },
+        multiple: [
+          {
+            score: 1,
+            member: 'one'
+          },
+          {
+            score: 2,
+            member: 'two'
+          }
+        ]
+      });
+    });
+
+  });
+
 });
