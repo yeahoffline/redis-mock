@@ -85,6 +85,7 @@ Currently implemented are the following redis commands:
 ### Strings
 * get
 * set
+* append
 * getset
 * mget
 * mset
