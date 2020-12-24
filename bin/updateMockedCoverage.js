@@ -32,7 +32,11 @@ const replaceVersion = (coverage) => {
     + color
     + ')'
   );
-  fs.writeFileSync(readmeFilePath, updatedReadme);
+  if (readme !== updatedReadme) {
+    fs.writeFileSync(readmeFilePath, updatedReadme);
+    return true;
+  }
+  return false;
 };
 
 const getCoverage = () => {
@@ -49,7 +53,11 @@ const getCoverage = () => {
 };
 
 const coverage = getCoverage();
-replaceVersion(coverage);
+const replaced = replaceVersion(coverage);
 
-console.log('Successfully updated the README.md to specify the Mocked method coverage as ' + coverage.percentage + '%');
+if (replaced) {
+  console.log('!!!Successfully updated the README.md to specify the Mocked method coverage as ' + coverage.percentage + '%!!!');
+  console.log('!!!Commit the updated README.md before releasing a new version!!!')
+}
+
 process.exit(0);
