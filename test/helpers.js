@@ -17,5 +17,6 @@ function createClient(opts) {
 }
 
 module.exports = {
-  createClient: createClient
+  createClient: createClient,
+  ReplyError: process.env.VALID_TESTS ? require('redis').ReplyError : require('../').ReplyError
 };
