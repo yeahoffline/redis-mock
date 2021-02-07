@@ -90,7 +90,7 @@ describe("multi()", function () {
       });
     });
 
-    it("should handle del with multiple keys", async function () {
+    it("should handle del with multiple keys", function () {
       const cmds = [
         [
           'del',
@@ -163,18 +163,15 @@ describe("multi()", function () {
           'mediasoup:servers:b5ZizudER5rxZffc6RUrG:address',
           '["1.0.0.0","2.0.0.0","127.0.0.1","JwX7Cju07gNJIII1K7bXc"]'
         ]
-      ]
+      ];
       return new Promise((resolve, reject) => {
-        console.log(`My Test`)
         r.multi(cmds).exec((err, result) => {
-          console.log(`My Test Callback`)
           if (err) {
-            return reject(err)
+            return reject(err);
           }
-          resolve(result)
-        })
-      })
-      done()
+          resolve(result);
+        });
+      });
     });
 
     it("should handle extraneous callbacks", function (done) {
