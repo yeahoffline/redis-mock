@@ -90,6 +90,90 @@ describe("multi()", function () {
       });
     });
 
+    it("should handle del with multiple keys", function () {
+      const cmds = [
+        [
+          'del',
+          'mediasoup:rooms:wipe-room-state-restart:routers:30070704-f47a-40bd-ab44-36534e56b4cc'
+        ],
+        [
+          'srem',
+          'mediasoup:rooms:wipe-room-state-restart:servers',
+          'b5ZizudER5rxZffc6RUrG'
+        ],
+        [
+          'hdel',
+          'mediasoup:rooms:wipe-room-state-restart:producers:b55b81d8-0dfb-4bb8-846d-55e9474d12b6',
+          'router'
+        ],
+        [
+          'srem',
+          'mediasoup:rooms:wipe-room-state-restart:producers',
+          'b55b81d8-0dfb-4bb8-846d-55e9474d12b6'
+        ],
+        [
+          'hdel',
+          'mediasoup:rooms:wipe-room-state-restart:producers:c5d11e21-c69d-4b1f-a083-c98efc03a74c',
+          'router'
+        ],
+        [
+          'srem',
+          'mediasoup:rooms:wipe-room-state-restart:producers',
+          'c5d11e21-c69d-4b1f-a083-c98efc03a74c'
+        ],
+        [
+          'hdel',
+          'mediasoup:rooms:wipe-room-state-restart:producers:532fcd12-2a8b-47fb-8070-d2f89f9b4da3',
+          'router'
+        ],
+        [
+          'srem',
+          'mediasoup:rooms:wipe-room-state-restart:producers',
+          '532fcd12-2a8b-47fb-8070-d2f89f9b4da3'
+        ],
+        [
+          'hdel',
+          'mediasoup:rooms:wipe-room-state-restart:producers:ac517e34-9ca5-4439-95a7-1e0a9ca10439',
+          'router'
+        ],
+        [
+          'srem',
+          'mediasoup:rooms:wipe-room-state-restart:producers',
+          'ac517e34-9ca5-4439-95a7-1e0a9ca10439'
+        ],
+        [
+          'del',
+          'mediasoup:servers:b5ZizudER5rxZffc6RUrG:address',
+          'mediasoup:servers:b5ZizudER5rxZffc6RUrG:rooms',
+          'mediasoup:servers:b5ZizudER5rxZffc6RUrG:routers',
+          'mediasoup:servers:b5ZizudER5rxZffc6RUrG:routers:30070704-f47a-40bd-ab44-36534e56b4cc:room',
+          'mediasoup:servers:b5ZizudER5rxZffc6RUrG:producers',
+          'mediasoup:servers:b5ZizudER5rxZffc6RUrG:producers:b55b81d8-0dfb-4bb8-846d-55e9474d12b6:room',
+          'mediasoup:servers:b5ZizudER5rxZffc6RUrG:producers:c5d11e21-c69d-4b1f-a083-c98efc03a74c:room',
+          'mediasoup:servers:b5ZizudER5rxZffc6RUrG:producers:532fcd12-2a8b-47fb-8070-d2f89f9b4da3:room',
+          'mediasoup:servers:b5ZizudER5rxZffc6RUrG:producers:ac517e34-9ca5-4439-95a7-1e0a9ca10439:room'
+        ],
+        [
+          'sadd',
+          'mediasoup:servers',
+          'b5ZizudER5rxZffc6RUrG'
+        ],
+        [
+          'set',
+          'mediasoup:servers:b5ZizudER5rxZffc6RUrG:address',
+          '["1.0.0.0","2.0.0.0","127.0.0.1","JwX7Cju07gNJIII1K7bXc"]'
+        ]
+      ];
+      return new Promise((resolve, reject) => {
+        r.multi(cmds).exec((err, result) => {
+          if (err) {
+            return reject(err);
+          }
+          resolve(result);
+        });
+      });
+    });
+
     it("should handle extraneous callbacks", function (done) {
       var multi = r.multi();
       multi.get('foo1').incr('foo1', function (err, result) {
