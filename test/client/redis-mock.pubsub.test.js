@@ -27,7 +27,10 @@ describe("publish and subscribe", function () {
 
     });
 
-    r.subscribe(channelName);
+    r.subscribe(channelName, function (err, ch) {
+      should.equal(err, null);
+      should.equal(ch, channelName);
+    });
   });
 
   it("should unsubscribe to all channels if no arguments are given", function (done) {
@@ -56,8 +59,14 @@ describe("publish and subscribe", function () {
       }
     });
 
-    r.subscribe(channelNames[0]);
-    r.subscribe(channelNames[1]);
+    r.subscribe(channelNames[0], function (err, ch) {
+      should.equal(err, null);
+      should.equal(channelNames[0], channelNames[0]);
+    });
+    r.subscribe(channelNames[1], function (err, ch) {
+      should.equal(err, null);
+      should.equal(ch, channelNames[1]);
+    });
   });
 
   it("should psubscribe and punsubscribe to a channel", function (done) {
@@ -76,7 +85,10 @@ describe("publish and subscribe", function () {
       should.equal(ch, channelName);
       r.quit(done);
     });
-    r.psubscribe(channelName);
+    r.psubscribe(channelName, function (err, ch) {
+      should.equal(err, null);
+      should.equal(ch, channelName);
+    });
   });
 
   it("suscribing and publishing with the same connection should make an error", function (done) {
