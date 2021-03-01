@@ -45,6 +45,18 @@ describe("basic hashing usage", function () {
 
   });
 
+  it("should set multiple values", function (done) {
+
+    r.hset(testHash, testKey, testValue, testKey + "2", testValue + "2", testKey + "3", testValue + "3", function (err, result) {
+
+      result.should.equal(3);
+
+      done();
+
+    });
+
+  });
+
   it("should treat empty string as existent", function (done) {
     r.hset(testHash, testKeyEmptyString, testValueEmptyString, function (err, result) {
       r.hexists(testHash, testKeyEmptyString, function (err, result) {
