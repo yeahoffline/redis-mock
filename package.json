@@ -12,7 +12,7 @@
   "devDependencies": {
     "eslint": "^5.16.0",
     "mocha": "6.2.3",
-    "redis": "^3.0.2",
+    "redis": "^3.1.2",
     "rsmq": "^0.12.2",
     "should": "13.2.3"
   },
